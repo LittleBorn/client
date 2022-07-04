@@ -21,20 +21,34 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
+import Login from './pages/Login/Login';
 
 setupIonicReact();
+
+const isLoggedIn = false; 
+
+const SecureRoutes = () => {
+  return (
+      <IonRouterOutlet>
+        <Route path="/home" component={Home} exact={true} />
+        <Route exact path="/" render={() => <Redirect to="/home" />} />
+      </IonRouterOutlet>
+  );
+}
+
+const PublicRoutes = () => {
+  return (
+      <IonRouterOutlet>
+        <Route path="/login" component={Login} exact={true} />
+        <Route exact path="/" render={() => <Redirect to="/login" />} />
+      </IonRouterOutlet>
+  );
+}
 
 const App: React.FC = () => (
   <IonApp>
     <IonReactRouter>
-      <IonRouterOutlet>
-        <Route exact path="/home">
-          <Home />
-        </Route>
-        <Route exact path="/">
-          <Redirect to="/home" />
-        </Route>
-      </IonRouterOutlet>
+      {isLoggedIn ? <SecureRoutes /> : <PublicRoutes />}
     </IonReactRouter>
   </IonApp>
 );
