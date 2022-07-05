@@ -1,24 +1,13 @@
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import Button from '../../components/Button';
+import SetupTemplate from '../../components/SetupTemplate';
 
 const Login: React.FC = () => {
   return (
-    <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Login</IonTitle>
-        </IonToolbar>
-      </IonHeader>
-      <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Login</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <div>
-            Test
-        </div>
-      </IonContent>
-    </IonPage>
+    <SetupTemplate>
+      <h1>Login</h1>
+      <Button title="Login"/>
+    </SetupTemplate>
   );
 };
 

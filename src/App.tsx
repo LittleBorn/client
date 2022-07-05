@@ -30,7 +30,7 @@ const isLoggedIn = false;
 const SecureRoutes = () => {
   return (
       <IonRouterOutlet>
-        <Route path="/home" component={Home} exact={true} />
+        <Route path="/home" render={() => <Home/>} exact={true} />
         <Route exact path="/" render={() => <Redirect to="/home" />} />
       </IonRouterOutlet>
   );
@@ -39,7 +39,7 @@ const SecureRoutes = () => {
 const PublicRoutes = () => {
   return (
       <IonRouterOutlet>
-        <Route path="/login" component={Login} exact={true} />
+        <Route path="/login" render={() => <Login/>} exact={true} />
         <Route exact path="/" render={() => <Redirect to="/login" />} />
       </IonRouterOutlet>
   );
