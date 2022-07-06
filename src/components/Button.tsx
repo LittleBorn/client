@@ -10,7 +10,7 @@ interface ContainerProps {
 const Button: React.FC<ContainerProps> = ({ title, style }) => {
 
     return (
-        <IonButton style={style}>{title}</IonButton>
+        <IonButton color="primary" fill="solid" style={style}>{title}</IonButton>
     );
 };
 

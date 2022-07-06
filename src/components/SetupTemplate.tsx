@@ -1,16 +1,12 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { IonCol, IonContent, IonGrid, IonHeader, IonImg, IonPage, IonRow, IonTitle, IonToolbar } from '@ionic/react';
+import { url } from 'inspector';
 
 interface ContainerProps { children: React.ReactNode }
 
-const SetupTemplate: React.FC<ContainerProps> = ({children}) => {
+const SetupTemplate: React.FC<ContainerProps> = ({ children }) => {
   return (
     <IonPage>
-      <IonContent fullscreen style={{display: "flex", justifyContent: "center", alignItems: "center", backgroundColor: "white"}}>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Login</IonTitle>
-          </IonToolbar>
-        </IonHeader>
+      <IonContent className='background-image' fullscreen>
         { children }
       </IonContent>
     </IonPage>
