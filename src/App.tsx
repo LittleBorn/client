@@ -25,6 +25,8 @@ import './theme/variables.css';
 import './App.css'
 
 import Login from './pages/Login/Login';
+import LostPassword from './pages/LostPassword/LostPassword';
+import LostPasswordMail from './pages/LostPassword/LostPasswordMail';
 
 setupIonicReact();
 
@@ -43,6 +45,8 @@ const PublicRoutes = () => {
   return (
       <IonRouterOutlet>
         <Route path="/login" render={() => <Login/>} exact={true} />
+        <Route path="/LostPassword" render={() => <LostPassword/>} exact={true} />
+        <Route path="/LostPasswordMail" render={() => <LostPasswordMail/>} exact={true} />
         <Route exact path="/" render={() => <Redirect to="/login" />} />
       </IonRouterOutlet>
   );

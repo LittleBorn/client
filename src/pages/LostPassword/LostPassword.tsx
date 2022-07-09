@@ -5,7 +5,7 @@ import SetupTemplate from '../../components/SetupTemplate';
 import login_mother from "../../assets/images/login_mother.svg";
 import { useState } from 'react';
 
-const Login: React.FC = () => {
+const LostPassword: React.FC = () => {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -16,10 +16,10 @@ const Login: React.FC = () => {
 
   return (
     <SetupTemplate>
-      <div style={{justifyContent: "flex-end", display: "flex", flexDirection: "column", alignItems: "center", height: "100vh", gap: "2rem", paddingBottom: "2rem"}}>
+      <div style={{justifyContent: "center", display: "flex", flexDirection: "column", alignItems: "center", height: "100vh", gap: "2rem", paddingBottom: "2rem"}}>
         <div>
           <div style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
-            <IonText style={{fontWeight: "bold", fontSize: "1.3em"}}>Willkommen zurück!</IonText>
+            <IonText style={{fontWeight: "bold", fontSize: "1.3em"}}>Passwort vergessen?</IonText>
           </div>
         </div>
         <div>
@@ -37,25 +37,12 @@ const Login: React.FC = () => {
         </div>
         <div>
           <div style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
-            <IonItem>
-              <IonLabel>Passwort</IonLabel>
-              <IonInput value={password} onIonChange={(e) => setPassword(`${e.target.value}`)} type="password" placeholder="Password" />
-            </IonItem>
+            <Button onClick={login} title="Password zurücksetzen" style={{backgroundColor: "#44C1AD", width: 350, height: 55}} />
           </div>
         </div>
         <div>
           <div style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
-            <IonText>Passwort vergessen? <IonText style={{color: "#44C1AD"}}>Hier entlang</IonText>.</IonText>
-          </div>
-        </div>
-        <div>
-          <div style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
-            <Button onClick={login} title="Login" style={{backgroundColor: "#44C1AD", width: 350, height: 55}} />
-          </div>
-        </div>
-        <div>
-          <div style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
-            <IonText>Noch keinen Account? Dann registriere dich <IonText style={{color: "#44C1AD"}}>hier</IonText>.</IonText>
+            <IonText>Zurück geht's <IonText style={{color: "#44C1AD"}}>hier</IonText>.</IonText>
           </div>
         </div>
       </div>
@@ -64,4 +51,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default LostPassword;

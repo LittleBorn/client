@@ -5,7 +5,7 @@ import SetupTemplate from '../../components/SetupTemplate';
 import login_mother from "../../assets/images/login_mother.svg";
 import { useState } from 'react';
 
-const Login: React.FC = () => {
+const LostPasswordMail: React.FC = () => {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -64,4 +64,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default LostPasswordMail;
