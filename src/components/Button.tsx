@@ -4,13 +4,14 @@ interface ContainerProps {
     title: string,
     style?: {
         [key: string]: any;
-    } | undefined
+    } | undefined,
+    onClick?: React.MouseEventHandler<HTMLIonButtonElement> | undefined
 }
 
-const Button: React.FC<ContainerProps> = ({ title, style }) => {
+const Button: React.FC<ContainerProps> = ({ title, style, onClick }) => {
 
     return (
-        <IonButton color="primary" fill="solid" style={style}>{title}</IonButton>
+        <IonButton onClick={onClick} color="primary" fill="solid" style={style}>{title}</IonButton>
     );
 };
 

@@ -25,6 +25,9 @@ import './theme/variables.css';
 import './App.css'
 
 import Login from './pages/Login/Login';
+import LostPassword from './pages/LostPassword/LostPassword';
+import LostPasswordMail from './pages/LostPassword/LostPasswordMail';
+import Register from './pages/Register/Register';
 
 setupIonicReact();
 
@@ -33,8 +36,8 @@ const isLoggedIn = false;
 const SecureRoutes = () => {
   return (
       <IonRouterOutlet>
-        <Route path="/home" render={() => <Home/>} exact={true} />
-        <Route exact path="/" render={() => <Redirect to="/home" />} />
+        <Route path="/Home" render={() => <Home/>} exact={true} />
+        <Route exact path="/" render={() => <Redirect to="/Home" />} />
       </IonRouterOutlet>
   );
 }
@@ -42,8 +45,11 @@ const SecureRoutes = () => {
 const PublicRoutes = () => {
   return (
       <IonRouterOutlet>
-        <Route path="/login" render={() => <Login/>} exact={true} />
-        <Route exact path="/" render={() => <Redirect to="/login" />} />
+        <Route path="/Register" render={() => <Register/>} exact={true} />
+        <Route path="/Login" render={() => <Login/>} exact={true} />
+        <Route path="/LostPassword" render={() => <LostPassword/>} exact={true} />
+        <Route path="/LostPasswordMail" render={() => <LostPasswordMail/>} exact={true} />
+        <Route exact path="/" render={() => <Redirect to="/Login" />} />
       </IonRouterOutlet>
   );
 }

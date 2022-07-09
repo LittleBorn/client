@@ -1,55 +1,58 @@
-import { IonGrid, IonRow, IonCol, IonImg, IonInput, IonText, IonItem, IonLabel } from '@ionic/react';
+import { IonGrid, IonImg, IonInput, IonText, IonItem, IonLabel } from '@ionic/react';
 import Button from '../../components/Button';
 import SetupTemplate from '../../components/SetupTemplate';
 
 import login_mother from "../../assets/images/login_mother.svg";
+import { useState } from 'react';
 
 const Login: React.FC = () => {
+
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
+  const login = () => {
+    console.log(email, password)
+  }
+
   return (
     <SetupTemplate>
-      <IonGrid>
-        <IonRow>
-          <IonCol style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
-            Willkommen zurück!
-          </IonCol>
-        </IonRow>
-        <IonRow>
-          <IonCol style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
-            <IonImg src={login_mother} style={{height: "40%"}}/>
-          </IonCol>
-        </IonRow>
-        <IonRow>
-          <IonCol style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+      <div style={{justifyContent: "flex-end", display: "flex", flexDirection: "column", alignItems: "center", height: "100vh", gap: "2rem", paddingBottom: "2rem"}}>
+
+          <div style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+            <IonText style={{fontWeight: "bold", fontSize: "1.3em"}}>Willkommen zurück!</IonText>
+          </div>
+
+          <div style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+            <IonImg src={login_mother} style={{height: 200}}/>
+          </div>
+
+          <div style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
             <IonItem>
-              <IonLabel>Username</IonLabel>
-              <IonInput type="text" placeholder="Username" />
+              <IonLabel>Email</IonLabel>
+              <IonInput value={email} onIonChange={(e) => setEmail(`${e.target.value}`)} type="text" placeholder="Email" />
             </IonItem>
-          </IonCol>
-        </IonRow>
-        <IonRow>
-          <IonCol style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+          </div>
+
+          <div style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
             <IonItem>
-              <IonLabel>Username</IonLabel>
-              <IonInput type="password" placeholder="Password" />
+              <IonLabel>Passwort</IonLabel>
+              <IonInput value={password} onIonChange={(e) => setPassword(`${e.target.value}`)} type="password" placeholder="Password" />
             </IonItem>
-          </IonCol>
-        </IonRow>
-        <IonRow>
-          <IonCol style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+          </div>
+
+          <div style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
             <IonText>Passwort vergessen? <IonText style={{color: "#44C1AD"}}>Hier entlang</IonText>.</IonText>
-          </IonCol>
-        </IonRow>
-        <IonRow>
-          <IonCol style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
-            <Button title="Login" style={{backgroundColor: "#44C1AD", width: 250}} />
-          </IonCol>
-        </IonRow>
-        <IonRow>
-          <IonCol style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+          </div>
+
+          <div style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
+            <Button onClick={login} title="Login" style={{backgroundColor: "#44C1AD", width: 350, height: 55}} />
+          </div>
+
+          <div style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
             <IonText>Noch keinen Account? Dann registriere dich <IonText style={{color: "#44C1AD"}}>hier</IonText>.</IonText>
-          </IonCol>
-        </IonRow>
-      </IonGrid>
+          </div>
+
+      </div>
 
     </SetupTemplate>
   );
