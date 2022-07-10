@@ -1,5 +1,5 @@
 .background-image{
-    --background: #fff url("./assets/images/background.svg");
+    --background: rgb(238, 238, 238) url("./assets/images/background.svg");
 }
 
 * {

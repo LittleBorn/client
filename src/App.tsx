@@ -28,6 +28,9 @@ import Login from './pages/Login/Login';
 import LostPassword from './pages/LostPassword/LostPassword';
 import LostPasswordMail from './pages/LostPassword/LostPasswordMail';
 import Register from './pages/Register/Register';
+import StartPage from './pages/StartPage/StartPage';
+import SetupStartPage from './pages/Setup/SetupStartPage';
+import SetupChildInformation from './pages/Setup/SetupChildInformation';
 
 setupIonicReact();
 
@@ -45,6 +48,9 @@ const SecureRoutes = () => {
 const PublicRoutes = () => {
   return (
       <IonRouterOutlet>
+        <Route path="/SetupChildInformation" render={() => <SetupChildInformation/>} exact={true} />
+        <Route path="/SetupStartPage" render={() => <SetupStartPage/>} exact={true} />
+        <Route path="/StartPage" render={() => <StartPage/>} exact={true} />
         <Route path="/Register" render={() => <Register/>} exact={true} />
         <Route path="/Login" render={() => <Login/>} exact={true} />
         <Route path="/LostPassword" render={() => <LostPassword/>} exact={true} />
