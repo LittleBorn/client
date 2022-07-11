@@ -1,14 +1,10 @@
 import { IonImg, IonText } from '@ionic/react';
 import Button from '../../components/Button';
 import SetupTemplate from '../../components/SetupTemplate';
-
-import accept_terms from "../../assets/images/accept_terms.svg";
-import { useState } from 'react';
 import SetupProgressBar from '../../components/SetupProgressBar';
+import accept_terms from "../../assets/images/accept_terms.svg";
 
 const SetupSuccess: React.FC = () => {
-
-  const [username, setUsername] = useState('');
 
   const navigateToHome = () => {
 
@@ -31,6 +27,8 @@ const SetupSuccess: React.FC = () => {
         <div style={{ justifySelf: "flex-end" }}>
           <Button onClick={navigateToHome} title="Los geht's" style={{ backgroundColor: "#EA407D", width: 350, height: 55 }} />
         </div>
+
+        <IonText style={{ color: "#44C1AD" }}>zurück</IonText>
 
       </div>
 

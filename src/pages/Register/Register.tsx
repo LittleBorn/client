@@ -5,7 +5,7 @@ import SetupTemplate from '../../components/SetupTemplate';
 import login_mother from "../../assets/images/login_mother.svg";
 import { useState } from 'react';
 
-const Register: React.FC = () => {
+const Register: React.FC = (props) => {
 
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')

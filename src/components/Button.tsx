@@ -11,7 +11,13 @@ interface ContainerProps {
 const Button: React.FC<ContainerProps> = ({ title, style, onClick }) => {
 
     return (
-        <IonButton onClick={onClick} color="primary" fill="solid" style={style}>{title}</IonButton>
+        <IonButton 
+            onClick={onClick} 
+            color={style?.backgroundColor ? style?.backgroundColor : "primary"} 
+            fill="solid" 
+            style={style}>
+                {title}
+        </IonButton>
     );
 };
 
