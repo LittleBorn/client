@@ -1,4 +1,4 @@
-import { IonImg, IonInput, IonItem, IonLabel, IonText } from '@ionic/react';
+import { IonDatetime, IonImg, IonInput, IonItem, IonLabel, IonPopover, IonSelect, IonSelectOption, IonText } from '@ionic/react';
 import Button from '../../components/Button';
 import SetupTemplate from '../../components/SetupTemplate';
 
@@ -9,6 +9,7 @@ import SetupProgressBar from '../../components/SetupProgressBar';
 const SetupChildInformation: React.FC = () => {
 
   const [childName, setChildName] = useState('')
+  const [childGender, setChildGender] = useState('')
 
   const navigateToSetup2 = () => {
 
@@ -23,8 +24,19 @@ const SetupChildInformation: React.FC = () => {
         <IonText style={{ fontWeight: "bold", fontSize: "1.3em" }}>Nun zu deinem Engel 👶</IonText>
 
         <IonItem>
-          <IonLabel>Name</IonLabel>
           <IonInput value={childName} onIonChange={(e) => setChildName(`${e.target.value}`)} type="text" placeholder="Email" />
+        </IonItem>
+
+        <IonItem>
+          <IonSelect placeholder="Welches Geschlecht hat dein Baby?">
+            <IonSelectOption value="female">Weiblich</IonSelectOption>
+            <IonSelectOption value="male">Männlich</IonSelectOption>
+            <IonSelectOption value="other">Anderes</IonSelectOption>
+          </IonSelect>
+        </IonItem>
+
+        <IonItem>
+          <IonDatetime presentation="month-year"></IonDatetime>
         </IonItem>
 
         {/* Weitere Input Felder */}
