@@ -1,15 +1,15 @@
 import { IonImg, IonText } from '@ionic/react';
 import Button from '../../components/Button';
 import SetupTemplate from '../../components/SetupTemplate';
-
-import mother_with_baby from "../../assets/images/mother_with_baby.svg";
 import SetupProgressBar from '../../components/SetupProgressBar';
 import { Link } from 'react-router-dom';
+import { IPagePros } from '../../interfaces/IPageProps';
 
-const SetupStartPage: React.FC = () => {
+
+const SetupStartPage: React.FC<IPagePros> = ({props}: IPagePros) => {
 
   const navigateToSetup1 = () => {
-
+    
   }
 
   return (

@@ -50,7 +50,7 @@ const SecureRoutes = () => {
 const PublicRoutes = () => {
   return (
       <IonRouterOutlet>
-        <Route path="/SetupInformation" render={() => <SetupInformation/>} exact={true} />
+        <Route path="/SetupInformation" render={(props) => <SetupInformation props={{...props}}/>} exact={true} />
         <Route path="/SetupSuccess" render={() => <SetupSuccess/>} exact={true} />
         <Route path="/SetupChildInformation" render={() => <SetupChildInformation/>} exact={true} />
         <Route path="/SetupStartPage" render={() => <SetupStartPage/>} exact={true} />
