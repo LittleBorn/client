@@ -31,6 +31,8 @@ import Register from './pages/Register/Register';
 import StartPage from './pages/StartPage/StartPage';
 import SetupStartPage from './pages/Setup/SetupStartPage';
 import SetupChildInformation from './pages/Setup/SetupChildInformation';
+import SetupSuccess from './pages/Setup/SetupSuccess';
+import SetupInformation from './pages/Setup/SetupInformation';
 
 setupIonicReact();
 
@@ -48,6 +50,8 @@ const SecureRoutes = () => {
 const PublicRoutes = () => {
   return (
       <IonRouterOutlet>
+        <Route path="/SetupInformation" render={(props) => <SetupInformation props={{...props}}/>} exact={true} />
+        <Route path="/SetupSuccess" render={() => <SetupSuccess/>} exact={true} />
         <Route path="/SetupChildInformation" render={() => <SetupChildInformation/>} exact={true} />
         <Route path="/SetupStartPage" render={() => <SetupStartPage/>} exact={true} />
         <Route path="/StartPage" render={() => <StartPage/>} exact={true} />

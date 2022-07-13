@@ -4,6 +4,9 @@ import SetupTemplate from '../../components/SetupTemplate';
 
 import login_mother from "../../assets/images/login_mother.svg";
 import { useState } from 'react';
+import Input from '../../components/Input';
+
+import { Link } from 'react-router-dom';
 
 const Login: React.FC = () => {
 
@@ -41,7 +44,7 @@ const Login: React.FC = () => {
           </div>
 
           <div style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
-            <IonText>Passwort vergessen? <IonText style={{color: "#44C1AD"}}>Hier entlang</IonText>.</IonText>
+            <IonText>Passwort vergessen? <Link to="/LostPassword" style={{color: "#44C1AD"}}>Hier entlang</Link>.</IonText>
           </div>
 
           <div style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
@@ -49,7 +52,7 @@ const Login: React.FC = () => {
           </div>
 
           <div style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
-            <IonText>Noch keinen Account? Dann registriere dich <IonText style={{color: "#44C1AD"}}>hier</IonText>.</IonText>
+            <IonText>Noch keinen Account? Dann registriere dich <Link to="/Register" style={{color: "#44C1AD"}}>hier</Link>.</IonText>
           </div>
 
       </div>

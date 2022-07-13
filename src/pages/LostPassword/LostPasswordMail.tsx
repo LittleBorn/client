@@ -4,12 +4,9 @@ import SetupTemplate from '../../components/SetupTemplate';
 
 import received_mail from "../../assets/images/received_mail.svg";
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const LostPasswordMail: React.FC = () => {
-
-  const navigateToLoginPage = () => {
-    // navigate to login page
-  }
 
   return (
     <SetupTemplate>
@@ -28,7 +25,7 @@ const LostPasswordMail: React.FC = () => {
         </div>
 
         <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <Button onClick={navigateToLoginPage} title="Login" style={{ backgroundColor: "#44C1AD", width: 350, height: 55 }} />
+            <Button routerLink='/Login' title="Login" style={{ backgroundColor: "#44C1AD", width: 350, height: 55 }} />
         </div>
 
       </div>
