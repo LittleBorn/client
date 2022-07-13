@@ -23,7 +23,7 @@ const StartPage: React.FC = () => {
         <IonText style={{ fontSize: "1em", textAlign: "center", width: "80%" }}>LittleBorn bietet über 700 verschiedene Babyprodukte für eure Liebsten, von Windeln, über Babypflege, über Babycremes {`&`} Öle bis Babynahrung und vieles mehr. Und das alles ist auch im Abo möglich.</IonText>
 
         <div style={{ justifySelf: "flex-end" }}>
-          <Button onClick={navigateToRegister} title="Los geht's" style={{ backgroundColor: "#44C1AD", width: 350, height: 55 }} />
+          <Button routerLink='/Register' onClick={navigateToRegister} title="Los geht's" style={{ backgroundColor: "#44C1AD", width: 350, height: 55 }} />
         </div>
 
       </div>

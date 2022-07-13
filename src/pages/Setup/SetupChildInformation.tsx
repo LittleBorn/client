@@ -5,6 +5,7 @@ import SetupTemplate from '../../components/SetupTemplate';
 import mother_with_baby from "../../assets/images/mother_with_baby.svg";
 import { useState } from 'react';
 import SetupProgressBar from '../../components/SetupProgressBar';
+import { Link } from 'react-router-dom';
 
 const SetupChildInformation: React.FC = () => {
 
@@ -29,11 +30,11 @@ const SetupChildInformation: React.FC = () => {
 
         {/* Weitere Input Felder */}
 
-        <IonText style={{ color: "#44C1AD", textDecoration: "underline" }}>Warum benötigen wir diese Infos?</IonText>
+        <Link to="/SetupInformation"><IonText style={{ color: "#44C1AD", textDecoration: "underline" }}>Warum benötigen wir diese Infos?</IonText></Link>
 
         <Button onClick={navigateToSetup2} title="Weiter" style={{ backgroundColor: "#44C1AD", width: 350, height: 55 }} />
 
-        <IonText style={{ color: "#44C1AD" }}>zurück</IonText>
+        <Link to="/SetupStartPage"><IonText style={{ color: "#44C1AD" }}>zurück</IonText></Link>
 
 
       </div>

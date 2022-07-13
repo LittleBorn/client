@@ -4,6 +4,7 @@ import SetupTemplate from '../../components/SetupTemplate';
 
 import login_mother from "../../assets/images/login_mother.svg";
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const Register: React.FC = (props) => {
 
@@ -19,7 +20,7 @@ const Register: React.FC = (props) => {
 
   return (
     <SetupTemplate>
-      <div style={{ display: "flex",justifyContent: "center" ,flexDirection: "column", alignItems: "center", height: "100vh", gap: "1.5rem", paddingBottom: "2rem" }}>
+      <div style={{ display: "flex",justifyContent: "center" ,flexDirection: "column", alignItems: "center", height: "100vh", gap: "1.5rem" }}>
 
         <IonText style={{ fontWeight: "bold", fontSize: "1.3em" }}>Willkommen bei LittleBorn</IonText>
 
@@ -60,7 +61,7 @@ const Register: React.FC = (props) => {
           </div>
 
           <div>
-            <IonText>Noch keinen Account? Dann registriere dich <IonText style={{ color: "#44C1AD" }}>hier</IonText>.</IonText>
+            <IonText>Schon einen Account? Dann melde dich <Link to="/Login" style={{ color: "#44C1AD" }}>hier</Link> an.</IonText>
           </div>
 
         </div>

@@ -10,10 +10,6 @@ const SetupStartPage: React.FC = () => {
 
   const [username, setUsername] = useState('');
 
-  const navigateToSetup1 = () => {
-
-  }
-
   return (
     <SetupTemplate>
       <div style={{ display: "flex", justifyContent: "center", flexDirection: "column", alignItems: "center", height: "100vh", gap: "1.5rem", paddingBottom: "2rem" }}>
@@ -31,7 +27,7 @@ const SetupStartPage: React.FC = () => {
         <IonText style={{ fontSize: "1em", textAlign: "center", width: "80%" }}>Text</IonText>
 
         <div style={{ justifySelf: "flex-end" }}>
-          <Button onClick={navigateToSetup1} title="Los geht's" style={{ backgroundColor: "#44C1AD", width: 350, height: 55 }} />
+          <Button routerLink='/SetupChildInformation' title="Los geht's" style={{ backgroundColor: "#44C1AD", width: 350, height: 55 }} />
         </div>
 
       </div>

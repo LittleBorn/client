@@ -4,6 +4,7 @@ import SetupTemplate from '../../components/SetupTemplate';
 
 import forgot_password from "../../assets/images/forgot_password.svg";
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const LostPassword: React.FC = () => {
 
@@ -36,7 +37,7 @@ const LostPassword: React.FC = () => {
           </div>
 
           <div style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
-            <IonText>Zurück geht's <IonText style={{color: "#44C1AD"}}>hier</IonText>.</IonText>
+            <IonText>Zurück geht's <Link to="/Login" style={{color: "#44C1AD"}}>hier</Link>.</IonText>
           </div>
 
       </div>

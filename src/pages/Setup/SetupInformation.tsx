@@ -4,6 +4,7 @@ import SetupTemplate from '../../components/SetupTemplate';
 
 import mother_with_baby from "../../assets/images/mother_with_baby.svg";
 import SetupProgressBar from '../../components/SetupProgressBar';
+import { Link } from 'react-router-dom';
 
 const SetupStartPage: React.FC = () => {
 
@@ -22,10 +23,10 @@ const SetupStartPage: React.FC = () => {
         <IonText style={{ fontSize: "1em", textAlign: "center", width: "80%", backgroundColor: "white", padding: "1rem" }}>Wir benötigen diese Informationen um...</IonText>
 
         <div style={{ justifySelf: "flex-end" }}>
-          <Button onClick={navigateToSetup1} title="Weiter" style={{ backgroundColor: "#44C1AD", width: 350, height: 55 }} />
+          <Button routerLink='/SetupChildInformation' onClick={navigateToSetup1} title="Weiter" style={{ backgroundColor: "#44C1AD", width: 350, height: 55 }} />
         </div>
 
-        <IonText style={{ color: "#44C1AD" }}>zurück</IonText>
+        <Link to="/SetupChildInformation"><IonText style={{ color: "#44C1AD" }}>zurück</IonText></Link>
 
       </div>
 
