@@ -42,7 +42,7 @@ const SecureRoutes = () => {
   return (
       <IonRouterOutlet>
         <Route path="/Home" render={(props) => <Home props={{...props}}/>} exact={true} />
-        <Route exact path="/" render={(props) => <Redirect to="/Home" />} />
+        <Route exact path="/" render={() => <Redirect to="/Home" />} />
       </IonRouterOutlet>
   );
 }
@@ -59,7 +59,7 @@ const PublicRoutes = () => {
         <Route path="/Login" render={(props) => <Login props={{...props}}/>} exact={true} />
         <Route path="/LostPassword" render={(props) => <LostPassword props={{...props}}/>} exact={true} />
         <Route path="/LostPasswordMail" render={(props) => <LostPasswordMail props={{...props}}/>} exact={true} />
-        <Route exact path="/" render={(props) => <Redirect to="/Login"/>} />
+        <Route exact path="/" render={() => <Redirect to="/Login"/>} />
       </IonRouterOutlet>
   );
 }
