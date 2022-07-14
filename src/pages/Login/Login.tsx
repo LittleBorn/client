@@ -7,8 +7,9 @@ import { useState } from 'react';
 import Input from '../../components/Input';
 
 import { Link } from 'react-router-dom';
+import { IPagePros } from '../../interfaces/IPageProps';
 
-const Login: React.FC = () => {
+const Login: React.FC<IPagePros> = ({props}: IPagePros) => {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')

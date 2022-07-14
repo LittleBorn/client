@@ -5,8 +5,9 @@ import SetupTemplate from '../../components/SetupTemplate';
 import received_mail from "../../assets/images/received_mail.svg";
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { IPagePros } from '../../interfaces/IPageProps';
 
-const LostPasswordMail: React.FC = () => {
+const LostPasswordMail: React.FC<IPagePros> = ({props}: IPagePros) => {
 
   return (
     <SetupTemplate>

@@ -5,8 +5,9 @@ import SetupTemplate from '../../components/SetupTemplate';
 import forgot_password from "../../assets/images/forgot_password.svg";
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { IPagePros } from '../../interfaces/IPageProps';
 
-const LostPassword: React.FC = () => {
+const LostPassword: React.FC<IPagePros> = ({props}: IPagePros) => {
 
   const [email, setEmail] = useState('')
 

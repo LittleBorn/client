@@ -3,8 +3,9 @@ import Button from '../../components/Button';
 import SetupTemplate from '../../components/SetupTemplate';
 
 import mother_with_baby from "../../assets/images/mother_with_baby.svg";
+import { IPagePros } from '../../interfaces/IPageProps';
 
-const StartPage: React.FC = () => {
+const StartPage: React.FC<IPagePros> = ({props}: IPagePros) => {
 
   const navigateToRegister = () => {
 

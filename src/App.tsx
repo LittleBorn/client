@@ -41,8 +41,8 @@ const isLoggedIn = false;
 const SecureRoutes = () => {
   return (
       <IonRouterOutlet>
-        <Route path="/Home" render={() => <Home/>} exact={true} />
-        <Route exact path="/" render={() => <Redirect to="/Home" />} />
+        <Route path="/Home" render={(props) => <Home props={{...props}}/>} exact={true} />
+        <Route exact path="/" render={(props) => <Redirect to="/Home" />} />
       </IonRouterOutlet>
   );
 }
@@ -51,15 +51,15 @@ const PublicRoutes = () => {
   return (
       <IonRouterOutlet>
         <Route path="/SetupInformation" render={(props) => <SetupInformation props={{...props}}/>} exact={true} />
-        <Route path="/SetupSuccess" render={() => <SetupSuccess/>} exact={true} />
-        <Route path="/SetupChildInformation" render={() => <SetupChildInformation/>} exact={true} />
-        <Route path="/SetupStartPage" render={() => <SetupStartPage/>} exact={true} />
-        <Route path="/StartPage" render={() => <StartPage/>} exact={true} />
-        <Route path="/Register" render={() => <Register/>} exact={true} />
-        <Route path="/Login" render={() => <Login/>} exact={true} />
-        <Route path="/LostPassword" render={() => <LostPassword/>} exact={true} />
-        <Route path="/LostPasswordMail" render={() => <LostPasswordMail/>} exact={true} />
-        <Route exact path="/" render={() => <Redirect to="/Login" />} />
+        <Route path="/SetupSuccess" render={(props) => <SetupSuccess props={{...props}}/>} exact={true} />
+        <Route path="/SetupChildInformation" render={(props) => <SetupChildInformation props={{...props}}/>} exact={true} />
+        <Route path="/SetupStartPage" render={(props) => <SetupStartPage props={{...props}}/>} exact={true} />
+        <Route path="/StartPage" render={(props) => <StartPage props={{...props}}/>} exact={true} />
+        <Route path="/Register" render={(props) => <Register props={{...props}}/>} exact={true} />
+        <Route path="/Login" render={(props) => <Login props={{...props}}/>} exact={true} />
+        <Route path="/LostPassword" render={(props) => <LostPassword props={{...props}}/>} exact={true} />
+        <Route path="/LostPasswordMail" render={(props) => <LostPasswordMail props={{...props}}/>} exact={true} />
+        <Route exact path="/" render={(props) => <Redirect to="/Login"/>} />
       </IonRouterOutlet>
   );
 }

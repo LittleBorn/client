@@ -6,8 +6,9 @@ import mother_with_baby from "../../assets/images/mother_with_baby.svg";
 import { useState } from 'react';
 import SetupProgressBar from '../../components/SetupProgressBar';
 import { Link } from 'react-router-dom';
+import { IPagePros } from '../../interfaces/IPageProps';
 
-const SetupChildInformation: React.FC = () => {
+const SetupChildInformation: React.FC<IPagePros> = ({props}: IPagePros) => {
 
   const [childName, setChildName] = useState('')
   const [childGender, setChildGender] = useState('')

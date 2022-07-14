@@ -5,8 +5,9 @@ import SetupTemplate from '../../components/SetupTemplate';
 import login_mother from "../../assets/images/login_mother.svg";
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { IPagePros } from '../../interfaces/IPageProps';
 
-const Register: React.FC = (props) => {
+const Register: React.FC<IPagePros> = ({props}: IPagePros) => {
 
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
