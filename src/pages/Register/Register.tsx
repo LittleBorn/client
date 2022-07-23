@@ -1,13 +1,15 @@
 import { IonGrid, IonImg, IonInput, IonText, IonItem, IonLabel } from '@ionic/react';
 import Button from '../../components/Button';
 import SetupTemplate from '../../components/SetupTemplate';
-
 import login_mother from "../../assets/images/login_mother.svg";
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { IPagePros } from '../../interfaces/IPageProps';
+import axios from "axios";
+import { sendEmailVerification, signInWithCustomToken } from "firebase/auth";
+import { auth } from "../../utils/firebaseHelper"
 
-const Register: React.FC<IPagePros> = ({props}: IPagePros) => {
+const Register: React.FC<IPagePros> = ({ props }: IPagePros) => {
 
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
@@ -15,13 +17,25 @@ const Register: React.FC<IPagePros> = ({props}: IPagePros) => {
   const [password, setPassword] = useState('')
   const [verifyPassword, setVerifyPassword] = useState('')
 
-  const register = () => {
-    console.log(email, password)
+  const register = async () => {
+
+    const res = await axios.post(`${process.env.REACT_APP_SERVER_URL}/api/auth/register`, {
+      firstName,
+      lastName,
+      email,
+      password
+    })
+
+    const token = res.data.id;
+
+    const userCedentials = await signInWithCustomToken(auth, token)
+    await sendEmailVerification(userCedentials.user);
+    console.log(userCedentials)
   }
 
   return (
     <SetupTemplate>
-      <div style={{ display: "flex",justifyContent: "center" ,flexDirection: "column", alignItems: "center", height: "100vh", gap: "1.5rem" }}>
+      <div style={{ display: "flex", justifyContent: "center", flexDirection: "column", alignItems: "center", height: "100vh", gap: "1.5rem" }}>
 
         <IonText style={{ fontWeight: "bold", fontSize: "1.3em" }}>Willkommen bei LittleBorn</IonText>
 
