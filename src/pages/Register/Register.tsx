@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { IPagePros } from '../../interfaces/IPageProps';
 import axios from "axios";
-import { sendEmailVerification, signInWithCustomToken } from "firebase/auth";
+import { sendEmailVerification, signInWithCustomToken, updateEmail } from "firebase/auth";
 import { auth } from "../../utils/firebaseHelper"
 
 const Register: React.FC<IPagePros> = ({ props }: IPagePros) => {
@@ -29,8 +29,8 @@ const Register: React.FC<IPagePros> = ({ props }: IPagePros) => {
     const token = res.data.id;
 
     const userCedentials = await signInWithCustomToken(auth, token)
-    await sendEmailVerification(userCedentials.user);
-    console.log(userCedentials)
+
+    // todo load token to state
   }
 
   return (
