@@ -16,6 +16,7 @@ const Login: React.FC<IPagePros> = ({props}: IPagePros) => {
 
   const login = () => {
     console.log(email, password)
+
   }
 
   return (

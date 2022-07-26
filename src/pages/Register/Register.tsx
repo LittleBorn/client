@@ -8,6 +8,7 @@ import { IPagePros } from '../../interfaces/IPageProps';
 import axios from "axios";
 import { sendEmailVerification, signInWithCustomToken, updateEmail } from "firebase/auth";
 import { auth } from "../../utils/firebaseHelper"
+import { sendStorefrontQuery } from '../../utils/shopifyStorefrontHelper';
 
 const Register: React.FC<IPagePros> = ({ props }: IPagePros) => {
 
@@ -19,18 +20,26 @@ const Register: React.FC<IPagePros> = ({ props }: IPagePros) => {
 
   const register = async () => {
 
-    const res = await axios.post(`${process.env.REACT_APP_SERVER_URL}/api/auth/register`, {
-      firstName,
-      lastName,
-      email,
-      password
-    })
+    const data = JSON.stringify({
+      query: `mutation customerCreate($input: CustomerCreateInput!) {
+      customerCreate(input: $input) {
+        customerUserErrors {
+          code
+          field
+          message
+        }
+        customer {
+          id
+        }
+      }
+    }`,
+      variables: {"input":{"email": email ,"password": password,"firstName": firstName,"lastName":lastName,"acceptsMarketing":true}}
+    });
+    
+    const result = await sendStorefrontQuery(data)
 
-    const token = res.data.id;
+    console.log(result)
 
-    const userCedentials = await signInWithCustomToken(auth, token)
-
-    // todo load token to state
   }
 
   return (
