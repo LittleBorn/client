@@ -1,15 +1,12 @@
-import { IonGrid, IonImg, IonInput, IonText, IonItem, IonLabel } from '@ionic/react';
+import { IonInput, IonText, IonItem, IonLabel } from '@ionic/react';
 import Button from '../../components/Button';
 import SetupTemplate from '../../components/SetupTemplate';
-import login_mother from "../../assets/images/login_mother.svg";
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { IPagePros } from '../../interfaces/IPageProps';
-import axios from "axios";
-import { sendEmailVerification, signInWithCustomToken, updateEmail } from "firebase/auth";
-import { auth } from "../../utils/firebaseHelper"
 import { sendStorefrontQuery } from '../../utils/shopifyStorefrontHelper';
 import { IRegistrationReturn } from '../../interfaces/Authentication/IRegistrationReturn';
+import { loading$ } from '../../utils/globalStore';
 
 const Register: React.FC<IPagePros> = ({ props }: IPagePros) => {
 
@@ -21,6 +18,8 @@ const Register: React.FC<IPagePros> = ({ props }: IPagePros) => {
 
   const register = async () => {
     
+    loading$.next(true);
+
     var data = JSON.stringify({
       query: `mutation customerCreate($input: CustomerCreateInput!) {
     customerCreate(input: $input) {
@@ -40,6 +39,8 @@ const Register: React.FC<IPagePros> = ({ props }: IPagePros) => {
     const result = await sendStorefrontQuery<IRegistrationReturn>(data)
 
     console.log(result.data.customerCreate)
+
+    loading$.next(false);
 
   }
 
