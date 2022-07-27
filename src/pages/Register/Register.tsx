@@ -9,6 +9,7 @@ import axios from "axios";
 import { sendEmailVerification, signInWithCustomToken, updateEmail } from "firebase/auth";
 import { auth } from "../../utils/firebaseHelper"
 import { sendStorefrontQuery } from '../../utils/shopifyStorefrontHelper';
+import { IRegistrationReturn } from '../../interfaces/Authentication/IRegistrationReturn';
 
 const Register: React.FC<IPagePros> = ({ props }: IPagePros) => {
 
@@ -19,26 +20,26 @@ const Register: React.FC<IPagePros> = ({ props }: IPagePros) => {
   const [verifyPassword, setVerifyPassword] = useState('')
 
   const register = async () => {
-
-    const data = JSON.stringify({
+    
+    var data = JSON.stringify({
       query: `mutation customerCreate($input: CustomerCreateInput!) {
-      customerCreate(input: $input) {
+    customerCreate(input: $input) {
         customerUserErrors {
-          code
-          field
-          message
+            code
+            field
+            message
         }
         customer {
-          id
+            id
         }
-      }
+    }
     }`,
-      variables: {"input":{"email": email ,"password": password,"firstName": firstName,"lastName":lastName,"acceptsMarketing":true}}
+      variables: {"input":{"email": email,"password": password,"firstName": firstName,"lastName": lastName,"acceptsMarketing": false}}
     });
-    
-    const result = await sendStorefrontQuery(data)
 
-    console.log(result)
+    const result = await sendStorefrontQuery<IRegistrationReturn>(data)
+
+    console.log(result.data.customerCreate)
 
   }
 
