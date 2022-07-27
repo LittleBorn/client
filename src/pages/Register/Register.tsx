@@ -1,4 +1,4 @@
-import { IonInput, IonText, IonItem, IonLabel } from '@ionic/react';
+import { IonInput, IonText, IonItem, IonLabel, useIonToast, useIonLoading } from '@ionic/react';
 import Button from '../../components/Button';
 import SetupTemplate from '../../components/SetupTemplate';
 import { useState } from 'react';
@@ -6,9 +6,11 @@ import { Link } from 'react-router-dom';
 import { IPagePros } from '../../interfaces/IPageProps';
 import { sendStorefrontQuery } from '../../utils/shopifyStorefrontHelper';
 import { IRegistrationReturn } from '../../interfaces/Authentication/IRegistrationReturn';
-import { loading$ } from '../../utils/globalStore';
 
 const Register: React.FC<IPagePros> = ({ props }: IPagePros) => {
+
+  const [presentToast, dismissToast] = useIonToast();
+  const [presentLoading, dismissLoading] = useIonLoading();
 
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
@@ -17,30 +19,51 @@ const Register: React.FC<IPagePros> = ({ props }: IPagePros) => {
   const [verifyPassword, setVerifyPassword] = useState('')
 
   const register = async () => {
+
+    if(firstName === "" || lastName === "" || email === "" || password === "" || verifyPassword === ""){
+      presentToast("Bitte füllen Sie alle Felder aus", 2000)
+      return
+    }
     
-    loading$.next(true);
+    if(password !== verifyPassword) {
+      presentToast("Engegebene Passwörter stimmen nicht überein", 2000)
+      return
+    }
+    
+    presentLoading()
 
     var data = JSON.stringify({
       query: `mutation customerCreate($input: CustomerCreateInput!) {
-    customerCreate(input: $input) {
-        customerUserErrors {
-            code
-            field
-            message
-        }
-        customer {
-            id
-        }
-    }
-    }`,
-      variables: {"input":{"email": email,"password": password,"firstName": firstName,"lastName": lastName,"acceptsMarketing": false}}
+      customerCreate(input: $input) {
+          customerUserErrors {
+              code
+              field
+              message
+          }
+          customer {
+              id
+          }
+      }
+      }`,
+      variables: { "input": { "email": email, "password": password, "firstName": firstName, "lastName": lastName, "acceptsMarketing": false } }
     });
 
-    const result = await sendStorefrontQuery<IRegistrationReturn>(data)
+    const result = await sendStorefrontQuery<IRegistrationReturn>(data);
 
-    console.log(result.data.customerCreate)
+    console.log(result.data.customerCreate);
 
-    loading$.next(false);
+    if(!result?.data?.customerCreate?.customer){
+      presentToast(result?.data?.customerCreate?.customerUserErrors[0]?.message, 2000);
+      dismissLoading();
+      return
+    }
+
+    setFirstName("");
+    setLastName("");
+    setEmail("");
+    setPassword("");
+    setEmail("");
+    dismissLoading()
 
   }
 

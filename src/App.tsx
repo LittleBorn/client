@@ -33,7 +33,6 @@ import SetupStartPage from './pages/Setup/SetupStartPage';
 import SetupChildInformation from './pages/Setup/SetupChildInformation';
 import SetupSuccess from './pages/Setup/SetupSuccess';
 import SetupInformation from './pages/Setup/SetupInformation';
-import Loading from './components/Loading';
 
 setupIonicReact();
 
@@ -70,7 +69,6 @@ const App: React.FC = () => (
     <IonReactRouter>
       {isLoggedIn ? <SecureRoutes /> : <PublicRoutes />}
     </IonReactRouter>
-    <Loading/>
   </IonApp>
 );
 
