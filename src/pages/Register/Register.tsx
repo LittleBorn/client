@@ -78,7 +78,7 @@ const Register: React.FC<IPagePros> = ({ props }: IPagePros) => {
     
         <Input value={firstName} onChange={(e) => { setFirstName(`${e.target.value}`) }} type="text" placeholder="Vorname" />
         <Input value={lastName} onChange={(e) => setLastName(`${e.target.value}`)} type="text" placeholder="Nachname" />
-        <Input value={email} onChange={(e) => setEmail(`${e.target.value}`)} type="text" placeholder="Email" />
+        <Input value={email} onChange={(e) => setEmail(`${e.target.value}`)} type="email" placeholder="Email" />
         <Input value={password} onChange={(e) => setPassword(`${e.target.value}`)} type="password" placeholder="Password" />
         <Input value={verifyPassword} onChange={(e) => setVerifyPassword(`${e.target.value}`)} type="password" placeholder="Passwort bestätigen" />
 
