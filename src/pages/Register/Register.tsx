@@ -1,4 +1,4 @@
-import { IonInput, IonText, IonItem, IonLabel, useIonToast, useIonLoading } from '@ionic/react';
+import { IonInput, IonText, IonItem, IonLabel, useIonToast, useIonLoading, IonContent } from '@ionic/react';
 import Button from '../../components/Button';
 import SetupTemplate from '../../components/SetupTemplate';
 import { useState } from 'react';
@@ -75,31 +75,14 @@ const Register: React.FC<IPagePros> = ({ props }: IPagePros) => {
         <IonText style={{ fontWeight: "bold", fontSize: "1.3em" }}>Willkommen bei LittleBorn</IonText>
 
         <IonText style={{ fontSize: "1em" }}>Lass Dich beim Alltag unterstützen!</IonText>
-        
+
         <Input value={firstName} onChange={(e) => { setFirstName(`${e.target.value}`) }} type="text" placeholder="Vorname" />
-
-        <IonItem>
-          <IonLabel>Nachname</IonLabel>
-          <IonInput value={lastName} onIonChange={(e) => setLastName(`${e.target.value}`)} type="text" placeholder="Nachname" />
-        </IonItem>
-
-        <IonItem>
-          <IonLabel>Email</IonLabel>
-          <IonInput value={email} onIonChange={(e) => setEmail(`${e.target.value}`)} type="text" placeholder="Email" />
-        </IonItem>
-
-        <IonItem>
-          <IonLabel>Passwort</IonLabel>
-          <IonInput value={password} onIonChange={(e) => setPassword(`${e.target.value}`)} type="password" placeholder="Password" />
-        </IonItem>
-
-        <IonItem>
-          <IonLabel>Passwort bestätigen</IonLabel>
-          <IonInput value={verifyPassword} onIonChange={(e) => setVerifyPassword(`${e.target.value}`)} type="password" placeholder="Passwort bestätigen" />
-        </IonItem>
+        <Input value={lastName} onChange={(e) => setLastName(`${e.target.value}`)} type="text" placeholder="Nachname" />
+        <Input value={email} onChange={(e) => setEmail(`${e.target.value}`)} type="text" placeholder="Email" />
+        <Input value={password} onChange={(e) => setPassword(`${e.target.value}`)} type="password" placeholder="Password" />
+        <Input value={verifyPassword} onChange={(e) => setVerifyPassword(`${e.target.value}`)} type="password" placeholder="Passwort bestätigen" />
 
         <IonText>Ich habe die <IonText style={{ color: "#44C1AD", textDecoration: "underline" }}>AGB</IonText> gelesen {`&`} aktzeptiert.</IonText>
-
 
         <div style={{ justifySelf: "flex-end" }}>
 

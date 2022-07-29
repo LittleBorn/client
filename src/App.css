@@ -7,6 +7,5 @@
 }
 
 .input-border:focus{
-    border-color: red;
-    outline-color: blue;
+    outline: 2px solid var(--ion-color-primary);
 }
