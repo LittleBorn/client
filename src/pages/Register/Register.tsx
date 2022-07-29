@@ -51,13 +51,13 @@ const Register: React.FC<IPagePros> = ({ props }: IPagePros) => {
 
     const result = await sendStorefrontQuery<IRegistrationReturn>(data);
 
-    console.log(result.data.customerCreate);
-
     if (!result?.data?.customerCreate?.customer) {
       presentToast(result?.data?.customerCreate?.customerUserErrors[0]?.message, 2000);
       dismissLoading();
       return
     }
+
+    const CUSTOMER = result.data.customerCreate.customer;
 
     setFirstName("");
     setLastName("");

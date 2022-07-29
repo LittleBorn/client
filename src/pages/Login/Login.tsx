@@ -52,13 +52,13 @@ const Login: React.FC<IPagePros> = ({ props }: IPagePros) => {
 
     const result = await sendStorefrontQuery<ILoginReturn>(data);
 
-    console.log(result.data.customerAccessTokenCreate);
-
     if (!result?.data?.customerAccessTokenCreate?.customerAccessToken) {
       presentToast(result?.data?.customerAccessTokenCreate?.customerUserErrors[0]?.message, 2000);
       dismissLoading();
       return
     }
+
+    const TOKEN = result.data.customerAccessTokenCreate.customerAccessToken.accessToken;
 
     setEmail("");
     setPassword("");
@@ -71,7 +71,6 @@ const Login: React.FC<IPagePros> = ({ props }: IPagePros) => {
     <SetupTemplate>
       <div style={{ justifyContent: "flex-end", display: "flex", flexDirection: "column", alignItems: "center", height: "100vh", gap: "2rem", paddingBottom: "2rem" }}>
 
-
         <IonText style={{ fontWeight: "bold", fontSize: "1.3em" }}>Willkommen zurück!</IonText>
         <IonImg src={login_mother} style={{ height: 200 }} />
 
@@ -83,7 +82,6 @@ const Login: React.FC<IPagePros> = ({ props }: IPagePros) => {
         <Button onClick={login} title="Login" style={{ backgroundColor: "#44C1AD", width: 350, height: 55 }} />
 
         <IonText>Noch keinen Account? Dann registriere dich <Link to="/Register" style={{ color: "#44C1AD" }}>hier</Link>.</IonText>
-
 
       </div>
 
