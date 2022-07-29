@@ -75,7 +75,7 @@ const Register: React.FC<IPagePros> = ({ props }: IPagePros) => {
         <IonText style={{ fontWeight: "bold", fontSize: "1.3em" }}>Willkommen bei LittleBorn</IonText>
 
         <IonText style={{ fontSize: "1em" }}>Lass Dich beim Alltag unterstützen!</IonText>
-
+    
         <Input value={firstName} onChange={(e) => { setFirstName(`${e.target.value}`) }} type="text" placeholder="Vorname" />
         <Input value={lastName} onChange={(e) => setLastName(`${e.target.value}`)} type="text" placeholder="Nachname" />
         <Input value={email} onChange={(e) => setEmail(`${e.target.value}`)} type="text" placeholder="Email" />

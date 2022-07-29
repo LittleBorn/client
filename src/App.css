@@ -7,5 +7,6 @@
 }
 
 .input-border:focus{
-    outline: 2px solid var(--ion-color-primary);
+    /* outline: 2px solid var(--ion-color-primary); */
+    outline: 2px auto var(--ion-color-primary);
 }
