@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { IPagePros } from '../../interfaces/IPageProps';
 import { sendStorefrontQuery } from '../../utils/shopifyStorefrontHelper';
 import { IRegistrationReturn } from '../../interfaces/Authentication/IRegistrationReturn';
+import Input from '../../components/Input';
 
 const Register: React.FC<IPagePros> = ({ props }: IPagePros) => {
 
@@ -20,16 +21,16 @@ const Register: React.FC<IPagePros> = ({ props }: IPagePros) => {
 
   const register = async () => {
 
-    if(firstName === "" || lastName === "" || email === "" || password === "" || verifyPassword === ""){
+    if (firstName === "" || lastName === "" || email === "" || password === "" || verifyPassword === "") {
       presentToast("Bitte füllen Sie alle Felder aus", 2000)
       return
     }
-    
-    if(password !== verifyPassword) {
+
+    if (password !== verifyPassword) {
       presentToast("Engegebene Passwörter stimmen nicht überein", 2000)
       return
     }
-    
+
     presentLoading()
 
     var data = JSON.stringify({
@@ -52,7 +53,7 @@ const Register: React.FC<IPagePros> = ({ props }: IPagePros) => {
 
     console.log(result.data.customerCreate);
 
-    if(!result?.data?.customerCreate?.customer){
+    if (!result?.data?.customerCreate?.customer) {
       presentToast(result?.data?.customerCreate?.customerUserErrors[0]?.message, 2000);
       dismissLoading();
       return
@@ -74,11 +75,8 @@ const Register: React.FC<IPagePros> = ({ props }: IPagePros) => {
         <IonText style={{ fontWeight: "bold", fontSize: "1.3em" }}>Willkommen bei LittleBorn</IonText>
 
         <IonText style={{ fontSize: "1em" }}>Lass Dich beim Alltag unterstützen!</IonText>
-
-        <IonItem>
-          <IonLabel>Vorname</IonLabel>
-          <IonInput value={firstName} onIonChange={(e) => setFirstName(`${e.target.value}`)} type="text" placeholder="Vorname" />
-        </IonItem>
+        
+        <Input value={firstName} onChange={(e) => { setFirstName(`${e.target.value}`) }} type="text" placeholder="Vorname" />
 
         <IonItem>
           <IonLabel>Nachname</IonLabel>

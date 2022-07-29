@@ -5,3 +5,8 @@
 * {
     font-family: 'Asap';;
 }
+
+.input-border:focus{
+    border-color: red;
+    outline-color: blue;
+}
