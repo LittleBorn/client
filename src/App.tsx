@@ -64,10 +64,13 @@ const SecureRoutes = () => {
           <IonLabel>Einstellungen</IonLabel>
         </IonTabButton>
       </IonTabBar>
+
+
       <IonRouterOutlet>
         <Route path="/Home" render={(props) => <Home props={{ ...props }} />} exact={true} />
         <Route render={() => <Redirect to="/Home" />} />
       </IonRouterOutlet>
+      
     </IonTabs>
   );
 }
