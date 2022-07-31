@@ -8,7 +8,7 @@ const MainTemplate: React.FC<ContainerProps> = ({ children, title }) => {
   return (
     <>
       <Menu/>
-      
+
       <IonPage id="main-content">
         <IonContent fullscreen>
           <IonHeader collapse="condense" translucent={true}>

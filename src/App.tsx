@@ -1,5 +1,5 @@
 import { Redirect, Route } from 'react-router-dom';
-import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
+import { IonApp, IonIcon, IonLabel, IonRouterOutlet, IonTab, IonTabBar, IonTabButton, IonTabs, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import Home from './pages/Home';
 
@@ -35,34 +35,57 @@ import SetupSuccess from './pages/Setup/SetupSuccess';
 import SetupInformation from './pages/Setup/SetupInformation';
 import { useContext } from 'react';
 import { AccessTokenContext } from '.';
+import { home, cube, medkit, notifications, settings } from 'ionicons/icons';
 
 setupIonicReact();
 
-const isLoggedIn = false; 
-
 const SecureRoutes = () => {
   return (
+    <IonTabs>
+      <IonTabBar slot="bottom">
+        <IonTabButton tab="home" href="/Home">
+          <IonIcon icon={home} />
+          <IonLabel>Übersicht</IonLabel>
+        </IonTabButton>
+        <IonTabButton tab="box" href="/Box">
+          <IonIcon icon={cube} />
+          <IonLabel>Meine Box</IonLabel>
+        </IonTabButton>
+        <IonTabButton tab="health" href="/Health">
+          <IonIcon icon={medkit} />
+          <IonLabel>Health</IonLabel>
+        </IonTabButton>
+        <IonTabButton tab="notification" href="/Notification">
+          <IonIcon icon={notifications} />
+          <IonLabel>Nachrichten</IonLabel>
+        </IonTabButton>
+        <IonTabButton tab="settings" href="/Settings">
+          <IonIcon icon={settings} />
+          <IonLabel>Einstellungen</IonLabel>
+        </IonTabButton>
+      </IonTabBar>
       <IonRouterOutlet>
-        <Route path="/Home" render={(props) => <Home props={{...props}}/>} exact={true} />
+        <Route path="/Home" render={(props) => <Home props={{ ...props }} />} exact={true} />
         <Route render={() => <Redirect to="/Home" />} />
       </IonRouterOutlet>
+    </IonTabs>
   );
 }
 
 const PublicRoutes = () => {
   return (
-      <IonRouterOutlet>
-        <Route path="/SetupInformation" render={(props) => <SetupInformation props={{...props}}/>} exact={true} />
-        <Route path="/SetupSuccess" render={(props) => <SetupSuccess props={{...props}}/>} exact={true} />
-        <Route path="/SetupChildInformation" render={(props) => <SetupChildInformation props={{...props}}/>} exact={true} />
-        <Route path="/SetupStartPage" render={(props) => <SetupStartPage props={{...props}}/>} exact={true} />
-        <Route path="/StartPage" render={(props) => <StartPage props={{...props}}/>} exact={true} />
-        <Route path="/Register" render={(props) => <Register props={{...props}}/>} exact={true} />
-        <Route path="/Login" render={(props) => <Login props={{...props}}/>} exact={true} />
-        <Route path="/LostPassword" render={(props) => <LostPassword props={{...props}}/>} exact={true} />
-        <Route path="/LostPasswordMail" render={(props) => <LostPasswordMail props={{...props}}/>} exact={true} />
-        <Route render={() => <Redirect to="/Login"/>} />
-      </IonRouterOutlet>
+    <IonRouterOutlet>
+      <Route path="/SetupInformation" render={(props) => <SetupInformation props={{ ...props }} />} exact={true} />
+      <Route path="/SetupSuccess" render={(props) => <SetupSuccess props={{ ...props }} />} exact={true} />
+      <Route path="/SetupChildInformation" render={(props) => <SetupChildInformation props={{ ...props }} />} exact={true} />
+      <Route path="/SetupStartPage" render={(props) => <SetupStartPage props={{ ...props }} />} exact={true} />
+      <Route path="/StartPage" render={(props) => <StartPage props={{ ...props }} />} exact={true} />
+      <Route path="/Register" render={(props) => <Register props={{ ...props }} />} exact={true} />
+      <Route path="/Login" render={(props) => <Login props={{ ...props }} />} exact={true} />
+      <Route path="/LostPassword" render={(props) => <LostPassword props={{ ...props }} />} exact={true} />
+      <Route path="/LostPasswordMail" render={(props) => <LostPasswordMail props={{ ...props }} />} exact={true} />
+      <Route render={() => <Redirect to="/Login" />} />
+    </IonRouterOutlet>
   );
 }
 
@@ -71,10 +94,10 @@ const App: React.FC = () => {
   const accessToken = useContext(AccessTokenContext);
 
   return <IonApp>
-        <IonReactRouter>
-          {accessToken ? <SecureRoutes /> : <PublicRoutes />}
-        </IonReactRouter>
-      </IonApp>;
+    <IonReactRouter>
+      {accessToken ? <SecureRoutes /> : <PublicRoutes />}
+    </IonReactRouter>
+  </IonApp>;
 };
 
 export default App;
