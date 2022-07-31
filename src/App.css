@@ -11,6 +11,13 @@
     outline: 2px auto var(--ion-color-primary);
 }
 
+.primary-color{
+  color: var("--ion-color-primary");
+}
+
+.primary-background-color{
+  background-color: var("--ion-color-primary");
+}
 
 /* Smartphones (portrait and landscape) ----------- */
 @media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
