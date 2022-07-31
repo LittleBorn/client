@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import { IPagePros } from '../../interfaces/IPageProps';
 import { sendStorefrontQuery } from '../../utils/shopifyStorefrontHelper';
 import { ILoginReturn } from '../../interfaces/Authentication/ILoginReturn';
+import { accessToken$ } from '../../stores/userStore';
 
 const Login: React.FC<IPagePros> = ({ props }: IPagePros) => {
 
@@ -58,13 +59,14 @@ const Login: React.FC<IPagePros> = ({ props }: IPagePros) => {
       return
     }
 
-    const TOKEN = result.data.customerAccessTokenCreate.customerAccessToken.accessToken;
-
     setEmail("");
     setPassword("");
     setEmail("");
     dismissLoading()
 
+    const ACCESS_TOKEN = result.data.customerAccessTokenCreate.customerAccessToken;
+
+    accessToken$.next(ACCESS_TOKEN);
   }
 
   return (

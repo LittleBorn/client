@@ -1,8 +1,14 @@
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import { IPagePros } from '../interfaces/IPageProps';
+import { accessToken$ } from '../stores/userStore';
 import './Home.css';
 
 const Home: React.FC<IPagePros> = ({props}: IPagePros) => {
+
+  const logout = () => {
+    accessToken$.next(undefined);
+  }
+
   return (
     <IonPage>
       <IonHeader>
@@ -17,6 +23,7 @@ const Home: React.FC<IPagePros> = ({props}: IPagePros) => {
           </IonToolbar>
         </IonHeader>
         <h1>Home Component</h1>
+        <button onClick={logout}>Logout</button>
       </IonContent>
     </IonPage>
   );

@@ -33,6 +33,8 @@ import SetupStartPage from './pages/Setup/SetupStartPage';
 import SetupChildInformation from './pages/Setup/SetupChildInformation';
 import SetupSuccess from './pages/Setup/SetupSuccess';
 import SetupInformation from './pages/Setup/SetupInformation';
+import { useContext } from 'react';
+import { AccessTokenContext } from '.';
 
 setupIonicReact();
 
@@ -42,7 +44,7 @@ const SecureRoutes = () => {
   return (
       <IonRouterOutlet>
         <Route path="/Home" render={(props) => <Home props={{...props}}/>} exact={true} />
-        <Route exact path="/" render={() => <Redirect to="/Home" />} />
+        <Route render={() => <Redirect to="/Home" />} />
       </IonRouterOutlet>
   );
 }
@@ -59,17 +61,20 @@ const PublicRoutes = () => {
         <Route path="/Login" render={(props) => <Login props={{...props}}/>} exact={true} />
         <Route path="/LostPassword" render={(props) => <LostPassword props={{...props}}/>} exact={true} />
         <Route path="/LostPasswordMail" render={(props) => <LostPasswordMail props={{...props}}/>} exact={true} />
-        <Route exact path="/" render={() => <Redirect to="/Login"/>} />
+        <Route render={() => <Redirect to="/Login"/>} />
       </IonRouterOutlet>
   );
 }
 
-const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
-      {isLoggedIn ? <SecureRoutes /> : <PublicRoutes />}
-    </IonReactRouter>
-  </IonApp>
-);
+const App: React.FC = () => {
+
+  const accessToken = useContext(AccessTokenContext);
+
+  return <IonApp>
+        <IonReactRouter>
+          {accessToken ? <SecureRoutes /> : <PublicRoutes />}
+        </IonReactRouter>
+      </IonApp>;
+};
 
 export default App;

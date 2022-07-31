@@ -1,13 +1,39 @@
-import React from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
+import { accessToken$ } from './stores/userStore';
+
+export const AccessTokenContext = createContext<any>(null);
+
+export const AccessTokenProvider: React.FC = ({ children }) => {
+  const [accessToken, setAccessToken] = useState<any>(null);
+
+  useEffect(() => {
+    accessToken$.asObservable().subscribe(value => {
+      console.log("AccessToken$ Observable changed: ", value)
+      if(typeof value?.accessToken !== "undefined" && typeof value?.expiresAt !== "undefined"){
+        localStorage.setItem("accessToken", value.accessToken);
+        localStorage.setItem("expiresAt", value.expiresAt)
+      }else{
+        localStorage.removeItem("accessToken")
+        localStorage.removeItem("expiresAt")
+      }
+      setAccessToken(value)
+    })
+    return () => {
+      accessToken$.unsubscribe();
+    }
+  }, []);
+
+  return <AccessTokenContext.Provider value={accessToken}> {children} </AccessTokenContext.Provider>;
+};
 
 ReactDOM.render(
-  <React.StrictMode>
+  <AccessTokenProvider>
     <App />
-  </React.StrictMode>,
+  </AccessTokenProvider>,
   document.getElementById('root')
 );
 
