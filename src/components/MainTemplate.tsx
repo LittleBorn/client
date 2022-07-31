@@ -1,5 +1,4 @@
-import { IonCol, IonContent, IonGrid, IonHeader, IonImg, IonPage, IonRow, IonTitle, IonToolbar } from '@ionic/react';
-import { url } from 'inspector';
+import { IonContent, IonPage} from '@ionic/react';
 
 interface ContainerProps { children: React.ReactNode }
 
