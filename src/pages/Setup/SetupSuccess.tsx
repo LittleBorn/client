@@ -3,8 +3,9 @@ import Button from '../../components/Button';
 import SetupTemplate from '../../components/SetupTemplate';
 import SetupProgressBar from '../../components/SetupProgressBar';
 import accept_terms from "../../assets/images/accept_terms.svg";
+import { IPagePros } from '../../interfaces/IPageProps';
 
-const SetupSuccess: React.FC = () => {
+const SetupSuccess: React.FC<IPagePros> = ({props}: IPagePros) => {
 
   const navigateToHome = () => {
 

@@ -5,8 +5,9 @@ import SetupTemplate from '../../components/SetupTemplate';
 import mother_with_baby from "../../assets/images/mother_with_baby.svg";
 import { useState } from 'react';
 import SetupProgressBar from '../../components/SetupProgressBar';
+import { IPagePros } from '../../interfaces/IPageProps';
 
-const SetupStartPage: React.FC = () => {
+const SetupStartPage: React.FC<IPagePros> = ({props}: IPagePros) => {
 
   const [username, setUsername] = useState('');
 

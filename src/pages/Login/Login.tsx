@@ -1,4 +1,4 @@
-import { IonGrid, IonImg, IonInput, IonText, IonItem, IonLabel } from '@ionic/react';
+import { IonGrid, IonImg, IonInput, IonText, IonItem, IonLabel, useIonToast, useIonLoading } from '@ionic/react';
 import Button from '../../components/Button';
 import SetupTemplate from '../../components/SetupTemplate';
 
@@ -7,53 +7,83 @@ import { useState } from 'react';
 import Input from '../../components/Input';
 
 import { Link } from 'react-router-dom';
+import { IPagePros } from '../../interfaces/IPageProps';
+import { sendStorefrontQuery } from '../../utils/shopifyStorefrontHelper';
+import { ILoginReturn } from '../../interfaces/Authentication/ILoginReturn';
+import { accessToken$ } from '../../stores/userStore';
 
-const Login: React.FC = () => {
+const Login: React.FC<IPagePros> = ({ props }: IPagePros) => {
+
+  const [presentToast, dismissToast] = useIonToast();
+  const [presentLoading, dismissLoading] = useIonLoading();
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  const login = () => {
-    console.log(email, password)
+  const login = async () => {
+
+    if (email === "" || password === "") {
+      presentToast("Bitte füllen Sie alle Felder aus", 2000)
+      return
+    }
+
+    presentLoading()
+
+    var data = JSON.stringify({
+      query: `mutation customerAccessTokenCreate($input: CustomerAccessTokenCreateInput!) {
+        customerAccessTokenCreate(input: $input) {
+          customerUserErrors {
+            code
+            field
+            message
+          }
+          customerAccessToken {
+            accessToken
+            expiresAt
+          }
+        }
+      }`,
+      variables: {
+        "input": {
+          "email": email,
+          "password": password
+        }
+      }
+    });
+
+    const result = await sendStorefrontQuery<ILoginReturn>(data);
+
+    if (!result?.data?.customerAccessTokenCreate?.customerAccessToken) {
+      presentToast(result?.data?.customerAccessTokenCreate?.customerUserErrors[0]?.message, 2000);
+      dismissLoading();
+      return
+    }
+
+    setEmail("");
+    setPassword("");
+    setEmail("");
+    dismissLoading()
+
+    const ACCESS_TOKEN = result.data.customerAccessTokenCreate.customerAccessToken;
+
+    accessToken$.next(ACCESS_TOKEN);
   }
 
   return (
     <SetupTemplate>
-      <div style={{justifyContent: "flex-end", display: "flex", flexDirection: "column", alignItems: "center", height: "100vh", gap: "2rem", paddingBottom: "2rem"}}>
+      <div style={{ justifyContent: "flex-end", display: "flex", flexDirection: "column", alignItems: "center", height: "100vh", gap: "2rem", paddingBottom: "2rem" }}>
 
-          <div style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
-            <IonText style={{fontWeight: "bold", fontSize: "1.3em"}}>Willkommen zurück!</IonText>
-          </div>
+        <IonText style={{ fontWeight: "bold", fontSize: "1.3em" }}>Willkommen zurück!</IonText>
+        <IonImg src={login_mother} style={{ height: 200 }} />
 
-          <div style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
-            <IonImg src={login_mother} style={{height: 200}}/>
-          </div>
+        <Input value={email} onChange={(e) => setEmail(`${e.target.value}`)} type="email" placeholder="Email" />
+        <Input value={password} onChange={(e) => setPassword(`${e.target.value}`)} type="password" placeholder="Password" />
 
-          <div style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
-            <IonItem>
-              <IonLabel>Email</IonLabel>
-              <IonInput value={email} onIonChange={(e) => setEmail(`${e.target.value}`)} type="text" placeholder="Email" />
-            </IonItem>
-          </div>
+        <IonText>Passwort vergessen? <Link to="/LostPassword" style={{ color: "#44C1AD" }}>Hier entlang</Link>.</IonText>
 
-          <div style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
-            <IonItem>
-              <IonLabel>Passwort</IonLabel>
-              <IonInput value={password} onIonChange={(e) => setPassword(`${e.target.value}`)} type="password" placeholder="Password" />
-            </IonItem>
-          </div>
+        <Button onClick={login} title="Login" style={{ backgroundColor: "#44C1AD", width: 350, height: 55 }} />
 
-          <div style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
-            <IonText>Passwort vergessen? <Link to="/LostPassword" style={{color: "#44C1AD"}}>Hier entlang</Link>.</IonText>
-          </div>
-
-          <div style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
-            <Button onClick={login} title="Login" style={{backgroundColor: "#44C1AD", width: 350, height: 55}} />
-          </div>
-
-          <div style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
-            <IonText>Noch keinen Account? Dann registriere dich <Link to="/Register" style={{color: "#44C1AD"}}>hier</Link>.</IonText>
-          </div>
+        <IonText>Noch keinen Account? Dann registriere dich <Link to="/Register" style={{ color: "#44C1AD" }}>hier</Link>.</IonText>
 
       </div>
 
