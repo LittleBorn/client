@@ -13,7 +13,7 @@ const BoxPreview: React.FC = () => {
 
 
     return (
-        <div style={{ backgroundColor: "#44C1AD", width: "90%", height: "10%", alignSelf: "center", borderRadius: "0.5rem", display: "flex", alignItems: "center", justifyContent: "space-around", margin: "0.5rem 0rem 0.5rem 0rem"}}>
+        <div style={{ backgroundColor: "#44C1AD", width: "90%", height: "10%", alignSelf: "center", borderRadius: "0.5rem", display: "flex", alignItems: "center", justifyContent: "center", margin: "0.5rem 0rem 0.5rem 0rem", gap: "2rem"}}>
 
             <IonIcon icon={cubeOutline} style={{height: "3rem", width: "3rem"}}/>
 
