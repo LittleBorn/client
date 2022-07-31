@@ -36,6 +36,7 @@ import SetupInformation from './pages/Setup/SetupInformation';
 import { useContext } from 'react';
 import { AccessTokenContext } from '.';
 import { home, cube, medkit, notifications, settings } from 'ionicons/icons';
+import AGB from './pages/AGB/AGB';
 
 setupIonicReact();
 
@@ -87,7 +88,8 @@ const PublicRoutes = () => {
       <Route path="/Login" render={(props) => <Login props={{ ...props }} />} exact={true} />
       <Route path="/LostPassword" render={(props) => <LostPassword props={{ ...props }} />} exact={true} />
       <Route path="/LostPasswordMail" render={(props) => <LostPasswordMail props={{ ...props }} />} exact={true} />
-      <Route render={() => <Redirect to="/Login" />} />
+      <Route path="/AGB" render={(props) => <AGB props={{ ...props }} />} exact={true} />
+      <Route render={() => <Redirect to="/StartPage" />} />
     </IonRouterOutlet>
   );
 }

@@ -7,10 +7,6 @@ import { IPagePros } from '../../interfaces/IPageProps';
 
 const StartPage: React.FC<IPagePros> = ({props}: IPagePros) => {
 
-  const navigateToRegister = () => {
-
-  }
-
   return (
     <SetupTemplate>
       <div style={{ display: "flex", justifyContent: "center", flexDirection: "column", alignItems: "center", height: "100vh", gap: "1.5rem", paddingBottom: "2rem" }}>
@@ -24,7 +20,7 @@ const StartPage: React.FC<IPagePros> = ({props}: IPagePros) => {
         <IonText style={{ fontSize: "1em", textAlign: "center", width: "80%" }}>LittleBorn bietet über 700 verschiedene Babyprodukte für eure Liebsten, von Windeln, über Babypflege, über Babycremes {`&`} Öle bis Babynahrung und vieles mehr. Und das alles ist auch im Abo möglich.</IonText>
 
         <div style={{ justifySelf: "flex-end" }}>
-          <Button routerLink='/Register' onClick={navigateToRegister} title="Los geht's" style={{ backgroundColor: "#44C1AD", width: 350, height: 55 }} />
+          <Button routerLink='/Register' title="Los geht's" style={{ backgroundColor: "#44C1AD", width: 350, height: 55 }} />
         </div>
 
       </div>
