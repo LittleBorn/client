@@ -82,7 +82,7 @@ const Register: React.FC<IPagePros> = ({ props }: IPagePros) => {
         <Input value={password} onChange={(e) => setPassword(`${e.target.value}`)} type="password" placeholder="Password" />
         <Input value={verifyPassword} onChange={(e) => setVerifyPassword(`${e.target.value}`)} type="password" placeholder="Passwort bestätigen" />
 
-        <IonText>Ich habe die <IonText style={{ color: "#44C1AD", textDecoration: "underline" }}>AGB</IonText> gelesen {`&`} aktzeptiert.</IonText>
+        <IonText>Ich habe die <Link to="/AGB" style={{ color: "#44C1AD", textDecoration: "underline" }}>AGB</Link> gelesen {`&`} aktzeptiert.</IonText>
 
         <div style={{ justifySelf: "flex-end" }}>
 

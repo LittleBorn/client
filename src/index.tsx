@@ -3,7 +3,9 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
-import { accessToken$ } from './stores/userStore';
+import { accessToken$, user$ } from './stores/userStore';
+import { sendStorefrontQuery } from './utils/shopifyStorefrontHelper';
+import { IUser } from './interfaces/IUser';
 
 export const AccessTokenContext = createContext<any>(null);
 
@@ -11,11 +13,37 @@ export const AccessTokenProvider: React.FC = ({ children }) => {
   const [accessToken, setAccessToken] = useState<any>(null);
 
   useEffect(() => {
+
+    // initially check local storage for values
+    const ACCESS_TOKEN = localStorage.getItem("accessToken");
+    const EXPIRES_AT = localStorage.getItem("expiresAt");
+    if(ACCESS_TOKEN !== null && EXPIRES_AT !== null){
+      accessToken$.next({
+        accessToken: ACCESS_TOKEN,
+        expiresAt: EXPIRES_AT
+      })
+    }
+
+    // set token to local storage and query user when fetched
     accessToken$.asObservable().subscribe(value => {
-      console.log("AccessToken$ Observable changed: ", value)
       if(typeof value?.accessToken !== "undefined" && typeof value?.expiresAt !== "undefined"){
         localStorage.setItem("accessToken", value.accessToken);
         localStorage.setItem("expiresAt", value.expiresAt)
+        // fetch userdata to save requests to api
+        var data = JSON.stringify({
+          query: `query {
+          customer(customerAccessToken: "${value.accessToken}") {
+            id
+            firstName
+            lastName
+            acceptsMarketing
+            email
+            phone
+          }
+        }`,
+          variables: {}
+        });
+        sendStorefrontQuery<{data: {customer: IUser}}>(data).then(res => user$.next(res.data.customer))
       }else{
         localStorage.removeItem("accessToken")
         localStorage.removeItem("expiresAt")

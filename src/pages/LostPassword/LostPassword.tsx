@@ -1,4 +1,4 @@
-import { IonGrid, IonImg, IonInput, IonText, IonItem, IonLabel } from '@ionic/react';
+import { IonGrid, IonImg, IonInput, IonText, IonItem, IonLabel, useIonToast, useIonLoading } from '@ionic/react';
 import Button from '../../components/Button';
 import SetupTemplate from '../../components/SetupTemplate';
 
@@ -7,13 +7,40 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { IPagePros } from '../../interfaces/IPageProps';
 import Input from '../../components/Input';
+import { ICustomerUserError } from '../../interfaces/ICustomerUserError';
+import { sendStorefrontQuery } from '../../utils/shopifyStorefrontHelper';
 
 const LostPassword: React.FC<IPagePros> = ({ props }: IPagePros) => {
 
+  const [presentToast, dismissToast] = useIonToast();
+  const [presentLoading, dismissLoading] = useIonLoading();
+
   const [email, setEmail] = useState('')
 
-  const resetPassword = () => {
-    console.log(email)
+  const resetPassword = async () => {
+    
+    var data = JSON.stringify({
+      query: `mutation customerRecover($email: String!) {
+      customerRecover(email: $email) {
+        customerUserErrors {
+          code
+          field
+          message
+        }
+      }
+    }`,
+      variables: {"email": email}
+    });
+    const result = await sendStorefrontQuery<{data: {customerRecover: {customerUserErrors: Array<ICustomerUserError>}}}>(data);
+
+    if(result?.data?.customerRecover?.customerUserErrors?.length === 0){
+      // redirect 
+      props.history.push("/LostPasswordMail");
+    }else{
+      presentToast(result?.data?.customerRecover?.customerUserErrors[0]?.message, 2000);
+      dismissLoading();
+      return
+    }
   }
 
   return (
