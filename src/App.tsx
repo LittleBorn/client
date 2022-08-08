@@ -37,6 +37,7 @@ import { useContext } from 'react';
 import { AccessTokenContext } from '.';
 import { home, cube, medkit, notifications, settings } from 'ionicons/icons';
 import AGB from './pages/AGB/AGB';
+import SetupChildInformation2 from './pages/Setup/SetupChildInformation2';
 
 setupIonicReact();
 
@@ -68,6 +69,11 @@ const SecureRoutes = () => {
 
 
       <IonRouterOutlet>
+        <Route path="/SetupInformation" render={(props) => <SetupInformation props={{ ...props }} />} exact={true} />
+        <Route path="/SetupSuccess" render={(props) => <SetupSuccess props={{ ...props }} />} exact={true} />
+        <Route path="/SetupChildInformation" render={(props) => <SetupChildInformation props={{ ...props }} />} exact={true} />
+        <Route path="/SetupChildInformation2" render={(props) => <SetupChildInformation2 props={{ ...props }} />} exact={true} />
+        <Route path="/SetupStartPage" render={(props) => <SetupStartPage props={{ ...props }} />} exact={true} />
         <Route path="/Home" render={(props) => <Home props={{ ...props }} />} exact={true} />
         <Route render={() => <Redirect to="/Home" />} />
       </IonRouterOutlet>
@@ -79,10 +85,6 @@ const SecureRoutes = () => {
 const PublicRoutes = () => {
   return (
     <IonRouterOutlet>
-      <Route path="/SetupInformation" render={(props) => <SetupInformation props={{ ...props }} />} exact={true} />
-      <Route path="/SetupSuccess" render={(props) => <SetupSuccess props={{ ...props }} />} exact={true} />
-      <Route path="/SetupChildInformation" render={(props) => <SetupChildInformation props={{ ...props }} />} exact={true} />
-      <Route path="/SetupStartPage" render={(props) => <SetupStartPage props={{ ...props }} />} exact={true} />
       <Route path="/StartPage" render={(props) => <StartPage props={{ ...props }} />} exact={true} />
       <Route path="/Register" render={(props) => <Register props={{ ...props }} />} exact={true} />
       <Route path="/Login" render={(props) => <Login props={{ ...props }} />} exact={true} />

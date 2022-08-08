@@ -3,13 +3,19 @@ import Button from '../../components/Button';
 import SetupTemplate from '../../components/SetupTemplate';
 
 import mother_with_baby from "../../assets/images/mother_with_baby.svg";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import SetupProgressBar from '../../components/SetupProgressBar';
 import { IPagePros } from '../../interfaces/IPageProps';
+import { user$ } from '../../stores/userStore';
 
 const SetupStartPage: React.FC<IPagePros> = ({props}: IPagePros) => {
 
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState<string>(`${user$.getValue()?.firstName}`);
+
+  useEffect(() => {
+    user$.asObservable().subscribe(v => setUsername(`${v?.firstName}`))
+  }, [])
+  
 
   return (
     <SetupTemplate>

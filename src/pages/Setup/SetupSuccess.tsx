@@ -8,7 +8,7 @@ import { IPagePros } from '../../interfaces/IPageProps';
 const SetupSuccess: React.FC<IPagePros> = ({props}: IPagePros) => {
 
   const navigateToHome = () => {
-
+    props.history.push("/Home")
   }
 
   return (
@@ -29,7 +29,7 @@ const SetupSuccess: React.FC<IPagePros> = ({props}: IPagePros) => {
           <Button onClick={navigateToHome} title="Los geht's" style={{ backgroundColor: "#EA407D", width: 350, height: 55 }} />
         </div>
 
-        <IonText style={{ color: "#44C1AD" }}>zurück</IonText>
+        {/* <IonText style={{ color: "#44C1AD" }}>zurück</IonText> */}
 
       </div>
 
