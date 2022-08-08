@@ -17,7 +17,7 @@ const Home: React.FC<IPagePros> = ({props}: IPagePros) => {
     setDate(new Date().toLocaleDateString('de-DE', {weekday: 'long', month: 'long', day: 'numeric'}))
   
     return () => {
-      user$.unsubscribe();
+      // user$.unsubscribe();
     }
   }, [])
   
