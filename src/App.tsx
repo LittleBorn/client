@@ -1,7 +1,9 @@
-import { Redirect, Route } from 'react-router-dom';
+import { AccessTokenContext } from '.';
+import { useContext } from 'react';
 import { IonApp, IonIcon, IonLabel, IonRouterOutlet, IonTab, IonTabBar, IonTabButton, IonTabs, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import Home from './pages/Home/Home';
+import { Redirect, Route } from 'react-router-dom';
+import { home, cube, medkit, notifications, settings } from 'ionicons/icons';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -24,6 +26,9 @@ import './theme/variables.css';
 
 import './App.css'
 
+
+/* Pages */
+import Home from './pages/Home/Home';
 import Login from './pages/Login/Login';
 import LostPassword from './pages/LostPassword/LostPassword';
 import LostPasswordMail from './pages/LostPassword/LostPasswordMail';
@@ -33,12 +38,14 @@ import SetupStartPage from './pages/Setup/SetupStartPage';
 import SetupChildInformation from './pages/Setup/SetupChildInformation';
 import SetupSuccess from './pages/Setup/SetupSuccess';
 import SetupInformation from './pages/Setup/SetupInformation';
-import { useContext } from 'react';
-import { AccessTokenContext } from '.';
-import { home, cube, medkit, notifications, settings } from 'ionicons/icons';
 import AGB from './pages/AGB/AGB';
 import SetupChildInformation2 from './pages/Setup/SetupChildInformation2';
 import BabyProfile from './pages/BabyProfile/BabyProfile';
+import Health from './pages/Health/Health';
+import BoxStartPage from './pages/Box/BoxStartPage';
+import BoxMainPage from './pages/Box/BoxMainPage';
+import Notification from './pages/Notification/Notification';
+import Settings from './pages/Settings/Settings';
 
 setupIonicReact();
 
@@ -50,7 +57,7 @@ const SecureRoutes = () => {
           <IonIcon icon={home} />
           <IonLabel>Übersicht</IonLabel>
         </IonTabButton>
-        <IonTabButton tab="box" href="/Box">
+        <IonTabButton tab="box" href="/BoxStartPage">
           <IonIcon icon={cube} />
           <IonLabel>Meine Box</IonLabel>
         </IonTabButton>
@@ -80,6 +87,11 @@ const SecureRoutes = () => {
         <Route path="/BabyProfile" render={(props) => <BabyProfile props={{ ...props }} />} exact={true} />
         {/* Menu */}
         <Route path="/Home" render={(props) => <Home props={{ ...props }} />} exact={true} />
+        <Route path="/Health" render={(props) => <Health props={{ ...props }} />} exact={true} />
+        <Route path="/BoxStartPage" render={(props) => <BoxStartPage props={{ ...props }} />} exact={true} />
+        <Route path="/BoxMainPage" render={(props) => <BoxMainPage props={{ ...props }} />} exact={true} />
+        <Route path="/Notification" render={(props) => <Notification props={{ ...props }} />} exact={true} />
+        <Route path="/Settings" render={(props) => <Settings props={{ ...props }} />} exact={true} />
         <Route render={() => <Redirect to="/Home" />} />
       </IonRouterOutlet>
       

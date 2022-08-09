@@ -5,7 +5,7 @@ import { IPagePros } from '../../interfaces/IPageProps';
 import { customer$ } from '../../stores/userStore';
 import { sendApiGetQuery } from '../../utils/apiHelper';
 
-const BabyProfile: React.FC<IPagePros> = ({props}: IPagePros) => {
+const Health: React.FC<IPagePros> = ({props}: IPagePros) => {
 
   const [child, setChild] = useState<any>();
 
@@ -24,11 +24,11 @@ const BabyProfile: React.FC<IPagePros> = ({props}: IPagePros) => {
   return (
     <MainTemplate>
       <div style={{display: "flex", flexDirection: "column", height: "100vh", padding: "1rem", gap: "0.5rem"}}>
-        Baby Profile
+        Health
         <h3>{ child && JSON.stringify(child) }</h3>
       </div>
     </MainTemplate>
   );
 };
 
-export default BabyProfile;
+export default Health;
