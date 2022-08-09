@@ -1,4 +1,4 @@
-import { IonGrid, IonImg, IonInput, IonText, IonItem, IonLabel, useIonToast, useIonLoading } from '@ionic/react';
+import { IonImg, IonText, useIonToast, useIonLoading } from '@ionic/react';
 import Button from '../../components/Button';
 import SetupTemplate from '../../components/SetupTemplate';
 
