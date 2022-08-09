@@ -38,6 +38,7 @@ import { AccessTokenContext } from '.';
 import { home, cube, medkit, notifications, settings } from 'ionicons/icons';
 import AGB from './pages/AGB/AGB';
 import SetupChildInformation2 from './pages/Setup/SetupChildInformation2';
+import BabyProfile from './pages/BabyProfile/BabyProfile';
 
 setupIonicReact();
 
@@ -69,11 +70,15 @@ const SecureRoutes = () => {
 
 
       <IonRouterOutlet>
+        {/* Setup */}
         <Route path="/SetupInformation" render={(props) => <SetupInformation props={{ ...props }} />} exact={true} />
         <Route path="/SetupSuccess" render={(props) => <SetupSuccess props={{ ...props }} />} exact={true} />
         <Route path="/SetupChildInformation" render={(props) => <SetupChildInformation props={{ ...props }} />} exact={true} />
         <Route path="/SetupChildInformation2" render={(props) => <SetupChildInformation2 props={{ ...props }} />} exact={true} />
         <Route path="/SetupStartPage" render={(props) => <SetupStartPage props={{ ...props }} />} exact={true} />
+        {/* Side Bar */}
+        <Route path="/BabyProfile" render={(props) => <BabyProfile props={{ ...props }} />} exact={true} />
+        {/* Menu */}
         <Route path="/Home" render={(props) => <Home props={{ ...props }} />} exact={true} />
         <Route render={() => <Redirect to="/Home" />} />
       </IonRouterOutlet>

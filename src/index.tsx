@@ -29,21 +29,6 @@ export const AccessTokenProvider: React.FC = ({ children }) => {
       if(typeof value?.accessToken !== "undefined" && typeof value?.expiresAt !== "undefined"){
         localStorage.setItem("accessToken", value.accessToken);
         localStorage.setItem("expiresAt", value.expiresAt)
-        // fetch userdata to save requests to api
-        var data = JSON.stringify({
-          query: `query {
-          customer(customerAccessToken: "${value.accessToken}") {
-            id
-            firstName
-            lastName
-            acceptsMarketing
-            email
-            phone
-          }
-        }`,
-          variables: {}
-        });
-        sendStorefrontQuery<{data: {customer: IUser}}>(data).then(res => user$.next(res.data.customer))
       }else{
         localStorage.removeItem("accessToken")
         localStorage.removeItem("expiresAt")

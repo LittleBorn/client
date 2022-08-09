@@ -57,7 +57,7 @@ const Menu: React.FC<ContainerProps> = ({}) => {
         </IonHeader>
         <IonContent>
           <IonList>
-            <IonItem>Babyprofil</IonItem>
+            <IonItem routerLink='/BabyProfile'>Babyprofil</IonItem>
             <IonItem>Abonnement</IonItem>
             <IonItem>Erinnerungen</IonItem>
             <IonItem>Einstellungen</IonItem>
