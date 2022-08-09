@@ -13,9 +13,9 @@ const SetupProgressBar: React.FC<ContainerProps> = ({progress, style, customWidt
     return (
         <div style={{...style, display: "flex", flexDirection: "row", gap: "1rem"}}>
             { 
-                progress.map((color) => {
+                progress.map((color, index) => {
                     return (
-                        <div style={{backgroundColor: color, height: "2px", width: customWidth ? customWidth : "5rem"}}></div>
+                        <div key={`${color}-${index}`} style={{backgroundColor: color, height: "2px", width: customWidth ? customWidth : "5rem"}}></div>
                     )
                 })
             }

@@ -1,4 +1,4 @@
-import { IonGrid, IonImg, IonInput, IonText, IonItem, IonLabel, useIonToast, useIonLoading } from '@ionic/react';
+import { IonImg, IonText, useIonToast, useIonLoading } from '@ionic/react';
 import Button from '../../components/Button';
 import SetupTemplate from '../../components/SetupTemplate';
 
@@ -77,7 +77,11 @@ const Login: React.FC<IPagePros> = ({ props }: IPagePros) => {
         <IonImg src={login_mother} style={{ height: 200 }} />
 
         <Input value={email} onChange={(e) => setEmail(`${e.target.value}`)} type="email" placeholder="Email" />
-        <Input value={password} onChange={(e) => setPassword(`${e.target.value}`)} type="password" placeholder="Password" />
+        <Input value={password} onKeyDown={(e) => {
+          if(e.key === "Enter"){
+            login()
+          }
+        }} onChange={(e) => setPassword(`${e.target.value}`)} type="password" placeholder="Password" />
 
         <IonText>Passwort vergessen? <Link to="/LostPassword" style={{ color: "#44C1AD" }}>Hier entlang</Link>.</IonText>
 
