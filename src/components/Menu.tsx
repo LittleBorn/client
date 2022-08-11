@@ -1,4 +1,4 @@
-import { IonContent, IonFooter, IonHeader, IonItem, IonList, IonMenu, IonText, IonToolbar } from '@ionic/react';
+import { IonContent, IonFooter, IonHeader, IonItem, IonList, IonMenu, IonText, IonTitle, IonToolbar } from '@ionic/react';
 import { useEffect, useState } from 'react';
 
 import littleborn_icon from "../assets/images/littleborn_icon.svg"
