@@ -42,7 +42,7 @@ const Menu: React.FC<ContainerProps> = ({ }) => {
       .then(result => setName(result.data.customer.firstName))
   }, [])
 
-  return (
+  return ( 
     <IonMenu side="start" menuId="first" contentId="main-content" swipeGesture={true}>
       <IonHeader>
         <IonToolbar color="tertiary">
