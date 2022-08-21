@@ -11,7 +11,7 @@ const MainTemplate: React.FC<ContainerProps> = ({ children, title }) => {
 
       <IonPage id="main-content">
         <IonContent fullscreen>
-          <IonHeader collapse="condense" translucent={true}>
+          <IonHeader /*collapse="condense" translucent={true}*/>
             <IonToolbar>
               <IonMenuButton slot='start'/>
               {title && <IonTitle>{title}</IonTitle>}
