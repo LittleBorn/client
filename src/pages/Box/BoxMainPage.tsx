@@ -1,6 +1,7 @@
-import { IonBadge, IonFab, IonFabButton, IonIcon, IonImg, IonItem, IonSegment, IonSegmentButton, IonText, IonToolbar, useIonLoading, useIonToast } from '@ionic/react';
+import { IonBadge, IonButton, IonFab, IonFabButton, IonIcon, IonImg, IonItem, IonSegment, IonSegmentButton, IonText, IonToolbar, useIonLoading, useIonToast } from '@ionic/react';
 import { basketOutline } from 'ionicons/icons';
 import { useEffect, useState } from 'react';
+import Button from '../../components/Button';
 import MainTemplate from '../../components/MainTemplate';
 import { IPagePros } from '../../interfaces/IPageProps';
 import { sendStorefrontQuery } from '../../utils/shopifyStorefrontHelper';
@@ -35,6 +36,7 @@ interface ICollectionResult {
             "title": string,
             "products": {
               "edges": Array<{
+                cursor: string;
                 node: {
                   title: string,
                   id: string,
@@ -70,17 +72,18 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
   const [presentLoading, dismissLoading] = useIonLoading();
 
   useEffect(() => {
-    // fetch all products
+    // fetch windeln
+    segmentChanged(SEGMENTS[0].id)
   }, [])
 
   const [currentSegment, setCurrentSegment] = useState<string>("Babywindeln")
-
   const [collection, setCollection] = useState<{
     "node": {
       "id": string;
       "title": string;
       "products": {
         "edges": Array<{
+          cursor: string;
           node: {
             title: string,
             id: string,
@@ -95,44 +98,108 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
       }
     }
   }>()
+  const [basket, setBasket] = useState<string[]>()
 
-  const segmentChanged = async (currentSegment: string | undefined) => {
+  const segmentChanged = async (currentSegment: string | undefined, cursorAfter?: string | undefined, cursorBefore?: string | undefined) => {
 
-    // setCollection(undefined)
     if (typeof currentSegment === "undefined") return;
 
-    presentLoading()
+    presentLoading(undefined, 5000)
 
     // change current segment for view
     setCurrentSegment(currentSegment)
 
-    var data = JSON.stringify({
-      query: `query {
-      collections(first: 1, query: "title:${currentSegment}") {
-        edges {
-          node {
-            id
-            title
-            products(first: 6){
-                edges{
-                    node{
-                        title
-                        id
-                        featuredImage {
-                            id
-                            url
-                            altText
-                            height
-                        }
-                    }
-                }
+
+    var data = "";
+
+    if (cursorAfter) {
+      data = JSON.stringify({
+        query: `query {
+        collections(first: 1, query: "title:${currentSegment}") {
+          edges {
+            node {
+              id
+              title
+              products(first: 6, after: "${cursorAfter}"){
+                  edges{
+                      cursor
+                      node{
+                          title
+                          id
+                          featuredImage {
+                              id
+                              url
+                              altText
+                              height
+                          }
+                      }
+                  }
+              }
             }
           }
         }
-      }
-    }`,
-      variables: {}
-    });
+      }`,
+        variables: {}
+      })
+    } else if (cursorBefore) {
+      data = JSON.stringify({
+        query: `query {
+        collections(first: 1, query: "title:${currentSegment}") {
+          edges {
+            node {
+              id
+              title
+              products(last: 6, before: "${cursorBefore}"){
+                  edges{
+                      cursor
+                      node{
+                          title
+                          id
+                          featuredImage {
+                              id
+                              url
+                              altText
+                              height
+                          }
+                      }
+                  }
+              }
+            }
+          }
+        }
+      }`,
+        variables: {}
+      })
+    } else {
+      data = JSON.stringify({
+        query: `query {
+        collections(first: 1, query: "title:${currentSegment}") {
+          edges {
+            node {
+              id
+              title
+              products(first: 6){
+                  edges{
+                      cursor
+                      node{
+                          title
+                          id
+                          featuredImage {
+                              id
+                              url
+                              altText
+                              height
+                          }
+                      }
+                  }
+              }
+            }
+          }
+        }
+      }`,
+        variables: {}
+      })
+    }
 
     const collectionResult = await sendStorefrontQuery<ICollectionResult>(data);
     if (typeof collectionResult?.data === "undefined") {
@@ -179,14 +246,32 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
           }
         </div>
 
+        {/* Pagination */}
+        <div style={{ display: "flex", gap: "0.5rem", justifyContent: "center"}}>
+          <Button title='Previous' onClick={() => {
+            if (collection && collection?.node.products.edges.length > 0) {
+              segmentChanged(currentSegment, undefined, collection?.node.products.edges[0].cursor)
+            } else {
+              segmentChanged(currentSegment)
+            }
+          }} />
+          <Button title='Next' onClick={() => {
+            if (collection && collection?.node.products.edges.length > 0) {
+              segmentChanged(currentSegment, collection?.node.products.edges.reverse()[0].cursor, undefined)
+            } else {
+              segmentChanged(currentSegment)
+            }
+          }} />
+        </div>
 
-        <div>Pagination</div>
 
       </div>
 
-      <IonFab vertical="bottom" horizontal="end" slot="fixed">
-        <IonBadge style={{ position: "absolute", top: "-5px", right: "-5px", "--background": "#666666", zIndex: 2, padding: "4px 9px 4px 9px" }}>22</IonBadge>
-        <IonFabButton>
+      <IonFab vertical="bottom" horizontal="end" slot="fixed" >
+        {basket && basket.length > 0 &&
+          <IonBadge style={{ position: "absolute", top: "-5px", right: "-5px", "--background": "#666666", zIndex: 2, padding: "4px 9px 4px 9px" }}>{basket.length}</IonBadge>
+        }
+        <IonFabButton disabled={!(basket && basket.length > 0)}>
           <IonIcon icon={basketOutline} />
         </IonFabButton>
       </IonFab>
