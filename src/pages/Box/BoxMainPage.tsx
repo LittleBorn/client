@@ -23,6 +23,10 @@ const SEGMENTS = [
   {
     id: "Fläschchen und Schnuller",
     title: "Zubehör"
+  },
+  {
+    id: "Babypflege",
+    title: "Pflege"
   }
 ];
 
@@ -104,103 +108,50 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
 
     if (typeof currentSegment === "undefined") return;
 
-    presentLoading(undefined, 5000)
+    presentLoading(undefined, 1000)
 
     // change current segment for view
     setCurrentSegment(currentSegment)
 
-
-    var data = "";
+    var filter = "";
 
     if (cursorAfter) {
-      data = JSON.stringify({
-        query: `query {
-        collections(first: 1, query: "title:${currentSegment}") {
-          edges {
-            node {
-              id
-              title
-              products(first: 6, after: "${cursorAfter}"){
-                  edges{
-                      cursor
-                      node{
-                          title
-                          id
-                          featuredImage {
-                              id
-                              url
-                              altText
-                              height
-                          }
-                      }
-                  }
-              }
-            }
-          }
-        }
-      }`,
-        variables: {}
-      })
+      filter = `first: 6, after: "${cursorAfter}"`;
     } else if (cursorBefore) {
-      data = JSON.stringify({
-        query: `query {
-        collections(first: 1, query: "title:${currentSegment}") {
-          edges {
-            node {
-              id
-              title
-              products(last: 6, before: "${cursorBefore}"){
-                  edges{
-                      cursor
-                      node{
-                          title
-                          id
-                          featuredImage {
-                              id
-                              url
-                              altText
-                              height
-                          }
-                      }
-                  }
-              }
-            }
-          }
-        }
-      }`,
-        variables: {}
-      })
-    } else {
-      data = JSON.stringify({
-        query: `query {
-        collections(first: 1, query: "title:${currentSegment}") {
-          edges {
-            node {
-              id
-              title
-              products(first: 6){
-                  edges{
-                      cursor
-                      node{
-                          title
-                          id
-                          featuredImage {
-                              id
-                              url
-                              altText
-                              height
-                          }
-                      }
-                  }
-              }
-            }
-          }
-        }
-      }`,
-        variables: {}
-      })
+      filter = `last: 6, before: "${cursorBefore}"`;
+    }else{
+      filter = `first: 6`;
     }
 
+    let data = JSON.stringify({
+        query: `query {
+        collections(first: 1, query: "title:${currentSegment}") {
+          edges {
+            node {
+              id
+              title
+              products(${filter}){
+                  edges{
+                      cursor
+                      node{
+                          title
+                          id
+                          featuredImage {
+                              id
+                              url
+                              altText
+                              height
+                          }
+                      }
+                  }
+              }
+            }
+          }
+        }
+      }`,
+        variables: {}
+    })
+    
     const collectionResult = await sendStorefrontQuery<ICollectionResult>(data);
     if (typeof collectionResult?.data === "undefined") {
       // error fetching items
@@ -225,7 +176,7 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
       <div style={{ display: "flex", flexDirection: "column", height: "100vh", padding: "1rem", gap: "0.5rem" }}>
 
 
-        <IonSegment onIonChange={(e) => segmentChanged(e.detail?.value)} value={currentSegment}>
+        <IonSegment scrollable onIonChange={(e) => segmentChanged(e.detail?.value)} value={currentSegment}>
           {
             SEGMENTS.map(SEGMENT => {
               return <IonSegmentButton key={SEGMENT.id} value={SEGMENT.id}>{SEGMENT.title}</IonSegmentButton>
@@ -239,6 +190,7 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
         <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "0.5rem", justifyContent: "center" }}>
           {
             collection && collection?.node.products.edges.length > 0 && collection?.node.products.edges.map(product => {
+              // depending on the current product render different Box Item
               return (
                 <DefaultBoxItem key={product.node.id + "-" + product.node.title} product={product} />
               );
@@ -248,14 +200,14 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
 
         {/* Pagination */}
         <div style={{ display: "flex", gap: "0.5rem", justifyContent: "center"}}>
-          <Button title='Previous' onClick={() => {
+          <Button title='⏪' onClick={() => {
             if (collection && collection?.node.products.edges.length > 0) {
               segmentChanged(currentSegment, undefined, collection?.node.products.edges[0].cursor)
             } else {
               segmentChanged(currentSegment)
             }
           }} />
-          <Button title='Next' onClick={() => {
+          <Button title='⏩' onClick={() => {
             if (collection && collection?.node.products.edges.length > 0) {
               segmentChanged(currentSegment, collection?.node.products.edges.reverse()[0].cursor, undefined)
             } else {
