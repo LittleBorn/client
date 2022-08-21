@@ -44,7 +44,7 @@ const Menu: React.FC<ContainerProps> = ({ }) => {
 
   return (
     <IonMenu side="start" menuId="first" contentId="main-content" swipeGesture={true}>
-      <IonHeader collapse="condense">
+      <IonHeader>
         <IonToolbar color="tertiary">
           <div style={{ display: "flex", height: "10rem", flexDirection: "column", padding: "2.5rem 1rem 1rem 2rem", justifyContent: "space-between" }}>
             <div><img src={littleborn_icon}></img></div>
