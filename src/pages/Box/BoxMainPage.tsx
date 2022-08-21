@@ -191,9 +191,15 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
           {
             collection && collection?.node.products.edges.length > 0 && collection?.node.products.edges.map(product => {
               // depending on the current product render different Box Item
-              return (
-                <DefaultBoxItem key={product.node.id + "-" + product.node.title} product={product} />
-              );
+              if(collection?.node.title === "Babywindeln"){
+                return (
+                  <DefaultBoxItem key={product.node.id + "-" + product.node.title} product={product} />
+                );
+              }else{
+                return (
+                  <DefaultBoxItem key={product.node.id + "-" + product.node.title} product={product} />
+                );
+              }
             })
           }
         </div>
