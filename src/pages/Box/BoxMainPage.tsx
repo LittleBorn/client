@@ -102,7 +102,7 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
       }
     }
   }>()
-  const [basket, setBasket] = useState<string[]>()
+  const [basket, setBasket] = useState<string[]>([])
 
   const segmentChanged = async (currentSegment: string | undefined, cursorAfter?: string | undefined, cursorBefore?: string | undefined) => {
 
@@ -193,11 +193,11 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
               // depending on the current product render different Box Item
               if(collection?.node.title === "Babywindeln"){
                 return (
-                  <DefaultBoxItem key={product.node.id + "-" + product.node.title} product={product} />
+                  <DefaultBoxItem addToBasket={() => setBasket([...basket, product.node.id])} key={product.node.id} product={product} />
                 );
               }else{
                 return (
-                  <DefaultBoxItem key={product.node.id + "-" + product.node.title} product={product} />
+                  <DefaultBoxItem addToBasket={() => setBasket([...basket, product.node.id])} key={product.node.id} product={product} />
                 );
               }
             })
@@ -206,14 +206,14 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
 
         {/* Pagination */}
         <div style={{ display: "flex", gap: "0.5rem", justifyContent: "center"}}>
-          <Button title='⏪' onClick={() => {
+          <Button title={`<`} onClick={() => {
             if (collection && collection?.node.products.edges.length > 0) {
               segmentChanged(currentSegment, undefined, collection?.node.products.edges[0].cursor)
             } else {
               segmentChanged(currentSegment)
             }
           }} />
-          <Button title='⏩' onClick={() => {
+          <Button title={`>`} onClick={() => {
             if (collection && collection?.node.products.edges.length > 0) {
               segmentChanged(currentSegment, collection?.node.products.edges.reverse()[0].cursor, undefined)
             } else {
