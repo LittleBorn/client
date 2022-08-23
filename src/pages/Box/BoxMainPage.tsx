@@ -7,6 +7,8 @@ import MainTemplate from '../../components/MainTemplate';
 import { IPagePros } from '../../interfaces/IPageProps';
 import { sendStorefrontQuery } from '../../utils/shopifyStorefrontHelper';
 import DefaultBoxItem from './BoxItems/DefaultBoxItem';
+import WindelBoxItem from './BoxItems/WindelBoxItem';
+import SizeSelectionModal from './SizeSelectionModal';
 
 const SEGMENTS = [
   {
@@ -37,14 +39,19 @@ interface ICollectionResult {
       "edges": Array<
         {
           "node": {
-            "id": string,
-            "title": string,
+            "id": string;
+            "title": string;
             "products": {
               "edges": Array<{
                 cursor: string;
                 node: {
-                  title: string,
-                  id: string,
+                  title: string;
+                  id: string;
+                  options: Array<{
+                    id: string;
+                    name: string;
+                    values: Array<string>;
+                  }>;
                   featuredImage: {
                     id: string;
                     url: string;
@@ -87,6 +94,11 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
     node: {
       title: string,
       id: string,
+      options: Array<{
+        id: string;
+        name: string;
+        values: Array<string>;
+      }>;
       featuredImage: {
         id: string;
         url: string;
@@ -174,14 +186,6 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
     <MainTemplate title='Deine Box 🎁'>
       <div style={{ display: "flex", flexDirection: "column", height: "100vh", padding: "1rem", gap: "0.5rem" }}>
 
-        {/* <IonSegment scrollable onIonChange={(e) => segmentChanged(e.detail?.value)} value={currentSegment}>
-          {
-            SEGMENTS.map(SEGMENT => {
-              return <IonSegmentButton key={SEGMENT.id} value={SEGMENT.id}>{SEGMENT.title}</IonSegmentButton>
-            })
-          }
-        </IonSegment> */}
-
         <BoxProgressBar style={{ margin: "0.5rem 0rem 0.5rem 0rem" }} progress={
           SEGMENTS.map(SEGMENT => {
             if (currentSegment === SEGMENT.id) {
@@ -207,9 +211,9 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
           {
             products && products?.length > 0 && products?.map(product => {
               // depending on the current product render different Box Item
-              if (product.node.title === "Babywindeln") {
+              if (currentSegment === "Babywindeln") {
                 return (
-                  <DefaultBoxItem inBasket={basket.find(i => i === product.node.id) !== undefined} addToBasket={() => setBasket([...basket, product.node.id])} key={product.node.id} product={product} />
+                  <WindelBoxItem inBasket={basket.find(i => i === product.node.id) !== undefined} addToBasket={() => setBasket([...basket, product.node.id])} key={product.node.id} product={product} />
                 );
               } else {
                 return (
@@ -239,26 +243,28 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
         </div>
       </div>
 
-      <div style={{position: "fixed", width: "100%", bottom: "2rem", display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column"}}>
+      {/* Weiter / Zurück Buttons */}
+      <div style={{ position: "fixed", width: "100%", bottom: "2rem", display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
         <Button onClick={() => {
           const currentIndex = SEGMENTS.findIndex(s => s.id === currentSegment);
-          if(SEGMENTS[currentIndex + 1] !== undefined){
+          if (SEGMENTS[currentIndex + 1] !== undefined) {
             segmentChanged(SEGMENTS[currentIndex + 1].id);
-          }else{
+          } else {
             presentToast("Keine weitere Seite gefunden!", 1000)
           }
         }} title={basket?.length > 0 ? `Weiter (${basket.length} Produkte ausgewählt)` : `Weiter`} style={{ width: "80%" }} />
         <IonText onClick={() => {
           const currentIndex = SEGMENTS.findIndex(s => s.id === currentSegment);
-          if(SEGMENTS[currentIndex - 1] !== undefined){
+          if (SEGMENTS[currentIndex - 1] !== undefined) {
             segmentChanged(SEGMENTS[currentIndex - 1].id);
-          }else{
+          } else {
             presentToast("Keine vorherige Seite gefunden!", 1000)
           }
-        }} style={{cursor: "pointer"}} color={"primary"}>zurück</IonText>
+        }} style={{ cursor: "pointer" }} color={"primary"}>zurück</IonText>
       </div>
 
-      <IonFab vertical="top" horizontal="end" slot="fixed" style={{marginTop: "6rem"}} >
+      {/* Basket */}
+      <IonFab vertical="top" horizontal="end" slot="fixed" style={{ marginTop: "6rem" }} >
         {basket && basket.length > 0 &&
           <IonBadge style={{ position: "absolute", top: "-5px", right: "-5px", "--background": "#666666", zIndex: 2, padding: "4px 9px 4px 9px" }}>{basket.length}</IonBadge>
         }

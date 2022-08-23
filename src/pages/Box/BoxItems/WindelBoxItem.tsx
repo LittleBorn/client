@@ -9,7 +9,7 @@ interface ContainerProps {
     inBasket: boolean;
 }
 
-const DefaultBoxItem: React.FC<ContainerProps> = ({ style, product, inBasket, addToBasket }) => {
+const WindelBoxItem: React.FC<ContainerProps> = ({ style, product, inBasket, addToBasket }) => {
 
     const [isOpen, setIsOpen] = useState(false)
 
@@ -18,9 +18,12 @@ const DefaultBoxItem: React.FC<ContainerProps> = ({ style, product, inBasket, ad
             <div className="container-item" style={inBasket ? { ...style, border: "2px solid #44C1AD55" } : { ...style }} onClick={() => setIsOpen(true)}>
                 <IonImg src={product.node.featuredImage.url} alt={product.node.featuredImage.altText}></IonImg>
             </div>
-            {/* hier muss das selection modal hinzugefügt werden todo */}
+            <SizeSelectionModal confirm={() => {
+                addToBasket();
+                setIsOpen(false);
+            }} isOpen={isOpen} setIsOpen={setIsOpen}/>
         </>
     );
 };
 
-export default DefaultBoxItem;
+export default WindelBoxItem;
