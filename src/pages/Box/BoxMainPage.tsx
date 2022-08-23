@@ -1,6 +1,7 @@
 import { IonBadge, IonButton, IonFab, IonFabButton, IonIcon, IonImg, IonItem, IonSegment, IonSegmentButton, IonText, IonToolbar, useIonLoading, useIonToast } from '@ionic/react';
-import { basketOutline } from 'ionicons/icons';
+import { basketOutline, cubeOutline } from 'ionicons/icons';
 import { useEffect, useState } from 'react';
+import BoxProgressBar from '../../components/BoxProgressBar';
 import Button from '../../components/Button';
 import MainTemplate from '../../components/MainTemplate';
 import { IPagePros } from '../../interfaces/IPageProps';
@@ -81,27 +82,19 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
   }, [])
 
   const [currentSegment, setCurrentSegment] = useState<string>("Babywindeln")
-  const [collection, setCollection] = useState<{
-    "node": {
-      "id": string;
-      "title": string;
-      "products": {
-        "edges": Array<{
-          cursor: string;
-          node: {
-            title: string,
-            id: string,
-            featuredImage: {
-              id: string;
-              url: string;
-              altText: string;
-              height: number;
-            }
-          }
-        }>
+  const [products, setProducts] = useState<Array<{
+    cursor: string;
+    node: {
+      title: string,
+      id: string,
+      featuredImage: {
+        id: string;
+        url: string;
+        altText: string;
+        height: number;
       }
     }
-  }>()
+  }>>()
   const [basket, setBasket] = useState<string[]>([])
 
   const segmentChanged = async (currentSegment: string | undefined, cursorAfter?: string | undefined, cursorBefore?: string | undefined) => {
@@ -116,15 +109,15 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
     var filter = "";
 
     if (cursorAfter) {
-      filter = `first: 6, after: "${cursorAfter}"`;
+      filter = `first: 10, after: "${cursorAfter}"`;
     } else if (cursorBefore) {
-      filter = `last: 6, before: "${cursorBefore}"`;
-    }else{
-      filter = `first: 6`;
+      filter = `last: 10, before: "${cursorBefore}"`;
+    } else {
+      filter = `first: 10`;
     }
 
     let data = JSON.stringify({
-        query: `query {
+      query: `query {
         collections(first: 1, query: "title:${currentSegment}") {
           edges {
             node {
@@ -149,9 +142,9 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
           }
         }
       }`,
-        variables: {}
+      variables: {}
     })
-    
+
     const collectionResult = await sendStorefrontQuery<ICollectionResult>(data);
     if (typeof collectionResult?.data === "undefined") {
       // error fetching items
@@ -160,7 +153,13 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
     } else {
       if (collectionResult.data.collections.edges.length > 0) {
         const COLLECTION = collectionResult.data.collections.edges[0];
-        setCollection(COLLECTION)
+        const PRODUCTS = COLLECTION.node.products.edges;
+        // todo hier kann durch before/after pointer die Richtung festgestellt werden
+        if (PRODUCTS.length === 0) {
+          presentToast("Keine weiteren Produkte gefunden", 2000)
+        } else {
+          setProducts(PRODUCTS)
+        }
         dismissLoading();
       } else {
         // or the segment was not found
@@ -175,29 +174,46 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
     <MainTemplate title='Deine Box 🎁'>
       <div style={{ display: "flex", flexDirection: "column", height: "100vh", padding: "1rem", gap: "0.5rem" }}>
 
-
-        <IonSegment scrollable onIonChange={(e) => segmentChanged(e.detail?.value)} value={currentSegment}>
+        {/* <IonSegment scrollable onIonChange={(e) => segmentChanged(e.detail?.value)} value={currentSegment}>
           {
             SEGMENTS.map(SEGMENT => {
               return <IonSegmentButton key={SEGMENT.id} value={SEGMENT.id}>{SEGMENT.title}</IonSegmentButton>
             })
           }
-        </IonSegment>
+        </IonSegment> */}
+
+        <BoxProgressBar style={{ margin: "0.5rem 0rem 0.5rem 0rem" }} progress={
+          SEGMENTS.map(SEGMENT => {
+            if (currentSegment === SEGMENT.id) {
+              return {
+                color: "#44C1AD",
+                title: SEGMENT.title,
+                onClick: () => segmentChanged(SEGMENT.id)
+              }
+            } else {
+              return {
+                color: "lightgrey",
+                title: SEGMENT.title,
+                onClick: () => segmentChanged(SEGMENT.id)
+              }
+            }
+          })
+        } />
 
         <h4>
-          <b>{collection && collection.node.title}</b>
+          <b>{currentSegment && currentSegment}</b>
         </h4>
         <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "0.5rem", justifyContent: "center" }}>
           {
-            collection && collection?.node.products.edges.length > 0 && collection?.node.products.edges.map(product => {
+            products && products?.length > 0 && products?.map(product => {
               // depending on the current product render different Box Item
-              if(collection?.node.title === "Babywindeln"){
+              if (product.node.title === "Babywindeln") {
                 return (
-                  <DefaultBoxItem addToBasket={() => setBasket([...basket, product.node.id])} key={product.node.id} product={product} />
+                  <DefaultBoxItem inBasket={basket.find(i => i === product.node.id) !== undefined} addToBasket={() => setBasket([...basket, product.node.id])} key={product.node.id} product={product} />
                 );
-              }else{
+              } else {
                 return (
-                  <DefaultBoxItem addToBasket={() => setBasket([...basket, product.node.id])} key={product.node.id} product={product} />
+                  <DefaultBoxItem inBasket={basket.find(i => i === product.node.id) !== undefined} addToBasket={() => setBasket([...basket, product.node.id])} key={product.node.id} product={product} />
                 );
               }
             })
@@ -205,32 +221,49 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
         </div>
 
         {/* Pagination */}
-        <div style={{ display: "flex", gap: "0.5rem", justifyContent: "center"}}>
+        <div style={{ display: "flex", gap: "0.5rem", justifyContent: "center" }}>
           <Button title={`<`} onClick={() => {
-            if (collection && collection?.node.products.edges.length > 0) {
-              segmentChanged(currentSegment, undefined, collection?.node.products.edges[0].cursor)
+            if (products && products?.length > 0) {
+              segmentChanged(currentSegment, undefined, products[0]?.cursor)
             } else {
               segmentChanged(currentSegment)
             }
           }} />
           <Button title={`>`} onClick={() => {
-            if (collection && collection?.node.products.edges.length > 0) {
-              segmentChanged(currentSegment, collection?.node.products.edges.reverse()[0].cursor, undefined)
+            if (products && products?.length > 0) {
+              segmentChanged(currentSegment, products?.reverse()[0].cursor, undefined)
             } else {
               segmentChanged(currentSegment)
             }
           }} />
         </div>
-
-
       </div>
 
-      <IonFab vertical="bottom" horizontal="end" slot="fixed" >
+      <div style={{position: "fixed", width: "100%", bottom: "2rem", display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column"}}>
+        <Button onClick={() => {
+          const currentIndex = SEGMENTS.findIndex(s => s.id === currentSegment);
+          if(SEGMENTS[currentIndex + 1] !== undefined){
+            segmentChanged(SEGMENTS[currentIndex + 1].id);
+          }else{
+            presentToast("Keine weitere Seite gefunden!", 1000)
+          }
+        }} title={basket?.length > 0 ? `Weiter (${basket.length} Produkte ausgewählt)` : `Weiter`} style={{ width: "80%" }} />
+        <IonText onClick={() => {
+          const currentIndex = SEGMENTS.findIndex(s => s.id === currentSegment);
+          if(SEGMENTS[currentIndex - 1] !== undefined){
+            segmentChanged(SEGMENTS[currentIndex - 1].id);
+          }else{
+            presentToast("Keine vorherige Seite gefunden!", 1000)
+          }
+        }} style={{cursor: "pointer"}} color={"primary"}>zurück</IonText>
+      </div>
+
+      <IonFab vertical="top" horizontal="end" slot="fixed" style={{marginTop: "6rem"}} >
         {basket && basket.length > 0 &&
           <IonBadge style={{ position: "absolute", top: "-5px", right: "-5px", "--background": "#666666", zIndex: 2, padding: "4px 9px 4px 9px" }}>{basket.length}</IonBadge>
         }
         <IonFabButton disabled={!(basket && basket.length > 0)}>
-          <IonIcon icon={basketOutline} />
+          <IonIcon icon={cubeOutline} />
         </IonFabButton>
       </IonFab>
 
