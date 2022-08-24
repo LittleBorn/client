@@ -1,5 +1,5 @@
-import { IonBadge, IonFab, IonFabButton, IonIcon, IonText, useIonLoading, useIonToast } from '@ionic/react';
-import { basketOutline, cubeOutline } from 'ionicons/icons';
+import { IonBadge, IonButton, IonFab, IonFabButton, IonIcon, IonText, useIonLoading, useIonToast } from '@ionic/react';
+import { basketOutline, cubeOutline, cubeSharp } from 'ionicons/icons';
 import { useEffect, useState } from 'react';
 import BoxProgressBar from '../../components/BoxProgressBar';
 import Button from '../../components/Button';
@@ -82,11 +82,11 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
     var filter = "";
 
     if (cursorAfter) {
-      filter = `first: 10, after: "${cursorAfter}"`;
+      filter = `first: 50, after: "${cursorAfter}"`;
     } else if (cursorBefore) {
-      filter = `last: 10, before: "${cursorBefore}"`;
+      filter = `last: 50, before: "${cursorBefore}"`;
     } else {
-      filter = `first: 10`;
+      filter = `first: 50`;
     }
 
     let data = JSON.stringify({
@@ -221,9 +221,21 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
           })
         } />
 
-        <h4>
-          <b>{currentSegment && currentSegment}</b>
-        </h4>
+        {/* Title Bar and Basket */}
+        <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+          <h4>
+            <b>{currentSegment && currentSegment}</b>
+          </h4>
+          <div>
+            {basket && basket.length > 0 &&
+              <IonBadge style={{ position: "absolute", marginLeft: "-5px", marginTop: "-5px", "--background": "#666666", zIndex: 2, padding: "4px 9px 4px 9px" }}>{basket.length}</IonBadge>
+            }
+            <IonButton disabled={!(basket && basket.length > 0)}>
+              <IonIcon icon={cubeSharp} />
+            </IonButton>
+          </div>
+        </div>
+
         <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "0.5rem", justifyContent: "center" }}>
           {
             products && products?.length > 0 && products?.map(product => {
@@ -233,9 +245,10 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
             })
           }
         </div>
+      </div>
 
-        {/* Pagination */}
-        <div style={{ display: "flex", gap: "0.5rem", justifyContent: "center" }}>
+      {/* Pagination */}
+      {/* <div style={{ display: "flex", gap: "0.5rem", justifyContent: "center" }}>
           <Button title={`<`} onClick={() => {
             if (products && products?.length > 0) {
               segmentChanged(currentSegment, undefined, products[0]?.cursor)
@@ -250,8 +263,7 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
               segmentChanged(currentSegment)
             }
           }} />
-        </div>
-      </div>
+        </div> */}
 
       {/* Weiter / Zurück Buttons */}
       <div style={{ position: "fixed", width: "100%", bottom: "2rem", display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
@@ -272,16 +284,6 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
           }
         }} style={{ cursor: "pointer" }} color={"primary"}>zurück</IonText>
       </div>
-
-      {/* Basket */}
-      <IonFab vertical="top" horizontal="end" slot="fixed" style={{ marginTop: "6rem" }} >
-        {basket && basket.length > 0 &&
-          <IonBadge style={{ position: "absolute", top: "-5px", right: "-5px", "--background": "#666666", zIndex: 2, padding: "4px 9px 4px 9px" }}>{basket.length}</IonBadge>
-        }
-        <IonFabButton disabled={!(basket && basket.length > 0)}>
-          <IonIcon icon={cubeOutline} />
-        </IonFabButton>
-      </IonFab>
 
     </MainTemplate>
   );
