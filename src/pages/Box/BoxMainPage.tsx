@@ -9,8 +9,7 @@ import { IShopifyCollection } from '../../interfaces/Shopify/IShopifyCollection'
 import { IShopifyProduct } from '../../interfaces/Shopify/IShopifyProduct';
 import { addItemToBasket, basket$, removeItemFromBasket } from '../../stores/basketStore';
 import { sendStorefrontQuery } from '../../utils/shopifyStorefrontHelper';
-import DefaultBoxItem from './BoxItems/DefaultBoxItem';
-import WindelBoxItem from './BoxItems/WindelBoxItem';
+import DefaultBoxItem from './DefaultBoxItem';
 
 const SEGMENTS = [
   {
@@ -105,12 +104,32 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
                       description
                       handle
                       variants (first: 20){
-                          edges{
-                              node{
-                                  id
-                                  title
+                        edges{
+                          node{
+                              id
+                              title
+                              compareAtPriceV2{
+                                  amount
+                                  currencyCode
                               }
+                              barcode
+                              availableForSale
+                              currentlyNotInStock
+                              image{
+                                  altText
+                                  height
+                                  id
+                                  url
+                                  width
+                              }
+                              priceV2{
+                                  amount
+                                  currencyCode
+                              }
+                              requiresShipping
+                              weight
                           }
+                      }
                       }
                       compareAtPriceRange {
                           maxVariantPrice{
@@ -208,16 +227,9 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
         <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "0.5rem", justifyContent: "center" }}>
           {
             products && products?.length > 0 && products?.map(product => {
-              // depending on the current product render different Box Item
-              if (currentSegment === "Babywindeln") {
-                return (
-                  <WindelBoxItem inBasket={basket.find(i => i === product.node.id) !== undefined} addToBasket={() => basket$.next([...basket, product.node.id])} key={product.node.id} product={product} />
-                );
-              } else {
-                return (
-                  <DefaultBoxItem inBasket={basket.find(i => i === product.node.id) !== undefined} addToBasket={() => basket$.next([...basket, product.node.id])} key={product.node.id} product={product} />
-                );
-              }
+              return (
+                <DefaultBoxItem inBasket={basket.find(i => i === product.node.id) !== undefined} addToBasket={() => basket$.next([...basket, product.node.id])} key={product.node.id} product={product} />
+              );
             })
           }
         </div>
