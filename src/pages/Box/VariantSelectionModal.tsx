@@ -11,9 +11,20 @@ interface ContainerProps {
     product: IShopifyProduct;
 }
 
+const VariantStyle = {
+    backgroundColor: "#44C1AD",
+    padding: "1rem",
+    borderRadius: "1rem",
+}
+
+const SelectedVariantStyle= {
+    ...VariantStyle,
+    backgroundColor: "#2d8576"
+}
+
 const VariantSelectionModal: React.FC<ContainerProps> = ({ isOpen, setIsOpen, product }) => {
 
-    const [selectedVariant, setSelectedVariant] = useState(undefined);
+    const [selectedVariant, setSelectedVariant] = useState<string | undefined>(product.node.variants.edges[0].node.id);
     const [selectedAmount, setSelectedAmount] = useState(1)
 
     return (
@@ -32,19 +43,30 @@ const VariantSelectionModal: React.FC<ContainerProps> = ({ isOpen, setIsOpen, pr
                 </IonToolbar>
             </IonHeader>
             <IonContent className="ion-padding">
-                <div>
-                    {
-                        product.node.variants.edges.map((variant: IShopifyProductVariant) => {
-                            return <IonText key={variant.node.id}>{variant.node.title}</IonText>
-                        })
-                    }
+
+                <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", height: "100%", alignItems: "center", gap: "1rem" }}>
+                    
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1rem" }}>
+                        {
+                            product.node.variants.edges.map((variant: IShopifyProductVariant) => {
+                                return <div
+                                    key={variant.node.id} 
+                                    style={variant.node.id === selectedVariant ? {...SelectedVariantStyle} : {...VariantStyle}}
+                                    onClick={() => setSelectedVariant(variant.node.id)}
+                                >
+                                    <IonText key={variant.node.id}>{variant.node.title}</IonText>
+                                </div>
+                            })
+                        }
+                    </div>
+
+                    <div style={{ display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", gap: "1rem" }}>
+                        <Button title="-" onClick={() => selectedAmount > 1 ? setSelectedAmount(selectedAmount - 1) : setSelectedAmount(selectedAmount)} />
+                        <IonText>{selectedAmount}</IonText>
+                        <Button title="+" onClick={() => setSelectedAmount(selectedAmount + 1)} />
+                    </div>
                 </div>
 
-                <div style={{ display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", gap: "1rem" }}>
-                    <Button title="-" onClick={() => selectedAmount > 1 ? setSelectedAmount(selectedAmount - 1) : setSelectedAmount(selectedAmount)} />
-                    <IonText>{selectedAmount}</IonText>
-                    <Button title="+" onClick={() => setSelectedAmount(selectedAmount + 1)} />
-                </div>
 
             </IonContent>
         </IonModal>
