@@ -1,15 +1,16 @@
-import { IonBadge, IonButton, IonFab, IonFabButton, IonIcon, IonImg, IonItem, IonSegment, IonSegmentButton, IonText, IonToolbar, useIonLoading, useIonToast } from '@ionic/react';
+import { IonBadge, IonFab, IonFabButton, IonIcon, IonText, useIonLoading, useIonToast } from '@ionic/react';
 import { basketOutline, cubeOutline } from 'ionicons/icons';
 import { useEffect, useState } from 'react';
 import BoxProgressBar from '../../components/BoxProgressBar';
 import Button from '../../components/Button';
 import MainTemplate from '../../components/MainTemplate';
 import { IPagePros } from '../../interfaces/IPageProps';
-import { addItemToBasket, removeItemFromBasket } from '../../stores/basketStore';
+import { IShopifyCollection } from '../../interfaces/Shopify/IShopifyCollection';
+import { IShopifyProduct } from '../../interfaces/Shopify/IShopifyProduct';
+import { addItemToBasket, basket$, removeItemFromBasket } from '../../stores/basketStore';
 import { sendStorefrontQuery } from '../../utils/shopifyStorefrontHelper';
 import DefaultBoxItem from './BoxItems/DefaultBoxItem';
 import WindelBoxItem from './BoxItems/WindelBoxItem';
-import SizeSelectionModal from './SizeSelectionModal';
 
 const SEGMENTS = [
   {
@@ -37,33 +38,7 @@ const SEGMENTS = [
 interface ICollectionResult {
   "data": {
     "collections": {
-      "edges": Array<
-        {
-          "node": {
-            "id": string;
-            "title": string;
-            "products": {
-              "edges": Array<{
-                cursor: string;
-                node: {
-                  title: string;
-                  id: string;
-                  options: Array<{
-                    id: string;
-                    name: string;
-                    values: Array<string>;
-                  }>;
-                  featuredImage: {
-                    id: string;
-                    url: string;
-                    altText: string;
-                    height: number;
-                  }
-                }
-              }>
-            }
-          }
-        }>
+      "edges": Array<IShopifyCollection>
     }
   }
 }
@@ -87,27 +62,13 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
   useEffect(() => {
     // fetch windeln
     segmentChanged(SEGMENTS[0].id)
+    // set basket state with observable
+    basket$.asObservable().subscribe(v => setBasket(v))
   }, [])
 
   const [currentSegment, setCurrentSegment] = useState<string>("Babywindeln")
-  const [products, setProducts] = useState<Array<{
-    cursor: string;
-    node: {
-      title: string,
-      id: string,
-      options: Array<{
-        id: string;
-        name: string;
-        values: Array<string>;
-      }>;
-      featuredImage: {
-        id: string;
-        url: string;
-        altText: string;
-        height: number;
-      }
-    }
-  }>>()
+  const [products, setProducts] = useState<Array<IShopifyProduct>>()
+
   const [basket, setBasket] = useState<string[]>([])
 
   const segmentChanged = async (currentSegment: string | undefined, cursorAfter?: string | undefined, cursorBefore?: string | undefined) => {
@@ -137,19 +98,55 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
               id
               title
               products(${filter}){
-                  edges{
-                      cursor
-                      node{
-                          title
-                          id
-                          featuredImage {
-                              id
-                              url
-                              altText
-                              height
+                edges{
+                  cursor
+                  node{
+                      availableForSale
+                      description
+                      handle
+                      variants (first: 20){
+                          edges{
+                              node{
+                                  id
+                                  title
+                              }
                           }
                       }
+                      compareAtPriceRange {
+                          maxVariantPrice{
+                              amount
+                              currencyCode
+                          }
+                          minVariantPrice{
+                              amount
+                              currencyCode
+                          }
+                      }
+                      createdAt
+                      title
+                      id
+                      options {
+                          id
+                          name
+                          values
+                      }
+                      featuredImage {
+                          id
+                          url
+                          altText
+                          height
+                      }
+                      onlineStoreUrl
+                      requiresSellingPlan
+                      seo {
+                          description
+                          title
+                      }
+                      tags
+                      totalInventory
+                      vendor
                   }
+              }
               }
             }
           }
@@ -205,10 +202,6 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
           })
         } />
 
-        <button onClick={() => { if(products) addItemToBasket(products[0])} }>1</button>
-        <button onClick={() => { if(products) addItemToBasket(products[1]) }}>2</button>
-        <button onClick={() => { if(products) removeItemFromBasket(products[0]) }}>3</button>
-
         <h4>
           <b>{currentSegment && currentSegment}</b>
         </h4>
@@ -218,11 +211,11 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
               // depending on the current product render different Box Item
               if (currentSegment === "Babywindeln") {
                 return (
-                  <WindelBoxItem inBasket={basket.find(i => i === product.node.id) !== undefined} addToBasket={() => setBasket([...basket, product.node.id])} key={product.node.id} product={product} />
+                  <WindelBoxItem inBasket={basket.find(i => i === product.node.id) !== undefined} addToBasket={() => basket$.next([...basket, product.node.id])} key={product.node.id} product={product} />
                 );
               } else {
                 return (
-                  <DefaultBoxItem inBasket={basket.find(i => i === product.node.id) !== undefined} addToBasket={() => setBasket([...basket, product.node.id])} key={product.node.id} product={product} />
+                  <DefaultBoxItem inBasket={basket.find(i => i === product.node.id) !== undefined} addToBasket={() => basket$.next([...basket, product.node.id])} key={product.node.id} product={product} />
                 );
               }
             })
