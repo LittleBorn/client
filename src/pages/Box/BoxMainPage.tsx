@@ -1,5 +1,5 @@
-import { IonBadge, IonButton, IonFab, IonFabButton, IonIcon, IonText, useIonLoading, useIonToast } from '@ionic/react';
-import { basketOutline, cubeOutline, cubeSharp } from 'ionicons/icons';
+import { IonBadge, IonButton,IonIcon, IonText, useIonLoading, useIonToast } from '@ionic/react';
+import { cubeSharp } from 'ionicons/icons';
 import { useEffect, useState } from 'react';
 import BoxProgressBar from '../../components/BoxProgressBar';
 import Button from '../../components/Button';
@@ -7,7 +7,7 @@ import MainTemplate from '../../components/MainTemplate';
 import { IPagePros } from '../../interfaces/IPageProps';
 import { IShopifyCollection } from '../../interfaces/Shopify/IShopifyCollection';
 import { IShopifyProduct } from '../../interfaces/Shopify/IShopifyProduct';
-import { addItemToBasket, basket$, removeItemFromBasket } from '../../stores/basketStore';
+import { basket$ } from '../../stores/basketStore';
 import { sendStorefrontQuery } from '../../utils/shopifyStorefrontHelper';
 import DefaultBoxItem from './DefaultBoxItem';
 
@@ -272,9 +272,10 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
           if (SEGMENTS[currentIndex + 1] !== undefined) {
             segmentChanged(SEGMENTS[currentIndex + 1].id);
           } else {
-            presentToast("Keine weitere Seite gefunden!", 1000)
+            props.history.push('/BoxSuccess');
+            // presentToast("Keine weitere Seite gefunden!", 1000)
           }
-        }} title={basket?.length > 0 ? `Weiter (${basket.length} Produkte ausgewählt)` : `Weiter`} style={{ width: "80%" }} />
+        }} title={SEGMENTS.findIndex(s => s.id === currentSegment) === SEGMENTS.length - 1 ? `Abschließen`: basket?.length > 0 ? `Weiter (${basket.length} Produkte ausgewählt)`: `Weiter`} style={{ width: "80%" }} />
         <IonText onClick={() => {
           const currentIndex = SEGMENTS.findIndex(s => s.id === currentSegment);
           if (SEGMENTS[currentIndex - 1] !== undefined) {

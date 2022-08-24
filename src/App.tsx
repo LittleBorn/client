@@ -1,6 +1,6 @@
 import { AccessTokenContext } from '.';
 import { useContext } from 'react';
-import { IonApp, IonIcon, IonLabel, IonRouterOutlet, IonTab, IonTabBar, IonTabButton, IonTabs, setupIonicReact } from '@ionic/react';
+import { IonApp, IonIcon, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { Redirect, Route } from 'react-router-dom';
 import { home, cube, medkit, notifications, settings } from 'ionicons/icons';
@@ -46,6 +46,8 @@ import BoxStartPage from './pages/Box/BoxStartPage';
 import BoxMainPage from './pages/Box/BoxMainPage';
 import Notification from './pages/Notification/Notification';
 import Settings from './pages/Settings/Settings';
+import BoxSuccess from './pages/Box/BoxSuccess';
+import BoxOverview from './pages/Box/BoxOverview';
 
 setupIonicReact();
 
@@ -89,9 +91,12 @@ const SecureRoutes = () => {
         <Route path="/Home" render={(props) => <Home props={{ ...props }} />} exact={true} />
         <Route path="/Health" render={(props) => <Health props={{ ...props }} />} exact={true} />
         <Route path="/BoxStartPage" render={(props) => <BoxStartPage props={{ ...props }} />} exact={true} />
-        <Route path="/BoxMainPage" render={(props) => <BoxMainPage props={{ ...props }} />} exact={true} />
         <Route path="/Notification" render={(props) => <Notification props={{ ...props }} />} exact={true} />
         <Route path="/Settings" render={(props) => <Settings props={{ ...props }} />} exact={true} />
+        {/* Box */}
+        <Route path="/BoxMainPage" render={(props) => <BoxMainPage props={{ ...props }} />} exact={true} />
+        <Route path="/BoxSuccess" render={(props) => <BoxSuccess props={{ ...props }} />} exact={true} />
+        <Route path="/BoxOverview" render={(props) => <BoxOverview props={{ ...props }} />} exact={true} />
         <Route render={() => <Redirect to="/Home" />} />
       </IonRouterOutlet>
       
