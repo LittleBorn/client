@@ -1,16 +1,16 @@
 import { IonButton, IonButtons, IonContent, IonHeader, IonModal, IonTitle, IonToolbar } from "@ionic/react";
 import { useState } from "react";
 import { IShopifyProduct } from "../../interfaces/Shopify/IShopifyProduct";
+import { addItemToBasket } from "../../stores/basketStore";
 
 interface ContainerProps {
     isOpen: boolean;
     setIsOpen: (isOpen: boolean) => void;
-    confirm: () => void;
     product: IShopifyProduct;
 }
 
 
-const NonVariantSelectionModal: React.FC<ContainerProps> = ({isOpen, setIsOpen, confirm, product }) => {
+const NonVariantSelectionModal: React.FC<ContainerProps> = ({isOpen, setIsOpen, product }) => {
 
     return (
         <IonModal isOpen={isOpen}>
@@ -21,7 +21,7 @@ const NonVariantSelectionModal: React.FC<ContainerProps> = ({isOpen, setIsOpen, 
               </IonButtons>
               <IonTitle>Welcome</IonTitle>
               <IonButtons slot="end">
-                <IonButton strong={true} onClick={() => confirm()}>
+                <IonButton strong={true} onClick={() => {addItemToBasket(product.node.id); setIsOpen(false)}}>
                   Confirm
                 </IonButton>
               </IonButtons>

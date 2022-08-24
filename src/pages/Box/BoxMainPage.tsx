@@ -228,7 +228,7 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
           {
             products && products?.length > 0 && products?.map(product => {
               return (
-                <DefaultBoxItem inBasket={basket.find(i => i === product.node.id) !== undefined} addToBasket={() => basket$.next([...basket, product.node.id])} key={product.node.id} product={product} />
+                <DefaultBoxItem inBasket={basket.find(i => i === product.node.id) !== undefined} key={product.node.id} product={product} />
               );
             })
           }

@@ -9,7 +9,6 @@ import VariantSelectionModal from "./VariantSelectionModal";
 interface ContainerProps {
     style?: any;
     product: IShopifyProduct;
-    addToBasket: () => void;
     inBasket: boolean;
 }
 
@@ -19,7 +18,7 @@ const CustomStyle = {
     justifyContent: "center",
     alignItems: "center",
     textAlign: "center",
-    gap: "0.1rem"
+    paddingBottom: "1rem",
 }
 
 const CustomStyleInBasket = {
@@ -37,29 +36,23 @@ const amountSortFunction = (a: IShopifyProductVariant, b: IShopifyProductVariant
     }
 }
 
-const DefaultBoxItem: React.FC<ContainerProps> = ({ style, product, inBasket, addToBasket }) => {
+const DefaultBoxItem: React.FC<ContainerProps> = ({ style, product, inBasket }) => {
 
     const [isOpen, setIsOpen] = useState(false)
 
     return (
         <>
             <div className="container-item" style={inBasket ? { ...style, ...CustomStyleInBasket } : { ...style, ...CustomStyle }} onClick={() => setIsOpen(true)}>
-                <IonImg style={{ marginBottom: "-1.5rem" }} src={product.node.featuredImage.url} alt={product.node.featuredImage.altText}></IonImg>
+                <IonImg style={{marginBottom: "-1rem"}} src={product.node.featuredImage.url} alt={product.node.featuredImage.altText}></IonImg>
                 <IonText style={{ fontSize: "0.8em", textTransform: "uppercase" }}>{product.node.vendor}</IonText>
                 <IonText style={{ fontWeight: "bold", fontSize: "0.9em" }}>{product.node.title}</IonText>
                 <IonText style={{ fontSize: "0.9rem", marginTop: "0.1rem" }}>Von {product.node.variants.edges.length > 0 && product.node.variants.edges.sort(amountSortFunction)[0].node.priceV2.amount} €</IonText>
                 <IonText style={{ fontSize: "0.7rem", marginTop: "0.2rem" }}>{product.node.variants.edges.length > 0 && product.node.variants.edges.length} {product.node.variants.edges.length === 1 ? "Variante" : "Varianten"} verfügbar</IonText>
             </div>
             {product.node.variants.edges.length > 1 ?
-                <VariantSelectionModal product={product} confirm={() => {
-                    addToBasket();
-                    setIsOpen(false);
-                }} isOpen={isOpen} setIsOpen={setIsOpen} />
+                <VariantSelectionModal product={product} isOpen={isOpen} setIsOpen={setIsOpen} />
                 :
-                <NonVariantSelectionModal product={product} confirm={() => {
-                    addToBasket();
-                    setIsOpen(false);
-                }} isOpen={isOpen} setIsOpen={setIsOpen} />
+                <NonVariantSelectionModal product={product} isOpen={isOpen} setIsOpen={setIsOpen} />
             }
         </>
     );
