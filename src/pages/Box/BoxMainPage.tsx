@@ -230,7 +230,7 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
             {basket && basket.length > 0 &&
               <IonBadge style={{ position: "absolute", marginLeft: "-5px", marginTop: "-5px", "--background": "#666666", zIndex: 2, padding: "4px 9px 4px 9px" }}>{basket.length}</IonBadge>
             }
-            <IonButton disabled={!(basket && basket.length > 0)}>
+            <IonButton onClick={() => props.history.push('/BoxOverview')} disabled={!(basket && basket.length > 0)}>
               <IonIcon icon={cubeSharp} />
             </IonButton>
           </div>
