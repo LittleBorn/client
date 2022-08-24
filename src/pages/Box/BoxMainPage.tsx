@@ -5,6 +5,7 @@ import BoxProgressBar from '../../components/BoxProgressBar';
 import Button from '../../components/Button';
 import MainTemplate from '../../components/MainTemplate';
 import { IPagePros } from '../../interfaces/IPageProps';
+import { addItemToBasket, removeItemFromBasket } from '../../stores/basketStore';
 import { sendStorefrontQuery } from '../../utils/shopifyStorefrontHelper';
 import DefaultBoxItem from './BoxItems/DefaultBoxItem';
 import WindelBoxItem from './BoxItems/WindelBoxItem';
@@ -203,6 +204,10 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
             }
           })
         } />
+
+        <button onClick={() => { if(products) addItemToBasket(products[0])} }>1</button>
+        <button onClick={() => { if(products) addItemToBasket(products[1]) }}>2</button>
+        <button onClick={() => { if(products) removeItemFromBasket(products[0]) }}>3</button>
 
         <h4>
           <b>{currentSegment && currentSegment}</b>
