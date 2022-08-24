@@ -18,7 +18,7 @@ const BoxSuccess: React.FC<IPagePros> = ({ props }: IPagePros) => {
     <MainTemplate title='Deine Box 🎁'>
       <div style={{ display: "flex", flexDirection: "column", height: "100%", padding: "1rem", gap: "1.5rem", alignItems: "center", justifyContent: "center" }}>
         
-        <SetupProgressBar style={{marginBottom: "2rem"}} progress={["#EA407D", "#EA407D", "#EA407D", "#EA407D", "#EA407D"]}/>
+        <SetupProgressBar customWidth='3rem' style={{marginBottom: "2rem"}} progress={["#EA407D", "#EA407D", "#EA407D", "#EA407D", "#EA407D"]}/>
 
         <IonText style={{ fontWeight: "bold", fontSize: "1.3em" }}>Toll! Deine Box ist fertig!</IonText>
 
