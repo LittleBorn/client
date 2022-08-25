@@ -26,7 +26,7 @@ const NonVariantSelectionModal: React.FC<ContainerProps> = ({ isOpen, setIsOpen,
           <IonButtons slot="end">
             <IonButton strong={true} onClick={() => {
               for (var i = 0; i < selectedAmount; i++) {
-                addItemToBasket(product.node.id);
+                addItemToBasket(product.node.variants.edges[0].node.id);
               }
               setIsOpen(false)
             }}>
