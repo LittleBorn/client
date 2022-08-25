@@ -17,7 +17,7 @@ const VariantStyle = {
     borderRadius: "1rem",
 }
 
-const SelectedVariantStyle= {
+const SelectedVariantStyle = {
     ...VariantStyle,
     backgroundColor: "#2d8576"
 }
@@ -36,7 +36,12 @@ const VariantSelectionModal: React.FC<ContainerProps> = ({ isOpen, setIsOpen, pr
                     </IonButtons>
                     <IonTitle>Varianten</IonTitle>
                     <IonButtons slot="end">
-                        <IonButton strong={true} onClick={() => { addItemToBasket(product.node.id); setIsOpen(false) }}>
+                        <IonButton strong={true} onClick={() => {
+                            for (var i = 0; i < selectedAmount; i++) {
+                                addItemToBasket(product.node.id);
+                            }
+                            setIsOpen(false)
+                        }}>
                             Confirm
                         </IonButton>
                     </IonButtons>
@@ -45,13 +50,13 @@ const VariantSelectionModal: React.FC<ContainerProps> = ({ isOpen, setIsOpen, pr
             <IonContent className="ion-padding">
 
                 <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", height: "100%", alignItems: "center", gap: "1rem" }}>
-                    
+
                     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1rem" }}>
                         {
                             product.node.variants.edges.map((variant: IShopifyProductVariant) => {
                                 return <div
-                                    key={variant.node.id} 
-                                    style={variant.node.id === selectedVariant ? {...SelectedVariantStyle} : {...VariantStyle}}
+                                    key={variant.node.id}
+                                    style={variant.node.id === selectedVariant ? { ...SelectedVariantStyle } : { ...VariantStyle }}
                                     onClick={() => setSelectedVariant(variant.node.id)}
                                 >
                                     <IonText key={variant.node.id}>{variant.node.title}</IonText>

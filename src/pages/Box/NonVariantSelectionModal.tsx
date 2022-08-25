@@ -1,41 +1,51 @@
-import { IonButton, IonButtons, IonContent, IonHeader, IonModal, IonTitle, IonToolbar } from "@ionic/react";
+import { IonButton, IonButtons, IonContent, IonHeader, IonModal, IonText, IonTitle, IonToolbar } from "@ionic/react";
 import { useState } from "react";
+import Button from "../../components/Button";
 import { IShopifyProduct } from "../../interfaces/Shopify/IShopifyProduct";
 import { addItemToBasket } from "../../stores/basketStore";
 
 interface ContainerProps {
-    isOpen: boolean;
-    setIsOpen: (isOpen: boolean) => void;
-    product: IShopifyProduct;
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+  product: IShopifyProduct;
 }
 
 
-const NonVariantSelectionModal: React.FC<ContainerProps> = ({isOpen, setIsOpen, product }) => {
+const NonVariantSelectionModal: React.FC<ContainerProps> = ({ isOpen, setIsOpen, product }) => {
 
-    return (
-        <IonModal isOpen={isOpen}>
-            <IonHeader>
-            <IonToolbar>
-              <IonButtons slot="start">
-                <IonButton onClick={() => setIsOpen(false)}>Cancel</IonButton>
-              </IonButtons>
-              <IonTitle>Welcome</IonTitle>
-              <IonButtons slot="end">
-                <IonButton strong={true} onClick={() => {addItemToBasket(product.node.id); setIsOpen(false)}}>
-                  Confirm
-                </IonButton>
-              </IonButtons>
-            </IonToolbar>
-            </IonHeader>
-            <IonContent className="ion-padding">
-                <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni illum quidem recusandae ducimus quos
-                    reprehenderit. Veniam, molestias quos, dolorum consequuntur nisi deserunt omnis id illo sit cum qui.
-                    Eaque, dicta.
-                </p>
-            </IonContent>
-        </IonModal>
-    );
+  const [selectedAmount, setSelectedAmount] = useState(1)
+
+  return (
+    <IonModal isOpen={isOpen}>
+      <IonHeader>
+        <IonToolbar>
+          <IonButtons slot="start">
+            <IonButton onClick={() => setIsOpen(false)}>Cancel</IonButton>
+          </IonButtons>
+          <IonTitle>Anzahl</IonTitle>
+          <IonButtons slot="end">
+            <IonButton strong={true} onClick={() => {
+              for (var i = 0; i < selectedAmount; i++) {
+                addItemToBasket(product.node.id);
+              }
+              setIsOpen(false)
+            }}>
+              Confirm
+            </IonButton>
+          </IonButtons>
+        </IonToolbar>
+      </IonHeader>
+      <IonContent className="ion-padding">
+        <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", height: "100%", alignItems: "center", gap: "1rem" }}>
+          <div style={{ display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center", gap: "1rem" }}>
+            <Button title="-" onClick={() => selectedAmount > 1 ? setSelectedAmount(selectedAmount - 1) : setSelectedAmount(selectedAmount)} />
+            <IonText>{selectedAmount}</IonText>
+            <Button title="+" onClick={() => setSelectedAmount(selectedAmount + 1)} />
+          </div>
+        </div>
+      </IonContent>
+    </IonModal>
+  );
 };
 
 export default NonVariantSelectionModal;
