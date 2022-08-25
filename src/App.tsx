@@ -48,6 +48,7 @@ import Notification from './pages/Notification/Notification';
 import Settings from './pages/Settings/Settings';
 import BoxSuccess from './pages/Box/BoxSuccess';
 import BoxOverview from './pages/Box/BoxOverview';
+import HealthStartPage from './pages/Health/HealthStartPage';
 
 setupIonicReact();
 
@@ -63,7 +64,7 @@ const SecureRoutes = () => {
           <IonIcon icon={cube} />
           <IonLabel>Meine Box</IonLabel>
         </IonTabButton>
-        <IonTabButton tab="health" href="/Health">
+        <IonTabButton tab="health" href="/HealthStartPage">
           <IonIcon icon={medkit} />
           <IonLabel>Health</IonLabel>
         </IonTabButton>
@@ -89,10 +90,12 @@ const SecureRoutes = () => {
         <Route path="/BabyProfile" render={(props) => <BabyProfile props={{ ...props }} />} exact={true} />
         {/* Menu */}
         <Route path="/Home" render={(props) => <Home props={{ ...props }} />} exact={true} />
-        <Route path="/Health" render={(props) => <Health props={{ ...props }} />} exact={true} />
+        <Route path="/HealthStartPage" render={(props) => <HealthStartPage props={{ ...props }} />} exact={true} />
         <Route path="/BoxStartPage" render={(props) => <BoxStartPage props={{ ...props }} />} exact={true} />
         <Route path="/Notification" render={(props) => <Notification props={{ ...props }} />} exact={true} />
         <Route path="/Settings" render={(props) => <Settings props={{ ...props }} />} exact={true} />
+        {/* Health */}
+        <Route path="/Health" render={(props) => <Health props={{ ...props }} />} exact={true} />
         {/* Box */}
         <Route path="/BoxMainPage" render={(props) => <BoxMainPage props={{ ...props }} />} exact={true} />
         <Route path="/BoxSuccess" render={(props) => <BoxSuccess props={{ ...props }} />} exact={true} />

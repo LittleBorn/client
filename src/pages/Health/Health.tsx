@@ -1,5 +1,5 @@
 import { IonIcon, IonText } from '@ionic/react';
-import { scaleOutline, scaleSharp } from 'ionicons/icons';
+import { scaleOutline, scaleSharp, speedometerSharp } from 'ionicons/icons';
 import { useEffect, useState } from 'react';
 import HealthCard from '../../components/HealthCard';
 import MainTemplate from '../../components/MainTemplate';
@@ -27,7 +27,7 @@ const Health: React.FC<IPagePros> = ({ props }: IPagePros) => {
   useEffect(() => {
 
     customer$.asObservable().subscribe(v => getChild(v))
-    
+
   }, [])
 
 
@@ -39,8 +39,8 @@ const Health: React.FC<IPagePros> = ({ props }: IPagePros) => {
 
         <IonText style={{alignSelf: "center", margin: "0rem 0rem 1rem 0rem", fontSize: "1.5em", fontWeight: "bold"}}>{child?.childName}</IonText>
 
-        <HealthCard title={`Gewicht ${child?.weight[0]?.value}`} text='im Alter von' icon={scaleSharp} date='8:13' />
-        <HealthCard title={`Körpergröße ${child?.height[0]?.value}`} text='im Alter von' icon={scaleSharp} date='8:13' />
+        <HealthCard title={`Gewicht ${child?.weight[0]?.value}`} text={ child?.weight[0]?.updated_at !== undefined ? `im Alter von ${Math.floor((Number.parseInt(child?.weight[0]?.updated_at)) / 1000 / 60 / 60 / 24 / 365)} Jahren`: `Alter konnte nicht ermittelt werden!"`} icon={scaleSharp} date='8:13' />
+        <HealthCard title={`Körpergröße ${child?.height[0]?.value}`} text={ child?.weight[0]?.updated_at !== undefined ? `im Alter von ${Math.floor((Number.parseInt(child?.weight[0]?.updated_at)) / 1000 / 60 / 60 / 24 / 365)} Jahren`: `Alter konnte nicht ermittelt werden!"`} icon={speedometerSharp} date='8:13' />
         {/* <HealthCard title='Körperumfang' text='im Alter von' icon={scaleSharp} date='8:13' /> */}
 
         {
