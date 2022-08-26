@@ -47,9 +47,9 @@ const VariantSelectionModal: React.FC<ContainerProps> = ({ isOpen, setIsOpen, pr
                     </IonButtons>
                 </IonToolbar>
             </IonHeader>
-            <IonContent className="ion-padding">
+            <IonContent className="ion-padding" style={{overflowY: "hidden"}}>
 
-                <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", height: "100%", alignItems: "center", gap: "1rem"}}>
+                <div style={{ display: "flex", flexDirection: "column", height: "100%", alignItems: "center", gap: "1rem", overflowY: "scroll", padding: "1rem"}}>
 
                     <IonText style={{ fontSize: "1.1em", fontWeight: "bold" }}>{product.node.title}</IonText>
                     <IonText style={{ fontSize: "1em" }}>Marke: {product.node.vendor}</IonText>
