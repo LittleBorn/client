@@ -49,7 +49,7 @@ const VariantSelectionModal: React.FC<ContainerProps> = ({ isOpen, setIsOpen, pr
             </IonHeader>
             <IonContent className="ion-padding">
 
-                <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", height: "100%", alignItems: "center", gap: "1rem" }}>
+                <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", height: "100%", alignItems: "center", gap: "1rem"}}>
 
                     <IonText style={{ fontSize: "1.1em", fontWeight: "bold" }}>{product.node.title}</IonText>
                     <IonText style={{ fontSize: "1em" }}>Marke: {product.node.vendor}</IonText>
