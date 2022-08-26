@@ -1,6 +1,7 @@
-import { IonBadge, IonButton,IonIcon, IonText, useIonLoading, useIonToast } from '@ionic/react';
+import { IonBadge, IonButton, IonIcon, IonText, useIonLoading, useIonToast } from '@ionic/react';
 import { cubeSharp } from 'ionicons/icons';
 import { useEffect, useState } from 'react';
+import BoxButton from '../../components/BoxButton';
 import BoxProgressBar from '../../components/BoxProgressBar';
 import Button from '../../components/Button';
 import MainTemplate from '../../components/MainTemplate';
@@ -240,7 +241,7 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
           {
             products && products?.length > 0 && products?.map(product => {
               return (
-                <DefaultBoxItem inBasket={basket.find(i => i === product.node.id) !== undefined} key={product.node.id} product={product} />
+                <DefaultBoxItem inBasket={basket.find(basketItem => product.node.variants.edges.find(variant => variant.node.id === basketItem)) !== undefined} key={product.node.id} product={product} />
               );
             })
           }
@@ -267,7 +268,7 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
 
       {/* Weiter / Zurück Buttons */}
       <div style={{ position: "fixed", width: "100%", bottom: "2rem", display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
-        <Button onClick={() => {
+        <BoxButton onClick={() => {
           const currentIndex = SEGMENTS.findIndex(s => s.id === currentSegment);
           if (SEGMENTS[currentIndex + 1] !== undefined) {
             segmentChanged(SEGMENTS[currentIndex + 1].id);
@@ -275,7 +276,10 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
             props.history.push('/BoxSuccess');
             // presentToast("Keine weitere Seite gefunden!", 1000)
           }
-        }} title={SEGMENTS.findIndex(s => s.id === currentSegment) === SEGMENTS.length - 1 ? `Abschließen`: basket?.length > 0 ? `Weiter (${basket.length} Produkte ausgewählt)`: `Weiter`} style={{ width: "80%" }} />
+        }}
+          title={SEGMENTS.findIndex(s => s.id === currentSegment) === SEGMENTS.length - 1 ? `Abschließen` : `Weiter`}
+          text={basket?.length > 1 ? `${basket.length} Produkte ausgewählt)` : basket?.length === 1 ? `${basket.length} Produkt ausgewählt)` : ``}
+          style={{ width: "80%" }} />
         <IonText onClick={() => {
           const currentIndex = SEGMENTS.findIndex(s => s.id === currentSegment);
           if (SEGMENTS[currentIndex - 1] !== undefined) {

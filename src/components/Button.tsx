@@ -12,8 +12,8 @@ interface ContainerProps {
     routerOptions?: RouterOptions | undefined
 }
 
-const ButtonStyle = {
-    borderRadius: "5rem"
+export const ButtonStyle = {
+    borderRadius: "5px"
 }
 
 const Button: React.FC<ContainerProps> = ({ title, style, onClick, routerLink, routerDirection, routerAnimation, routerOptions }) => {
