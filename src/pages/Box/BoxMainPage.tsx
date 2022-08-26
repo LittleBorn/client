@@ -202,7 +202,7 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
 
   return (
     <MainTemplate title='Deine Box 🎁'>
-      <div style={{ display: "flex", flexDirection: "column", height: "100vh", padding: "1rem", gap: "0.5rem" }}>
+      <div style={{ display: "flex", flexDirection: "column", height: "95%", padding: "1rem", gap: "0.5rem", overflowY: 'scroll'}}>
 
         <BoxProgressBar style={{ margin: "0.5rem 0rem 0.5rem 0rem" }} progress={
           SEGMENTS.map(SEGMENT => {
@@ -243,8 +243,11 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
               return (
                 <DefaultBoxItem inBasket={basket.find(basketItem => product.node.variants.edges.find(variant => variant.node.id === basketItem)) !== undefined} key={product.node.id} product={product} />
               );
-            })
+            }) 
           }
+          <div style={{height: "6.5rem", width: "100%"}}>
+            {/* BLOCKER for better Navigation */}
+          </div>
         </div>
       </div>
 
@@ -267,7 +270,7 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
         </div> */}
 
       {/* Weiter / Zurück Buttons */}
-      <div style={{ position: "fixed", width: "100%", bottom: "2rem", display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
+      <div style={{ position: "fixed", width: "100%", bottom: "0rem", display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
         <BoxButton onClick={() => {
           const currentIndex = SEGMENTS.findIndex(s => s.id === currentSegment);
           if (SEGMENTS[currentIndex + 1] !== undefined) {
@@ -279,7 +282,8 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
         }}
           title={SEGMENTS.findIndex(s => s.id === currentSegment) === SEGMENTS.length - 1 ? `Abschließen` : `Weiter`}
           text={basket?.length > 1 ? `${basket.length} Produkte ausgewählt)` : basket?.length === 1 ? `${basket.length} Produkt ausgewählt)` : ``}
-          style={{ width: "80%" }} />
+          style={{ width: "80%"}} />
+        {/* <BoxButton title='zurück' style={{backgroundColor: "#cccccc"}}/> */}
         <IonText onClick={() => {
           const currentIndex = SEGMENTS.findIndex(s => s.id === currentSegment);
           if (SEGMENTS[currentIndex - 1] !== undefined) {
@@ -287,7 +291,7 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
           } else {
             presentToast("Keine vorherige Seite gefunden!", 1000)
           }
-        }} style={{ cursor: "pointer" }} color={"primary"}>zurück</IonText>
+        }} style={{ cursor: "pointer", padding: "0.5rem 1rem 1rem 1rem", width: "50%", textAlign: "center"}} color={"primary"}>zurück</IonText>
       </div>
 
     </MainTemplate>

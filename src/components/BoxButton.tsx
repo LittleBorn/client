@@ -25,7 +25,8 @@ const BoxButton: React.FC<ContainerProps> = ({ title, style, onClick, text }) =>
             style={{ ...BoxButtonStyle, ...style }}>
             <div style={{display: "flex", flexDirection: "column", gap: "0.5rem", padding: "1rem"}}>
                 <IonText>{title}</IonText>
-                { text !== `` &&
+                {/* Text can be `` or undefined to not get displayed */}
+                { (text !== `` && text !== undefined) &&
                     <IonText style={{fontSize: "0.8em", textDecoration: "underline"}}>{text}</IonText> 
                 }
             </div>
