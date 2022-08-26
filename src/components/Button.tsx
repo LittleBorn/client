@@ -12,6 +12,10 @@ interface ContainerProps {
     routerOptions?: RouterOptions | undefined
 }
 
+export const ButtonStyle = {
+    borderRadius: "5px"
+}
+
 const Button: React.FC<ContainerProps> = ({ title, style, onClick, routerLink, routerDirection, routerAnimation, routerOptions }) => {
 
     return (
@@ -23,7 +27,7 @@ const Button: React.FC<ContainerProps> = ({ title, style, onClick, routerLink, r
             onClick={onClick} 
             color={style?.backgroundColor ? style?.backgroundColor : "primary"} 
             fill="solid" 
-            style={style}>
+            style={{...ButtonStyle, ...style}}>
                 {title}
         </IonButton>
     );

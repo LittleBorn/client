@@ -1,13 +1,14 @@
-import { IonBadge, IonFab, IonFabButton, IonIcon, IonText, useIonLoading, useIonToast } from '@ionic/react';
-import { basketOutline, cubeOutline } from 'ionicons/icons';
+import { IonBadge, IonButton, IonIcon, IonText, useIonLoading, useIonToast } from '@ionic/react';
+import { cubeSharp } from 'ionicons/icons';
 import { useEffect, useState } from 'react';
+import BoxButton from '../../components/BoxButton';
 import BoxProgressBar from '../../components/BoxProgressBar';
 import Button from '../../components/Button';
 import MainTemplate from '../../components/MainTemplate';
 import { IPagePros } from '../../interfaces/IPageProps';
 import { IShopifyCollection } from '../../interfaces/Shopify/IShopifyCollection';
 import { IShopifyProduct } from '../../interfaces/Shopify/IShopifyProduct';
-import { addItemToBasket, basket$, removeItemFromBasket } from '../../stores/basketStore';
+import { basket$ } from '../../stores/basketStore';
 import { sendStorefrontQuery } from '../../utils/shopifyStorefrontHelper';
 import DefaultBoxItem from './DefaultBoxItem';
 
@@ -82,11 +83,11 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
     var filter = "";
 
     if (cursorAfter) {
-      filter = `first: 10, after: "${cursorAfter}"`;
+      filter = `first: 50, after: "${cursorAfter}"`;
     } else if (cursorBefore) {
-      filter = `last: 10, before: "${cursorBefore}"`;
+      filter = `last: 50, before: "${cursorBefore}"`;
     } else {
-      filter = `first: 10`;
+      filter = `first: 50`;
     }
 
     let data = JSON.stringify({
@@ -201,7 +202,7 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
 
   return (
     <MainTemplate title='Deine Box 🎁'>
-      <div style={{ display: "flex", flexDirection: "column", height: "100vh", padding: "1rem", gap: "0.5rem" }}>
+      <div style={{ display: "flex", flexDirection: "column", height: "95%", padding: "1rem", gap: "0.5rem", overflowY: 'scroll'}}>
 
         <BoxProgressBar style={{ margin: "0.5rem 0rem 0.5rem 0rem" }} progress={
           SEGMENTS.map(SEGMENT => {
@@ -221,21 +222,37 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
           })
         } />
 
-        <h4>
-          <b>{currentSegment && currentSegment}</b>
-        </h4>
+        {/* Title Bar and Basket */}
+        <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+          <h4>
+            <b>{currentSegment && currentSegment}</b>
+          </h4>
+          <div>
+            {basket && basket.length > 0 &&
+              <IonBadge style={{ position: "absolute", marginLeft: "-5px", marginTop: "-5px", "--background": "#666666", zIndex: 2, padding: "4px 9px 4px 9px" }}>{basket.length}</IonBadge>
+            }
+            <IonButton onClick={() => props.history.push('/BoxOverview')} disabled={!(basket && basket.length > 0)}>
+              <IonIcon icon={cubeSharp} />
+            </IonButton>
+          </div>
+        </div>
+
         <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "0.5rem", justifyContent: "center" }}>
           {
             products && products?.length > 0 && products?.map(product => {
               return (
-                <DefaultBoxItem inBasket={basket.find(i => i === product.node.id) !== undefined} key={product.node.id} product={product} />
+                <DefaultBoxItem inBasket={basket.find(basketItem => product.node.variants.edges.find(variant => variant.node.id === basketItem)) !== undefined} key={product.node.id} product={product} />
               );
-            })
+            }) 
           }
+          <div style={{height: "6.5rem", width: "100%"}}>
+            {/* BLOCKER for better Navigation */}
+          </div>
         </div>
+      </div>
 
-        {/* Pagination */}
-        <div style={{ display: "flex", gap: "0.5rem", justifyContent: "center" }}>
+      {/* Pagination */}
+      {/* <div style={{ display: "flex", gap: "0.5rem", justifyContent: "center" }}>
           <Button title={`<`} onClick={() => {
             if (products && products?.length > 0) {
               segmentChanged(currentSegment, undefined, products[0]?.cursor)
@@ -250,19 +267,23 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
               segmentChanged(currentSegment)
             }
           }} />
-        </div>
-      </div>
+        </div> */}
 
       {/* Weiter / Zurück Buttons */}
-      <div style={{ position: "fixed", width: "100%", bottom: "2rem", display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
-        <Button onClick={() => {
+      <div style={{ position: "fixed", width: "100%", bottom: "0rem", display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
+        <BoxButton onClick={() => {
           const currentIndex = SEGMENTS.findIndex(s => s.id === currentSegment);
           if (SEGMENTS[currentIndex + 1] !== undefined) {
             segmentChanged(SEGMENTS[currentIndex + 1].id);
           } else {
-            presentToast("Keine weitere Seite gefunden!", 1000)
+            props.history.push('/BoxSuccess');
+            // presentToast("Keine weitere Seite gefunden!", 1000)
           }
-        }} title={basket?.length > 0 ? `Weiter (${basket.length} Produkte ausgewählt)` : `Weiter`} style={{ width: "80%" }} />
+        }}
+          title={SEGMENTS.findIndex(s => s.id === currentSegment) === SEGMENTS.length - 1 ? `Abschließen` : `Weiter`}
+          text={basket?.length > 1 ? `${basket.length} Produkte ausgewählt)` : basket?.length === 1 ? `${basket.length} Produkt ausgewählt)` : ``}
+          style={{ width: "80%"}} />
+        {/* <BoxButton title='zurück' style={{backgroundColor: "#cccccc"}}/> */}
         <IonText onClick={() => {
           const currentIndex = SEGMENTS.findIndex(s => s.id === currentSegment);
           if (SEGMENTS[currentIndex - 1] !== undefined) {
@@ -270,18 +291,8 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
           } else {
             presentToast("Keine vorherige Seite gefunden!", 1000)
           }
-        }} style={{ cursor: "pointer" }} color={"primary"}>zurück</IonText>
+        }} style={{ cursor: "pointer", padding: "0.5rem 1rem 1rem 1rem", width: "50%", textAlign: "center"}} color={"primary"}>zurück</IonText>
       </div>
-
-      {/* Basket */}
-      <IonFab vertical="top" horizontal="end" slot="fixed" style={{ marginTop: "6rem" }} >
-        {basket && basket.length > 0 &&
-          <IonBadge style={{ position: "absolute", top: "-5px", right: "-5px", "--background": "#666666", zIndex: 2, padding: "4px 9px 4px 9px" }}>{basket.length}</IonBadge>
-        }
-        <IonFabButton disabled={!(basket && basket.length > 0)}>
-          <IonIcon icon={cubeOutline} />
-        </IonFabButton>
-      </IonFab>
 
     </MainTemplate>
   );
