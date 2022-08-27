@@ -1,5 +1,5 @@
 import { IonBadge, IonButton, IonIcon, IonText, useIonLoading, useIonToast } from '@ionic/react';
-import { cubeSharp } from 'ionicons/icons';
+import { basketOutline, basketSharp, cubeSharp } from 'ionicons/icons';
 import { useEffect, useState } from 'react';
 import BoxButton from '../../components/BoxButton';
 import BoxProgressBar from '../../components/BoxProgressBar';
@@ -103,6 +103,7 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
                   node{
                       availableForSale
                       description
+                      descriptionHtml
                       handle
                       variants (first: 20){
                         edges{
@@ -228,11 +229,11 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
             <b>{currentSegment && currentSegment}</b>
           </h4>
           <div>
-            {basket && basket.length > 0 &&
+            {/* {basket && basket.length > 0 &&
               <IonBadge style={{ position: "absolute", marginLeft: "-5px", marginTop: "-5px", "--background": "#666666", zIndex: 2, padding: "4px 9px 4px 9px" }}>{basket.length}</IonBadge>
-            }
+            } */}
             <IonButton onClick={() => props.history.push('/BoxOverview')} disabled={!(basket && basket.length > 0)}>
-              <IonIcon icon={cubeSharp} />
+              <IonIcon icon={basketOutline} />
             </IonButton>
           </div>
         </div>

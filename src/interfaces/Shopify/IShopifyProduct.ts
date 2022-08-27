@@ -17,6 +17,7 @@ export interface IShopifyProduct {
         };
         availableForSale: boolean;
         description: string;
+        descriptionHtml: string;
         handle: string;
         compareAtPriceRange: IShopifyPriceRange;
         variants: {

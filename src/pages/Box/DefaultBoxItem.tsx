@@ -2,8 +2,6 @@ import { IonImg, IonText } from "@ionic/react";
 import { useEffect, useState } from "react";
 import { IShopifyProduct } from "../../interfaces/Shopify/IShopifyProduct";
 import { IShopifyProductVariant } from "../../interfaces/Shopify/IShopifyProductVariant";
-import NonVariantSelectionModal from "./NonVariantSelectionModal";
-import SizeSelectionModal from "./NonVariantSelectionModal";
 import VariantSelectionModal from "./VariantSelectionModal";
 
 interface ContainerProps {
@@ -19,11 +17,12 @@ const CustomStyle = {
     alignItems: "center",
     textAlign: "center",
     paddingBottom: "1rem",
+    gap: "0.2rem"
 }
 
 const CustomStyleInBasket = {
     ...CustomStyle,
-    border: "2px solid #44C1AD55"
+    // border: "2px solid #44C1AD55"
 }
 
 const amountSortFunction = (a: IShopifyProductVariant, b: IShopifyProductVariant) => {
@@ -43,17 +42,13 @@ const DefaultBoxItem: React.FC<ContainerProps> = ({ style, product, inBasket }) 
     return (
         <>
             <div className="container-item" style={inBasket ? { ...style, ...CustomStyleInBasket } : { ...style, ...CustomStyle }} onClick={() => setIsOpen(true)}>
-                <IonImg style={{marginBottom: "-1rem"}} src={product.node.featuredImage.url} alt={product.node.featuredImage.altText}></IonImg>
-                <IonText style={{ fontSize: "0.8em", textTransform: "uppercase" }}>{product.node.vendor}</IonText>
+                <img style={{ borderRadius: "1rem"}} src={product.node.featuredImage.url} alt={product.node.featuredImage.altText}></img>
+                <IonText style={{ fontSize: "0.8em", textTransform: "uppercase", marginTop: "0.3rem" }}>{product.node.vendor}</IonText>
                 <IonText style={{ fontWeight: "bold", fontSize: "0.9em" }}>{product.node.title}</IonText>
-                <IonText style={{ fontSize: "0.9rem", marginTop: "0.1rem" }}>Von {product.node.variants.edges.length > 0 && product.node.variants.edges.sort(amountSortFunction)[0].node.priceV2.amount} €</IonText>
-                <IonText style={{ fontSize: "0.7rem", marginTop: "0.2rem" }}>{product.node.variants.edges.length > 0 && product.node.variants.edges.length} {product.node.variants.edges.length === 1 ? "Variante" : "Varianten"} verfügbar</IonText>
+                <IonText style={{ fontSize: "0.9rem" }}>Von {product.node.variants.edges.length > 0 && product.node.variants.edges.sort(amountSortFunction)[0].node.priceV2.amount} €</IonText>
+                <IonText style={{ fontSize: "0.7rem" }}>{product.node.variants.edges.length > 0 && product.node.variants.edges.length} {product.node.variants.edges.length === 1 ? "Variante" : "Varianten"} verfügbar</IonText>
             </div>
-            {product.node.variants.edges.length > 1 ?
-                <VariantSelectionModal product={product} isOpen={isOpen} setIsOpen={setIsOpen} />
-                :
-                <NonVariantSelectionModal product={product} isOpen={isOpen} setIsOpen={setIsOpen} />
-            }
+            <VariantSelectionModal product={product} isOpen={isOpen} setIsOpen={setIsOpen} />
         </>
     );
 };
