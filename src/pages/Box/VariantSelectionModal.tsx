@@ -1,5 +1,5 @@
 import { IonButton, IonButtons, IonContent, IonHeader, IonImg, IonModal, IonText, IonTitle, IonToolbar } from "@ionic/react";
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import Button from "../../components/Button";
 import { IShopifyProduct } from "../../interfaces/Shopify/IShopifyProduct";
 import { IShopifyProductVariant } from "../../interfaces/Shopify/IShopifyProductVariant";
@@ -26,11 +26,6 @@ const VariantSelectionModal: React.FC<ContainerProps> = ({ isOpen, setIsOpen, pr
 
     const [selectedVariant, setSelectedVariant] = useState<IShopifyProductVariant | undefined>(product.node.variants.edges[0]);
     const [selectedAmount, setSelectedAmount] = useState(1)
-
-    useEffect(() => {
-      console.log(product && product)
-    }, [])
-    
 
     return (
         <IonModal isOpen={isOpen}>
