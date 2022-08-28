@@ -13,7 +13,7 @@ interface ContainerProps {
 const CustomStyle = {
     display: "flex",
     flexDirection: "column",
-    justifyContent: "center",
+    justifyContent: "flex-start",
     alignItems: "center",
     textAlign: "center",
     paddingBottom: "1rem",
@@ -42,7 +42,7 @@ const DefaultBoxItem: React.FC<ContainerProps> = ({ style, product, inBasket }) 
     return (
         <>
             <div className="container-item" style={inBasket ? { ...style, ...CustomStyleInBasket } : { ...style, ...CustomStyle }} onClick={() => setIsOpen(true)}>
-                <img style={{ borderRadius: "1rem"}} src={product.node.featuredImage.url} alt={product.node.featuredImage.altText}></img>
+                <img style={{ borderRadius: "1rem" }} src={product.node.featuredImage.url} alt={product.node.featuredImage.altText}></img>
                 <IonText style={{ fontSize: "0.8em", textTransform: "uppercase", marginTop: "0.3rem" }}>{product.node.vendor}</IonText>
                 <IonText style={{ fontWeight: "bold", fontSize: "0.9em" }}>{product.node.title}</IonText>
                 <IonText style={{ fontSize: "0.9rem" }}>Von {product.node.variants.edges.length > 0 && product.node.variants.edges.sort(amountSortFunction)[0].node.priceV2.amount} €</IonText>
