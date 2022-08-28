@@ -123,7 +123,15 @@ const cartLinesAdd = async (cardId: string, lines: IShopifyCardLineInput) => {
           }
         }
       }`,
-        variables: {"cartId":"","lines":{"attributes":[{"key":"","value":""}],"merchandiseId":"","quantity":1,"sellingPlanId":""}}
+        variables: {
+            "cartId":"",
+            "lines":{
+                "attributes":[{"key":"","value":""}],
+                "merchandiseId":"",
+                "quantity":1,
+                "sellingPlanId":""
+            }
+        }
       });
       const result = await sendStorefrontQuery<{
         "data": {
