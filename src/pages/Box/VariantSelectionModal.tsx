@@ -1,9 +1,10 @@
 import { IonButton, IonButtons, IonContent, IonHeader, IonImg, IonModal, IonText, IonTitle, IonToolbar } from "@ionic/react";
-import {  useState } from "react";
+import { useState } from "react";
 import Button from "../../components/Button";
 import { IShopifyProduct } from "../../interfaces/Shopify/IShopifyProduct";
 import { IShopifyProductVariant } from "../../interfaces/Shopify/IShopifyProductVariant";
 import { addItemToBasket } from "../../stores/basketStore";
+import { addItemToCart } from "../../stores/cartStore";
 
 interface ContainerProps {
     isOpen: boolean;
@@ -37,8 +38,11 @@ const VariantSelectionModal: React.FC<ContainerProps> = ({ isOpen, setIsOpen, pr
                     <IonTitle>{product.node.title}</IonTitle>
                     <IonButtons slot="end">
                         <IonButton strong={true} onClick={() => {
-                            for (var i = 0; i < selectedAmount; i++) {
-                                addItemToBasket(selectedVariant?.node.id);
+                            if(selectedVariant){
+                                addItemToCart({
+                                    merchandiseId: selectedVariant.node.id,
+                                    quantity: selectedAmount
+                                });
                             }
                             setIsOpen(false)
                         }}>
@@ -47,9 +51,9 @@ const VariantSelectionModal: React.FC<ContainerProps> = ({ isOpen, setIsOpen, pr
                     </IonButtons>
                 </IonToolbar>
             </IonHeader>
-            <IonContent className="ion-padding" style={{overflowY: "hidden"}}>
+            <IonContent className="ion-padding" style={{ overflowY: "hidden" }}>
 
-                <div style={{ display: "flex", flexDirection: "column", height: "100%", alignItems: "center", gap: "1rem", overflowY: "scroll", padding: "1rem"}}>
+                <div style={{ display: "flex", flexDirection: "column", height: "100%", alignItems: "center", gap: "1rem", overflowY: "scroll", padding: "1rem" }}>
 
                     {/* Infos */}
                     <IonText style={{ fontSize: "1.1em", fontWeight: "bold" }}>{product.node.title}</IonText>
@@ -57,11 +61,11 @@ const VariantSelectionModal: React.FC<ContainerProps> = ({ isOpen, setIsOpen, pr
                     <IonImg style={{ height: "30%" }} src={product.node.variants.edges.find(variant => variant.node.id === selectedVariant?.node.id)?.node.image.url}></IonImg>
 
                     {/* Preis */}
-                    <div style={{display: "flex", gap: "1rem", width: "100%", justifyContent: "center", flexDirection: "column", alignItems: "center"}}>
-                        <IonText style={{fontSize: "1.4em", fontWeight: "bold"}}>{selectedVariant?.node.priceV2.amount && Number(Number.parseFloat(selectedVariant?.node.priceV2.amount) * selectedAmount).toFixed(2)} €</IonText>
-                        <IonText style={{color: "#838383"}}>Enthält: {selectedVariant?.node.weight}</IonText>
+                    <div style={{ display: "flex", gap: "1rem", width: "100%", justifyContent: "center", flexDirection: "column", alignItems: "center" }}>
+                        <IonText style={{ fontSize: "1.4em", fontWeight: "bold" }}>{selectedVariant?.node.priceV2.amount && Number(Number.parseFloat(selectedVariant?.node.priceV2.amount) * selectedAmount).toFixed(2)} €</IonText>
+                        <IonText style={{ color: "#838383" }}>Enthält: {selectedVariant?.node.weight}</IonText>
                         {/* <IonText>{ selectedVariant?.node.currentlyNotInStock ? `🟡 Zurzeit nicht verfügbar` : `🟢 Produkt auf Lager` }</IonText> */}
-                        <IonText style={{color: "#838383"}}>{ !selectedVariant?.node.availableForSale ? `🟡 Zurzeit nicht verfügbar` : `🟢 Produkt auf Lager` }</IonText>
+                        <IonText style={{ color: "#838383" }}>{!selectedVariant?.node.availableForSale ? `🟡 Zurzeit nicht verfügbar` : `🟢 Produkt auf Lager`}</IonText>
                     </div>
 
                     {/* Variant */}
@@ -93,7 +97,7 @@ const VariantSelectionModal: React.FC<ContainerProps> = ({ isOpen, setIsOpen, pr
                     </div>
 
                     {/* Beschreibung */}
-                    <div dangerouslySetInnerHTML={{__html: product?.node.descriptionHtml}} style={{display: "flex", gap: "1rem", width: "100%", flexDirection: "column", marginTop: "1rem", color: "#838383"}}></div>
+                    <div dangerouslySetInnerHTML={{ __html: product?.node.descriptionHtml }} style={{ display: "flex", gap: "1rem", width: "100%", flexDirection: "column", marginTop: "1rem", color: "#838383" }}></div>
 
                     {/* Details */}
                     {/* todo */}

@@ -1,85 +1,29 @@
+import { cart } from "ionicons/icons";
 import { BehaviorSubject } from "rxjs";
-import { IShopifyCard } from "../interfaces/Shopify/IShopifyCard";
 import { IShopifyCardLineInput } from "../interfaces/Shopify/IShopifyCardLineInput";
 import { sendStorefrontQuery } from "../utils/shopifyStorefrontHelper";
 import { accessToken$ } from "./userStore";
 
-export const cart$ = new BehaviorSubject<IShopifyCard | undefined>(undefined);
+export const cart_lines$ = new BehaviorSubject<Array<IShopifyCardLineInput>>([]);
 
-cart$.asObservable().subscribe(v => console.log("New Value: ", v))
+cart_lines$.asObservable().subscribe(v => console.log("New Value: ", v))
 
-/* Card Query */
-const refreshCard = async (id: string) => {
-    var data = JSON.stringify({
-        query: `{
-        cart(id: "gid://shopify/Cart/35e1137732d161a3b603e7c29053e12a") {
-            buyerIdentity{
-                customer{
-                    id
-                }
-            }
-            checkoutUrl
-            cost {
-                  checkoutChargeAmount{
-                      amount
-                      currencyCode
-                  }
-                  subtotalAmount{
-                      amount
-                      currencyCode
-                  }
-                  subtotalAmountEstimated
-                  totalAmount{
-                      amount
-                      currencyCode
-                  }
-                  totalAmountEstimated
-                  totalDutyAmount{
-                      amount
-                      currencyCode
-                  }
-                  totalDutyAmountEstimated
-                  totalTaxAmount{
-                      amount
-                      currencyCode
-                  }
-                  totalTaxAmountEstimated
-            }
-            createdAt
-            discountAllocations{
-                discountedAmount{
-                    amount
-                    currencyCode
-                }
-            }
-            discountCodes{
-                applicable
-                code
-            }
-            id,
-            note,
-            totalQuantity
-            updatedAt
-          
-        }
-      }`,
-        variables: {}
-      });
-    const result = await sendStorefrontQuery<{data: IShopifyCard}>(data);
-    if(result){
-        cart$.next(result.data);
-    }else{
-        console.log("getCard fetch not successfull")
-    }
-} 
+export const addItemToCart = (line: IShopifyCardLineInput) => {
+    cart_lines$.next([...cart_lines$.getValue(), line]);
+}
+
+export const removeItemFromCart = (line: IShopifyCardLineInput) => {
+    cart_lines$.next(cart_lines$.getValue().filter(i => i !== line));
+}
 
 /* Card Mutations */
-const cartCreate = async () => {
+export const cartCreate = async () => {
     var data = JSON.stringify({
         query: `mutation cartCreate {
         cartCreate {
           cart {
             id
+            checkoutUrl
           }
           userErrors {
             field
@@ -89,7 +33,9 @@ const cartCreate = async () => {
       }`,
         variables: {
             "input": {
-                "buyerIdentity": { "customerAccessToken": accessToken$.getValue()?.accessToken }
+                "buyerIdentity": { 
+                    "customerAccessToken": accessToken$.getValue()?.accessToken 
+                }
             }
         }
     });
@@ -98,21 +44,89 @@ const cartCreate = async () => {
             "cartCreate": {
                 "cart": {
                     "id": string;
+                    "checkoutUrl": string;
                 },
                 "userErrors": Array<string>;
             }
         }
     }>(data);
     if(result){
-        refreshCard(result.data.cartCreate.cart.id)
+        return [result.data.cartCreate.cart.id, result.data.cartCreate.cart.checkoutUrl]
     }else{
         console.log("getCard fetch not successfull")
+        return []
     }
 }
 
-const cartLinesAdd = async (cardId: string, lines: IShopifyCardLineInput) => {
+// /* Card Query */
+// const refreshCard = async (id: string) => {
+//     var data = JSON.stringify({
+//         query: `{
+//         cart(id: "${id}) {
+//             buyerIdentity{
+//                 customer{
+//                     id
+//                 }
+//             }
+//             checkoutUrl
+//             cost {
+//                   checkoutChargeAmount{
+//                       amount
+//                       currencyCode
+//                   }
+//                   subtotalAmount{
+//                       amount
+//                       currencyCode
+//                   }
+//                   subtotalAmountEstimated
+//                   totalAmount{
+//                       amount
+//                       currencyCode
+//                   }
+//                   totalAmountEstimated
+//                   totalDutyAmount{
+//                       amount
+//                       currencyCode
+//                   }
+//                   totalDutyAmountEstimated
+//                   totalTaxAmount{
+//                       amount
+//                       currencyCode
+//                   }
+//                   totalTaxAmountEstimated
+//             }
+//             createdAt
+//             discountAllocations{
+//                 discountedAmount{
+//                     amount
+//                     currencyCode
+//                 }
+//             }
+//             discountCodes{
+//                 applicable
+//                 code
+//             }
+//             id,
+//             note,
+//             totalQuantity
+//             updatedAt
+          
+//         }
+//       }`,
+//         variables: {}
+//       });
+//     const result = await sendStorefrontQuery<{data: IShopifyCard}>(data);
+//     if(result){
+//         cart$.next(result.data);
+//     }else{
+//         console.log("getCard fetch not successfull")
+//     }
+// } 
+
+
+export const cartLinesAdd = async (cartId: string, lines: IShopifyCardLineInput) => {
     var data = JSON.stringify({
-        query: `mutation cartLinesAdd($cartId: , $lines: ) {
+        query: `mutation cartLinesAdd($cartId: ID!, $lines: [CartLineInput!]!) {
         cartLinesAdd(cartId: $cartId, lines: $lines) {
           cart {
             id
@@ -124,12 +138,10 @@ const cartLinesAdd = async (cardId: string, lines: IShopifyCardLineInput) => {
         }
       }`,
         variables: {
-            "cartId":"",
+            "cartId": cartId,
             "lines":{
-                "attributes":[{"key":"","value":""}],
-                "merchandiseId":"",
-                "quantity":1,
-                "sellingPlanId":""
+                "merchandiseId": lines.merchandiseId,
+                "quantity": lines.quantity,
             }
         }
       });
@@ -144,7 +156,7 @@ const cartLinesAdd = async (cardId: string, lines: IShopifyCardLineInput) => {
         }
     }>(data);
     if(result){
-        refreshCard(result.data.cartLinesAdd.cart.id)
+        console.log("Add Line Result: ", result.data)
     }else{
         console.log("getCard fetch not successfull")
     }

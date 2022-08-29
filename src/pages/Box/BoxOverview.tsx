@@ -3,9 +3,10 @@ import { useEffect, useState } from 'react';
 import Button from '../../components/Button';
 import MainTemplate from '../../components/MainTemplate';
 import { IPagePros } from '../../interfaces/IPageProps';
+import { IShopifyCardLineInput } from '../../interfaces/Shopify/IShopifyCardLineInput';
 import { basket$ } from '../../stores/basketStore';
+import { cartCreate, cartLinesAdd, cart_lines$ } from '../../stores/cartStore';
 import { sendStorefrontQuery } from '../../utils/shopifyStorefrontHelper';
-
 
 const BoxOverview: React.FC<IPagePros> = ({ props }: IPagePros) => {
 
@@ -14,10 +15,10 @@ const BoxOverview: React.FC<IPagePros> = ({ props }: IPagePros) => {
 
   useEffect(() => {
     // set basket state with observable
-    basket$.asObservable().subscribe(v => setBasket(v))
+    cart_lines$.asObservable().subscribe(v => setCartLines(v))
   }, [])
 
-  const [basket, setBasket] = useState<string[]>([])
+  const [cartLines, setCartLines] = useState<IShopifyCardLineInput[]>([])
 
   const fetchBasket = async () => {
 
@@ -58,9 +59,9 @@ const BoxOverview: React.FC<IPagePros> = ({ props }: IPagePros) => {
         <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "0.5rem", justifyContent: "center" }}>
 
           {
-            basket && basket.length > 0 && basket.map((basketItem, index) => {
-              return (<div key={`${basketItem}-${index}`}>
-                {basketItem}
+            cartLines && cartLines.length > 0 && cartLines.map((cartItem, index) => {
+              return (<div key={`${cartItem.merchandiseId}-${index}`}>
+                {JSON.stringify(cartItem)}
               </div>);
             })
           }
@@ -70,7 +71,23 @@ const BoxOverview: React.FC<IPagePros> = ({ props }: IPagePros) => {
 
       {/* Weiter / Zurück Buttons */}
       <div style={{ position: "fixed", width: "100%", bottom: "2rem", display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
-        <Button onClick={() => { }} title={`Zur Kasse`} style={{ width: "80%", borderRadius: "5rem" }} />
+        <Button onClick={async () => {
+          const [cartId, checkoutUrl] = await cartCreate();
+          if(cartId){
+            cartLines.forEach(cartLine => {
+              cartLinesAdd(cartId, cartLine);
+            })
+            if(checkoutUrl){
+              console.log(checkoutUrl)
+              setTimeout(() => window.location.replace(`${checkoutUrl}`), 3000)
+              
+            }else{
+              presentToast("Es konnte keine Umleitung erfolgen!", 2000)
+            }
+          }else{
+            presentToast("Ein Problem trat beim Anlegen auf!", 2000)
+          }
+         }} title={`Zur Kasse`} style={{ width: "80%", borderRadius: "5rem" }} />
       </div>
 
     </MainTemplate>

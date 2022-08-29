@@ -17,7 +17,8 @@ const CustomStyle = {
     alignItems: "center",
     textAlign: "center",
     paddingBottom: "1rem",
-    gap: "0.2rem"
+    gap: "0.2rem",
+    borderRadius: "1rem"
 }
 
 const CustomStyleInBasket = {
