@@ -3,6 +3,7 @@ import { useState } from "react";
 import Button from "../../components/Button";
 import { IShopifyProduct } from "../../interfaces/Shopify/IShopifyProduct";
 import { addItemToBasket } from "../../stores/basketStore";
+import { addItemToCart } from "../../stores/cartStore";
 
 interface ContainerProps {
   isOpen: boolean;
@@ -25,9 +26,10 @@ const NonVariantSelectionModal: React.FC<ContainerProps> = ({ isOpen, setIsOpen,
           <IonTitle>Anzahl</IonTitle>
           <IonButtons slot="end">
             <IonButton strong={true} onClick={() => {
-              for (var i = 0; i < selectedAmount; i++) {
-                addItemToBasket(product.node.variants.edges[0].node.id);
-              }
+              addItemToCart({
+                merchandiseId: product.node.variants.edges[0].node.id,
+                quantity: selectedAmount
+              });
               setIsOpen(false)
             }}>
               Confirm

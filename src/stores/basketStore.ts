@@ -11,3 +11,4 @@ export const addItemToBasket = (product: any) => {
 export const removeItemFromBasket = (product: any) => {
     basket$.next(basket$.getValue().filter(i => i !== product));
 }
+
