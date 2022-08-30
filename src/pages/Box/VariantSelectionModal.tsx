@@ -41,7 +41,13 @@ const VariantSelectionModal: React.FC<ContainerProps> = ({ isOpen, setIsOpen, pr
                             if(selectedVariant){
                                 addItemToCart({
                                     merchandiseId: selectedVariant.node.id,
-                                    quantity: selectedAmount
+                                    quantity: selectedAmount,
+                                    attributes: [
+                                        {
+                                            key: "product_id",
+                                            value: product.node.id
+                                        }
+                                    ]
                                 });
                             }
                             setIsOpen(false)

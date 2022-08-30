@@ -1,6 +1,7 @@
 import { IonText, useIonLoading, useIonToast } from '@ionic/react';
 import { useEffect, useState } from 'react';
 import Button from '../../components/Button';
+import CartItem from '../../components/CartItem';
 import MainTemplate from '../../components/MainTemplate';
 import { IPagePros } from '../../interfaces/IPageProps';
 import { IShopifyCardLineInput } from '../../interfaces/Shopify/IShopifyCardLineInput';
@@ -49,7 +50,7 @@ const BoxOverview: React.FC<IPagePros> = ({ props }: IPagePros) => {
       <div style={{ display: "flex", flexDirection: "column", height: "100vh", padding: "1rem", gap: "0.5rem" }}>
 
         <IonText style={{justifySelf: "center", alignSelf: "center", textAlign: "center"}}>
-          Wir haben alle Produkte nach dem durschnittlichen Verbrauch auf eine Monatsbox hochgerechnet. Passe diese aber gerne auch an. 
+          Wir haben alle Produkte nach dem durchschnittlichen Verbrauch auf eine Monatsbox hochgerechnet. Passe diese aber gerne auch an. 
         </IonText>
 
         <IonText style={{fontSize: "1.2em", fontWeight: "bold"}}>
@@ -60,9 +61,9 @@ const BoxOverview: React.FC<IPagePros> = ({ props }: IPagePros) => {
 
           {
             cartLines && cartLines.length > 0 && cartLines.map((cartItem, index) => {
-              return (<div key={`${cartItem.merchandiseId}-${index}`}>
-                {JSON.stringify(cartItem)}
-              </div>);
+              return (
+                <CartItem key={`${cartItem.merchandiseId}-${index}`} cardLine={cartItem}/>
+              );
             })
           }
 
