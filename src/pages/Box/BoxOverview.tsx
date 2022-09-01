@@ -80,7 +80,11 @@ const BoxOverview: React.FC<IPagePros> = ({ props }: IPagePros) => {
             })
             if(checkoutUrl){
               console.log(checkoutUrl)
-              setTimeout(() => window.location.replace(`${checkoutUrl}`), 3000)
+              presentLoading(undefined, 5000);
+              setTimeout(() => {
+                dismissLoading();
+                window.location.replace(`${checkoutUrl}`)
+              }, 3000)
               
             }else{
               presentToast("Es konnte keine Umleitung erfolgen!", 2000)

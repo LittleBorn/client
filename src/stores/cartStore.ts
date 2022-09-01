@@ -4,6 +4,7 @@ import { IShopifyCardLineInput } from "../interfaces/Shopify/IShopifyCardLineInp
 import { sendStorefrontQuery } from "../utils/shopifyStorefrontHelper";
 import { accessToken$ } from "./userStore";
 
+// export const cart_id$ = new BehaviorSubject<string | undefined>(undefined);
 export const cart_lines$ = new BehaviorSubject<Array<IShopifyCardLineInput>>([]);
 
 cart_lines$.asObservable().subscribe(v => console.log("New Value: ", v))
@@ -35,6 +36,10 @@ export const cartCreate = async () => {
             "input": {
                 "buyerIdentity": { 
                     "customerAccessToken": accessToken$.getValue()?.accessToken 
+                },
+                attributes: { 
+                    key: "channel", 
+                    value: "LittleBorn Application" 
                 }
             }
         }
