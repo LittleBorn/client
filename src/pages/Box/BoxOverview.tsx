@@ -83,7 +83,8 @@ const BoxOverview: React.FC<IPagePros> = ({ props }: IPagePros) => {
               presentLoading(undefined, 5000);
               setTimeout(() => {
                 dismissLoading();
-                window.location.replace(`${checkoutUrl}`)
+                console.log("Eigentlich wird hier umgeleitet")
+                // window.location.replace(`${checkoutUrl}`)
               }, 3000)
               
             }else{
