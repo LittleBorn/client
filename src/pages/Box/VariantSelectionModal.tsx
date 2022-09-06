@@ -1,10 +1,10 @@
-import { IonButton, IonButtons, IonContent, IonHeader, IonImg, IonModal, IonText, IonTitle, IonToolbar } from "@ionic/react";
+import { IonButton, IonButtons, IonContent, IonHeader, IonImg, IonModal, IonText, IonTitle, IonToolbar, useIonLoading, useIonToast } from "@ionic/react";
 import { useState } from "react";
 import Button from "../../components/Button";
 import { IShopifyProduct } from "../../interfaces/Shopify/IShopifyProduct";
 import { IShopifyProductVariant } from "../../interfaces/Shopify/IShopifyProductVariant";
 import { addItemToBasket } from "../../stores/basketStore";
-import { addItemToCart } from "../../stores/cartStore";
+import { cart$, cartCreate, cartLinesAdd } from "../../stores/cartStore";
 
 interface ContainerProps {
     isOpen: boolean;
@@ -25,7 +25,10 @@ const SelectedVariantStyle = {
 
 const VariantSelectionModal: React.FC<ContainerProps> = ({ isOpen, setIsOpen, product }) => {
 
-    const [selectedVariant, setSelectedVariant] = useState<IShopifyProductVariant | undefined>(product.node.variants.edges[0]);
+    const [presentLoading, dismissLoading] = useIonLoading();
+    const [presentToast, dismissToast] = useIonToast();
+
+    const [selectedVariant, setSelectedVariant] = useState<IShopifyProductVariant | undefined>(product.node.variants.edges[0].node);
     const [selectedAmount, setSelectedAmount] = useState(1)
 
     return (
@@ -37,18 +40,30 @@ const VariantSelectionModal: React.FC<ContainerProps> = ({ isOpen, setIsOpen, pr
                     </IonButtons>
                     <IonTitle>{product.node.title}</IonTitle>
                     <IonButtons slot="end">
-                        <IonButton strong={true} onClick={() => {
+                        <IonButton strong={true} onClick={async () => {
+                            presentLoading("Hinzufügen zum Einkaufswagen", 1000)
                             if(selectedVariant){
-                                addItemToCart({
-                                    merchandiseId: selectedVariant.node.id,
-                                    quantity: selectedAmount,
-                                    attributes: [
-                                        {
-                                            key: "product_id",
-                                            value: product.node.id
-                                        }
-                                    ]
+
+                                // if this is the first item in cart -> create cart first
+                                let cart_id = cart$.getValue()?.cart.id;
+                                if(typeof cart_id === "undefined"){
+                                    dismissLoading()
+                                    presentLoading("Einkaufswagen erstellen", 1000)
+                                    cart_id = await cartCreate();
+                                    if(typeof cart_id === "undefined"){
+                                        presentToast("Problem trat auf beim anlegen des Warenkorbs");
+                                        return
+                                    }
+                                }
+
+                                dismissLoading()
+                                presentLoading("Füge Artikel hinzu...", 1000)
+                                await cartLinesAdd(cart_id, {
+                                    merchandiseId: selectedVariant.id,
+                                    quantity: selectedAmount
                                 });
+                                dismissLoading()
+                                setSelectedAmount(1)
                             }
                             setIsOpen(false)
                         }}>
@@ -64,14 +79,14 @@ const VariantSelectionModal: React.FC<ContainerProps> = ({ isOpen, setIsOpen, pr
                     {/* Infos */}
                     <IonText style={{ fontSize: "1.1em", fontWeight: "bold" }}>{product.node.title}</IonText>
                     <IonText style={{ fontSize: "1em" }}>Marke: {product.node.vendor}</IonText>
-                    <IonImg style={{ height: "30%" }} src={product.node.variants.edges.find(variant => variant.node.id === selectedVariant?.node.id)?.node.image.url}></IonImg>
+                    <IonImg style={{ height: "30%" }} src={product.node.variants.edges.find(variant => variant.node.id === selectedVariant?.id)?.node.image.url}></IonImg>
 
                     {/* Preis */}
                     <div style={{ display: "flex", gap: "1rem", width: "100%", justifyContent: "center", flexDirection: "column", alignItems: "center" }}>
-                        <IonText style={{ fontSize: "1.4em", fontWeight: "bold" }}>{selectedVariant?.node.priceV2.amount && Number(Number.parseFloat(selectedVariant?.node.priceV2.amount) * selectedAmount).toFixed(2)} €</IonText>
-                        <IonText style={{ color: "#838383" }}>Enthält: {selectedVariant?.node.weight}</IonText>
-                        {/* <IonText>{ selectedVariant?.node.currentlyNotInStock ? `🟡 Zurzeit nicht verfügbar` : `🟢 Produkt auf Lager` }</IonText> */}
-                        <IonText style={{ color: "#838383" }}>{!selectedVariant?.node.availableForSale ? `🟡 Zurzeit nicht verfügbar` : `🟢 Produkt auf Lager`}</IonText>
+                        <IonText style={{ fontSize: "1.4em", fontWeight: "bold" }}>{selectedVariant?.priceV2.amount && Number(Number.parseFloat(selectedVariant?.priceV2.amount) * selectedAmount).toFixed(2)} €</IonText>
+                        <IonText style={{ color: "#838383" }}>Enthält: {selectedVariant?.weight}</IonText>
+                        {/* <IonText>{ selectedVariant?.currentlyNotInStock ? `🟡 Zurzeit nicht verfügbar` : `🟢 Produkt auf Lager` }</IonText> */}
+                        <IonText style={{ color: "#838383" }}>{!selectedVariant?.availableForSale ? `🟡 Zurzeit nicht verfügbar` : `🟢 Produkt auf Lager`}</IonText>
                     </div>
 
                     {/* Variant */}
@@ -80,11 +95,11 @@ const VariantSelectionModal: React.FC<ContainerProps> = ({ isOpen, setIsOpen, pr
                             <IonText>Wählen Sie eine <b>Größe</b> aus</IonText>
                             <div style={{ display: "flex", gap: "1rem", width: "100%", flexWrap: "wrap", justifyContent: "center" }}>
                                 {
-                                    product.node.variants.edges.map((variant: IShopifyProductVariant) => {
+                                    product.node.variants.edges.map((variant: {node : IShopifyProductVariant}) => {
                                         return <div
                                             key={variant.node.id}
-                                            style={variant.node.id === selectedVariant?.node.id ? { ...SelectedVariantStyle } : { ...VariantStyle }}
-                                            onClick={() => setSelectedVariant(variant)}
+                                            style={variant.node.id === selectedVariant?.id ? { ...SelectedVariantStyle } : { ...VariantStyle }}
+                                            onClick={() => setSelectedVariant(variant.node)}
                                         >
                                             <IonText key={variant.node.id}>{variant.node.title}</IonText>
                                         </div>

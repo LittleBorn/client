@@ -6,11 +6,13 @@ import BoxProgressBar from '../../components/BoxProgressBar';
 import Button from '../../components/Button';
 import MainTemplate from '../../components/MainTemplate';
 import { IPagePros } from '../../interfaces/IPageProps';
+import { IShopifyCard } from '../../interfaces/Shopify/IShopifyCard';
+import { IShopifyCardLine } from '../../interfaces/Shopify/IShopifyCardLine';
 import { IShopifyCardLineInput } from '../../interfaces/Shopify/IShopifyCardLineInput';
 import { IShopifyCollection } from '../../interfaces/Shopify/IShopifyCollection';
 import { IShopifyProduct } from '../../interfaces/Shopify/IShopifyProduct';
 import { basket$ } from '../../stores/basketStore';
-import { cart_lines$ } from '../../stores/cartStore';
+import { cart$ } from '../../stores/cartStore';
 import { sendStorefrontQuery } from '../../utils/shopifyStorefrontHelper';
 import DefaultBoxItem from './DefaultBoxItem';
 
@@ -65,13 +67,15 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
     // fetch windeln
     segmentChanged(SEGMENTS[0].id)
     // set basket state with observable
-    cart_lines$.asObservable().subscribe(v => setCartLines(v))
+    cart$.asObservable().subscribe(v => {
+      setCart(v)
+    })
   }, [])
 
   const [currentSegment, setCurrentSegment] = useState<string>("Babywindeln")
   const [products, setProducts] = useState<Array<IShopifyProduct>>()
 
-  const [cartLines, setCartLines] = useState<IShopifyCardLineInput[]>([])
+  const [cart, setCart] = useState<IShopifyCard | undefined>(undefined)
 
   const segmentChanged = async (currentSegment: string | undefined, cursorAfter?: string | undefined, cursorBefore?: string | undefined) => {
 
@@ -234,7 +238,7 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
             {/* {cartLines && cartLines.length > 0 &&
               <IonBadge style={{ position: "absolute", marginLeft: "-5px", marginTop: "-5px", "--background": "#666666", zIndex: 2, padding: "4px 9px 4px 9px" }}>{cartLines.length}</IonBadge>
             } */}
-            <IonButton onClick={() => props.history.push('/BoxOverview')} disabled={!(cartLines && cartLines.length > 0)}>
+            <IonButton onClick={() => props.history.push('/BoxOverview')} disabled={!(cart?.cart.lines.edges && cart?.cart.lines.edges.length > 0)}>
               <IonIcon icon={basketOutline} />
             </IonButton>
           </div>
@@ -244,7 +248,7 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
           {
             products && products?.length > 0 && products?.map(product => {
               return (
-                <DefaultBoxItem inBasket={ cartLines.find(cartLine => product.node.variants.edges.find(variant => variant.node.id === cartLine.merchandiseId)) !== undefined } key={product.node.id} product={product} />
+                <DefaultBoxItem  key={product.node.id} product={product} />
               );
             }) 
           }
@@ -284,7 +288,7 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
           }
         }}
           title={SEGMENTS.findIndex(s => s.id === currentSegment) === SEGMENTS.length - 1 ? `Abschließen` : `Weiter`}
-          text={cartLines?.length > 1 ? `${cartLines.length} Produkte ausgewählt)` : cartLines?.length === 1 ? `${cartLines.length} Produkt ausgewählt)` : ``}
+          text={(cart?.cart?.lines?.edges?.length !== undefined && cart?.cart?.lines?.edges?.length > 1) ? `${cart?.cart.lines.edges.length} Produkte ausgewählt)` : cart?.cart.lines.edges?.length === 1 ? `${cart?.cart.lines.edges.length} Produkt ausgewählt)` : ``}
           style={{ width: "80%"}} />
         {/* <BoxButton title='zurück' style={{backgroundColor: "#cccccc"}}/> */}
         <IonText onClick={() => {

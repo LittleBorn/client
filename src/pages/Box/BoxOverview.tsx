@@ -4,9 +4,11 @@ import Button from '../../components/Button';
 import CartItem from '../../components/CartItem';
 import MainTemplate from '../../components/MainTemplate';
 import { IPagePros } from '../../interfaces/IPageProps';
+import { IShopifyCard } from '../../interfaces/Shopify/IShopifyCard';
+import { IShopifyCardLine } from '../../interfaces/Shopify/IShopifyCardLine';
 import { IShopifyCardLineInput } from '../../interfaces/Shopify/IShopifyCardLineInput';
 import { basket$ } from '../../stores/basketStore';
-import { cartCreate, cartLinesAdd, cart_lines$ } from '../../stores/cartStore';
+import { cart$, cartCreate, cartLinesAdd } from '../../stores/cartStore';
 import { sendStorefrontQuery } from '../../utils/shopifyStorefrontHelper';
 
 const BoxOverview: React.FC<IPagePros> = ({ props }: IPagePros) => {
@@ -16,10 +18,12 @@ const BoxOverview: React.FC<IPagePros> = ({ props }: IPagePros) => {
 
   useEffect(() => {
     // set basket state with observable
-    cart_lines$.asObservable().subscribe(v => setCartLines(v))
+    cart$.asObservable().subscribe(v => {
+      setCart(v)
+    })
   }, [])
 
-  const [cartLines, setCartLines] = useState<IShopifyCardLineInput[]>([])
+  const [cart, setCart] = useState<IShopifyCard | undefined>(undefined)
 
   const fetchBasket = async () => {
 
@@ -47,55 +51,70 @@ const BoxOverview: React.FC<IPagePros> = ({ props }: IPagePros) => {
 
   return (
     <MainTemplate title='Deine Box 🎁'>
-      <div style={{ display: "flex", flexDirection: "column", height: "100vh", padding: "1rem", gap: "0.5rem" }}>
+      <div style={{ display: "flex", flexDirection: "column", height: "100vh", padding: "1rem", gap: "1.5rem" }}>
 
-        <IonText style={{justifySelf: "center", alignSelf: "center", textAlign: "center"}}>
-          Wir haben alle Produkte nach dem durchschnittlichen Verbrauch auf eine Monatsbox hochgerechnet. Passe diese aber gerne auch an. 
+        <IonText style={{ justifySelf: "center", alignSelf: "center", textAlign: "center" }}>
+          Wir haben alle Produkte nach dem durchschnittlichen Verbrauch auf eine Monatsbox hochgerechnet. Passe diese aber gerne auch an.
         </IonText>
 
-        <IonText style={{fontSize: "1.2em", fontWeight: "bold"}}>
+        <IonText style={{ fontSize: "1.2em", fontWeight: "bold" }}>
           Menge {`&`} unverbindliches Abo
         </IonText>
 
-        <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "0.5rem", justifyContent: "center" }}>
+        <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "1rem", justifyContent: "center" }}>
 
           {
-            cartLines && cartLines.length > 0 && cartLines.map((cartItem, index) => {
+            cart && cart.cart.lines.edges.length > 0 ? cart.cart.lines.edges.map((cartLine, index) => {
               return (
-                <CartItem key={`${cartItem.merchandiseId}-${index}`} cardLine={cartItem}/>
+                <CartItem key={`${cartLine.node.id}-${index}`} cartLine={cartLine.node} />
               );
-            })
+            }) :
+              <div>
+                Sie haben keine Artikel im Warenkorb
+              </div>
           }
 
         </div>
       </div>
 
       {/* Weiter / Zurück Buttons */}
-      <div style={{ position: "fixed", width: "100%", bottom: "2rem", display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
-        <Button onClick={async () => {
-          const [cartId, checkoutUrl] = await cartCreate();
-          if(cartId){
-            cartLines.forEach(cartLine => {
-              cartLinesAdd(cartId, cartLine);
-            })
-            if(checkoutUrl){
-              console.log(checkoutUrl)
+      <div style={{ position: "fixed", width: "100%", bottom: "1rem", display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
+        <Button onClick={() => {
+          const checkoutUrl = cart$.getValue()?.cart.checkoutUrl;
+          if (checkoutUrl) {
               presentLoading(undefined, 5000);
-              setTimeout(() => {
-                dismissLoading();
-                console.log("Eigentlich wird hier umgeleitet")
-                // window.location.replace(`${checkoutUrl}`)
-              }, 3000)
-              
-            }else{
-              presentToast("Es konnte keine Umleitung erfolgen!", 2000)
-            }
-          }else{
-            presentToast("Ein Problem trat beim Anlegen auf!", 2000)
+            setTimeout(() => {
+              dismissLoading();
+              window.location.replace(`${checkoutUrl}`)
+            }, 3000)
+          } else {
+            presentToast("Aktuell ist kein Warenkorb angelegt", 2000)
           }
-         }} title={`Zur Kasse`} style={{ width: "80%", borderRadius: "5rem" }} />
-      </div>
+          // const cartId = await cartCreate();
+          // if(cartId){
+          //   cart?.cart.lines.edges.forEach(cartLine => {
+          //     cartLinesAdd(cartId, cartLine);
+          //   })
+          // if(checkoutUrl){
+          //   console.log(checkoutUrl)
+          //   presentLoading(undefined, 5000);
+          //   setTimeout(() => {
+          //     dismissLoading();
+          //     // console.log("Eigentlich wird hier umgeleitet")
+          //     window.location.replace(`${checkoutUrl}`)
+          //   }, 3000)
 
+          // }else{
+          //   presentToast("Es konnte keine Umleitung erfolgen!", 2000)
+          // }
+          // }else{
+          //   presentToast("Ein Problem trat beim Anlegen auf!", 2000)
+          // }
+        }} title={`Zur Kasse`} style={{ width: "80%", borderRadius: "5rem" }} />
+        <IonText onClick={() => props.history.push("/BoxMainPage")} style={{ cursor: "pointer", padding: "0.5rem 1rem 1rem 1rem", width: "50%", textAlign: "center" }} color={"primary"}>
+          zurück
+        </IonText>
+      </div>
     </MainTemplate>
   );
 };

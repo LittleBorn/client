@@ -1,21 +1,32 @@
 import { cart } from "ionicons/icons";
 import { BehaviorSubject } from "rxjs";
+import { IShopifyCard } from "../interfaces/Shopify/IShopifyCard";
 import { IShopifyCardLineInput } from "../interfaces/Shopify/IShopifyCardLineInput";
 import { sendStorefrontQuery } from "../utils/shopifyStorefrontHelper";
 import { accessToken$ } from "./userStore";
 
 // export const cart_id$ = new BehaviorSubject<string | undefined>(undefined);
-export const cart_lines$ = new BehaviorSubject<Array<IShopifyCardLineInput>>([]);
+export const cart$ = new BehaviorSubject<IShopifyCard | undefined>(undefined);
 
-cart_lines$.asObservable().subscribe(v => console.log("New Value: ", v))
+cart$.asObservable().subscribe(v => {
+    console.log("New Value: ", v)
+})
 
-export const addItemToCart = (line: IShopifyCardLineInput) => {
-    cart_lines$.next([...cart_lines$.getValue(), line]);
-}
+//////////////////////// SIMPLE FIRST TRY ///////////////////////
 
-export const removeItemFromCart = (line: IShopifyCardLineInput) => {
-    cart_lines$.next(cart_lines$.getValue().filter(i => i !== line));
-}
+// export const cart_lines$ = new BehaviorSubject<Array<IShopifyCardLineInput>>([]);
+
+// cart_lines$.asObservable().subscribe(v => console.log("New Value: ", v))
+
+// export const addItemToCart = (line: IShopifyCardLineInput) => {
+//     cart_lines$.next([...cart_lines$.getValue(), line]);
+// }
+
+// export const removeItemFromCart = (line: IShopifyCardLineInput) => {
+//     cart_lines$.next(cart_lines$.getValue().filter(i => i !== line));
+// }
+
+///////////////////// END SIMPLE FIRST TRY /////////////////////
 
 /* Card Mutations */
 export const cartCreate = async () => {
@@ -56,80 +67,138 @@ export const cartCreate = async () => {
         }
     }>(data);
     if(result){
-        return [result.data.cartCreate.cart.id, result.data.cartCreate.cart.checkoutUrl]
+        return result.data.cartCreate.cart.id
     }else{
         console.log("getCard fetch not successfull")
-        return []
+        return undefined
     }
 }
 
-// /* Card Query */
-// const refreshCard = async (id: string) => {
-//     var data = JSON.stringify({
-//         query: `{
-//         cart(id: "${id}) {
-//             buyerIdentity{
-//                 customer{
-//                     id
-//                 }
-//             }
-//             checkoutUrl
-//             cost {
-//                   checkoutChargeAmount{
-//                       amount
-//                       currencyCode
-//                   }
-//                   subtotalAmount{
-//                       amount
-//                       currencyCode
-//                   }
-//                   subtotalAmountEstimated
-//                   totalAmount{
-//                       amount
-//                       currencyCode
-//                   }
-//                   totalAmountEstimated
-//                   totalDutyAmount{
-//                       amount
-//                       currencyCode
-//                   }
-//                   totalDutyAmountEstimated
-//                   totalTaxAmount{
-//                       amount
-//                       currencyCode
-//                   }
-//                   totalTaxAmountEstimated
-//             }
-//             createdAt
-//             discountAllocations{
-//                 discountedAmount{
-//                     amount
-//                     currencyCode
-//                 }
-//             }
-//             discountCodes{
-//                 applicable
-//                 code
-//             }
-//             id,
-//             note,
-//             totalQuantity
-//             updatedAt
+/* Card Query */
+const refreshCard = async (id: string) => {
+    var data = JSON.stringify({
+        query: `{
+        cart(id: "${id}") {
+            buyerIdentity{
+                customer{
+                    id
+                }
+            }
+            lines(first: 10) {
+            edges {
+              node {
+                id
+                quantity
+                merchandise {
+                  ... on ProductVariant {
+                  id
+                  title
+                  compareAtPriceV2 {
+                      amount
+                      currencyCode
+                  }
+                  barcode
+                  availableForSale
+                  currentlyNotInStock
+                  image{
+                      altText
+                      height
+                      id
+                      url
+                      width
+                  }
+                  priceV2{
+                      amount
+                      currencyCode
+                  }
+                  requiresShipping
+                  weight
+                  }
+                }
+                cost {
+                  amountPerQuantity{
+                      amount
+                      currencyCode
+                  }
+                  compareAtAmountPerQuantity{
+                      amount
+                      currencyCode
+                  }
+                  subtotalAmount {
+                      amount
+                      currencyCode
+                  }
+                  totalAmount {
+                      amount
+                      currencyCode
+                  }
+                }
+                attributes {
+                  key
+                  value
+                }
+              }
+            }
+          }
+            checkoutUrl
+            cost {
+                  checkoutChargeAmount{
+                      amount
+                      currencyCode
+                  }
+                  subtotalAmount{
+                      amount
+                      currencyCode
+                  }
+                  subtotalAmountEstimated
+                  totalAmount{
+                      amount
+                      currencyCode
+                  }
+                  totalAmountEstimated
+                  totalDutyAmount{
+                      amount
+                      currencyCode
+                  }
+                  totalDutyAmountEstimated
+                  totalTaxAmount{
+                      amount
+                      currencyCode
+                  }
+                  totalTaxAmountEstimated
+            }
+            createdAt
+            discountAllocations{
+                discountedAmount{
+                    amount
+                    currencyCode
+                }
+            }
+            discountCodes{
+                applicable
+                code
+            }
+            id,
+            note,
+            totalQuantity
+            updatedAt
           
-//         }
-//       }`,
-//         variables: {}
-//       });
-//     const result = await sendStorefrontQuery<{data: IShopifyCard}>(data);
-//     if(result){
-//         cart$.next(result.data);
-//     }else{
-//         console.log("getCard fetch not successfull")
-//     }
-// } 
+        }
+      }`,
+        variables: {}
+      });
+      
+    const result = await sendStorefrontQuery<{data: IShopifyCard}>(data);
+    if(result){
+        cart$.next(result.data);
+    }else{
+        console.log("getCard fetch not successfull")
+    }
+} 
 
-
+/* Add Line to Cart */
 export const cartLinesAdd = async (cartId: string, lines: IShopifyCardLineInput) => {
+    console.log("Try to add: ", lines)
     var data = JSON.stringify({
         query: `mutation cartLinesAdd($cartId: ID!, $lines: [CartLineInput!]!) {
         cartLinesAdd(cartId: $cartId, lines: $lines) {
@@ -161,7 +230,7 @@ export const cartLinesAdd = async (cartId: string, lines: IShopifyCardLineInput)
         }
     }>(data);
     if(result){
-        console.log("Add Line Result: ", result.data)
+        refreshCard(result.data.cartLinesAdd.cart.id)
     }else{
         console.log("getCard fetch not successfull")
     }

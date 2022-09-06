@@ -21,7 +21,9 @@ export interface IShopifyProduct {
         handle: string;
         compareAtPriceRange: IShopifyPriceRange;
         variants: {
-            edges: Array<IShopifyProductVariant>;
+            edges: Array<{
+                node: IShopifyProductVariant
+            }>;
         }
         createdAt: string;
         onlineStoreUrl: string;
