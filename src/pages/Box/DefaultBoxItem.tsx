@@ -7,7 +7,6 @@ import VariantSelectionModal from "./VariantSelectionModal";
 interface ContainerProps {
     style?: any;
     product: IShopifyProduct;
-    inBasket: boolean;
 }
 
 const CustomStyle = {
@@ -21,12 +20,7 @@ const CustomStyle = {
     borderRadius: "1rem"
 }
 
-const CustomStyleInBasket = {
-    ...CustomStyle,
-    // border: "2px solid #44C1AD55"
-}
-
-const amountSortFunction = (a: IShopifyProductVariant, b: IShopifyProductVariant) => {
+const amountSortFunction = (a: {node: IShopifyProductVariant}, b: {node: IShopifyProductVariant}) => {
     if (a.node.priceV2.amount < b.node.priceV2.amount) {
         return 1;
     } else if (a.node.priceV2.amount > b.node.priceV2.amount) {
@@ -36,13 +30,13 @@ const amountSortFunction = (a: IShopifyProductVariant, b: IShopifyProductVariant
     }
 }
 
-const DefaultBoxItem: React.FC<ContainerProps> = ({ style, product, inBasket }) => {
+const DefaultBoxItem: React.FC<ContainerProps> = ({ style, product }) => {
 
     const [isOpen, setIsOpen] = useState(false)
 
     return (
         <>
-            <div className="container-item" style={inBasket ? { ...style, ...CustomStyleInBasket } : { ...style, ...CustomStyle }} onClick={() => setIsOpen(true)}>
+            <div className="container-item" style={{...style, ...CustomStyle}} onClick={() => setIsOpen(true)}>
                 <img style={{ borderRadius: "1rem" }} src={product.node.featuredImage.url} alt={product.node.featuredImage.altText}></img>
                 <IonText style={{ fontSize: "0.8em", textTransform: "uppercase", marginTop: "0.3rem" }}>{product.node.vendor}</IonText>
                 <IonText style={{ fontWeight: "bold", fontSize: "0.9em" }}>{product.node.title}</IonText>

@@ -1,3 +1,7 @@
+import { IShopifyCardLine } from "./IShopifyCardLine";
+import { IShopifyCardLineInput } from "./IShopifyCardLineInput";
+import { IShopifyProductVariant } from "./IShopifyProductVariant";
+
 export interface IShopifyCard {
     "cart": {
         "buyerIdentity": {
@@ -26,6 +30,11 @@ export interface IShopifyCard {
             "totalTaxAmount": null | any,
             "totalTaxAmountEstimated": boolean
         },
+        "lines": {
+            "edges": Array<{
+                node: IShopifyCardLine;
+            }>
+        }
         "createdAt": string,
         "discountAllocations": Array<any>;
         "discountCodes": Array<any>;
