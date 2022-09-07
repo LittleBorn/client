@@ -5,11 +5,8 @@ import CartItem from '../../components/CartItem';
 import MainTemplate from '../../components/MainTemplate';
 import { IPagePros } from '../../interfaces/IPageProps';
 import { IShopifyCard } from '../../interfaces/Shopify/IShopifyCard';
-import { IShopifyCardLine } from '../../interfaces/Shopify/IShopifyCardLine';
-import { IShopifyCardLineInput } from '../../interfaces/Shopify/IShopifyCardLineInput';
-import { basket$ } from '../../stores/basketStore';
-import { cart$, cartCreate, cartLinesAdd } from '../../stores/cartStore';
-import { sendStorefrontQuery } from '../../utils/shopifyStorefrontHelper';
+import { cart$ } from '../../stores/cartStore';
+
 
 const BoxOverview: React.FC<IPagePros> = ({ props }: IPagePros) => {
 
@@ -24,30 +21,6 @@ const BoxOverview: React.FC<IPagePros> = ({ props }: IPagePros) => {
   }, [])
 
   const [cart, setCart] = useState<IShopifyCard | undefined>(undefined)
-
-  const fetchBasket = async () => {
-
-    presentLoading(undefined, 1000)
-
-    let data = ""
-
-    const collectionResult = await sendStorefrontQuery<any>(data);
-    if (typeof collectionResult?.data === "undefined") {
-      // error fetching items
-      dismissLoading()
-      presentToast("Error occured while fetching Products", 2000)
-    } else {
-      if (true) {
-        // set state
-        dismissLoading();
-      } else {
-        // or the segment was not found
-        dismissLoading();
-        presentToast("Segment was not found", 2000)
-      }
-    }
-  }
-
 
   return (
     <MainTemplate title='Deine Box 🎁'>
@@ -90,26 +63,6 @@ const BoxOverview: React.FC<IPagePros> = ({ props }: IPagePros) => {
           } else {
             presentToast("Aktuell ist kein Warenkorb angelegt", 2000)
           }
-          // const cartId = await cartCreate();
-          // if(cartId){
-          //   cart?.cart.lines.edges.forEach(cartLine => {
-          //     cartLinesAdd(cartId, cartLine);
-          //   })
-          // if(checkoutUrl){
-          //   console.log(checkoutUrl)
-          //   presentLoading(undefined, 5000);
-          //   setTimeout(() => {
-          //     dismissLoading();
-          //     // console.log("Eigentlich wird hier umgeleitet")
-          //     window.location.replace(`${checkoutUrl}`)
-          //   }, 3000)
-
-          // }else{
-          //   presentToast("Es konnte keine Umleitung erfolgen!", 2000)
-          // }
-          // }else{
-          //   presentToast("Ein Problem trat beim Anlegen auf!", 2000)
-          // }
         }} title={`Zur Kasse`} style={{ width: "80%", borderRadius: "5rem" }} />
         <IonText onClick={() => props.history.push("/BoxMainPage")} style={{ cursor: "pointer", padding: "0.5rem 1rem 1rem 1rem", width: "50%", textAlign: "center" }} color={"primary"}>
           zurück

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { IShopifyCardLine } from '../interfaces/Shopify/IShopifyCardLine';
 import { IShopifyCardLineInput } from '../interfaces/Shopify/IShopifyCardLineInput';
 import { IShopifyProductVariant } from '../interfaces/Shopify/IShopifyProductVariant';
+import { cart$, cartLinesUpdate } from '../stores/cartStore';
 import { sendStorefrontQuery } from '../utils/shopifyStorefrontHelper';
 
 interface ContainerProps {
@@ -19,33 +20,44 @@ const CartItem: React.FC<ContainerProps> = ({ cartLine, style }) => {
     const [presentToast, dismissToast] = useIonToast();
     const [presentLoading, dismissLoading] = useIonLoading();
 
-    const [productVariant, setProductVariant] = useState<IShopifyProductVariant | undefined>(undefined);
-    const [subscribtionToggle, setSubscribtionToggle] = useState(false)
+    const [productVariant, setProductVariant] = useState<IShopifyProductVariant | undefined>(cartLine.merchandise);
+    const [subscribtionToggle, setSubscribtionToggle] = useState(false);
 
-    const fetchProductVariant = async () => {
-        setProductVariant(cartLine.merchandise)
+    const incrementCount = async () => {
+        presentLoading("Aktualisiere Anzahl", 4000);
+        const cart = cart$.getValue();
+        if(typeof cart !== "undefined"){
+            await cartLinesUpdate(cart?.cart.id, {
+                id: cartLine.id,
+                merchandiseId: cartLine.merchandise.id,
+                quantity: cartLine.quantity + 1
+            })
+            dismissLoading()
+        }else{
+            presentToast("Item konnte nicht aktualisiert werden!", 1000);
+        }
     }
 
-    useEffect(() => {
-        fetchProductVariant();
-        console.log(cartLine)
-    }, [])
-
-    const incrementCount = () => {
-        console.log("Increment Count")
-    }
-
-    const decrementCount = () => {
-        console.log("Decrement Count")
+    const decrementCount = async () => {
+        presentLoading("Aktualisiere Anzahl", 4000);
+        const cart = cart$.getValue();
+        if(typeof cart !== "undefined"){
+            await cartLinesUpdate(cart?.cart.id, {
+                id: cartLine.id,
+                merchandiseId: cartLine.merchandise.id,
+                quantity: cartLine.quantity - 1
+            })
+            dismissLoading()
+        }else{
+            presentToast("Item konnte nicht aktualisiert werden!", 1000);
+        }
     }
 
     const subscribtionModeChanged = (checked: boolean) => {
         if (checked) {
             presentLoading("Aktiviere Abo", 2000)
-
         } else {
             presentLoading("Entferne Produkt aus Abo", 2000)
-
         }
     }
 

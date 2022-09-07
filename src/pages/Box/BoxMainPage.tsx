@@ -283,7 +283,7 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
           if (SEGMENTS[currentIndex + 1] !== undefined) {
             segmentChanged(SEGMENTS[currentIndex + 1].id);
           } else {
-            props.history.push('/BoxSuccess');
+            props.history.push('/BoxOverview');
             // presentToast("Keine weitere Seite gefunden!", 1000)
           }
         }}
