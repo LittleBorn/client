@@ -2,6 +2,7 @@ import { cart } from "ionicons/icons";
 import { BehaviorSubject } from "rxjs";
 import { IShopifyCard } from "../interfaces/Shopify/IShopifyCard";
 import { IShopifyCardLineInput } from "../interfaces/Shopify/IShopifyCardLineInput";
+import { IShopifyCardLineUpdateInput } from "../interfaces/Shopify/IShopifyCardLineUpdateInput";
 import { sendStorefrontQuery } from "../utils/shopifyStorefrontHelper";
 import { accessToken$ } from "./userStore";
 
@@ -45,12 +46,12 @@ export const cartCreate = async () => {
       }`,
         variables: {
             "input": {
-                "buyerIdentity": { 
-                    "customerAccessToken": accessToken$.getValue()?.accessToken 
+                "buyerIdentity": {
+                    "customerAccessToken": accessToken$.getValue()?.accessToken
                 },
-                attributes: { 
-                    key: "channel", 
-                    value: "LittleBorn Application" 
+                attributes: {
+                    key: "channel",
+                    value: "LittleBorn Application"
                 }
             }
         }
@@ -66,9 +67,9 @@ export const cartCreate = async () => {
             }
         }
     }>(data);
-    if(result){
+    if (result) {
         return result.data.cartCreate.cart.id
-    }else{
+    } else {
         console.log("getCard fetch not successfull")
         return undefined
     }
@@ -186,15 +187,15 @@ const refreshCard = async (id: string) => {
         }
       }`,
         variables: {}
-      });
-      
-    const result = await sendStorefrontQuery<{data: IShopifyCard}>(data);
-    if(result){
+    });
+
+    const result = await sendStorefrontQuery<{ data: IShopifyCard }>(data);
+    if (result) {
         cart$.next(result.data);
-    }else{
+    } else {
         console.log("getCard fetch not successfull")
     }
-} 
+}
 
 /* Add Line to Cart */
 export const cartLinesAdd = async (cartId: string, lines: IShopifyCardLineInput) => {
@@ -213,13 +214,13 @@ export const cartLinesAdd = async (cartId: string, lines: IShopifyCardLineInput)
       }`,
         variables: {
             "cartId": cartId,
-            "lines":{
+            "lines": {
                 "merchandiseId": lines.merchandiseId,
                 "quantity": lines.quantity,
             }
         }
-      });
-      const result = await sendStorefrontQuery<{
+    });
+    const result = await sendStorefrontQuery<{
         "data": {
             "cartLinesAdd": {
                 "cart": {
@@ -229,9 +230,49 @@ export const cartLinesAdd = async (cartId: string, lines: IShopifyCardLineInput)
             }
         }
     }>(data);
-    if(result){
+    if (result) {
         refreshCard(result.data.cartLinesAdd.cart.id)
-    }else{
+    } else {
+        console.log("getCard fetch not successfull")
+    }
+}
+
+export const cartLinesUpdate = async (cartId: string, lines: IShopifyCardLineUpdateInput) => {
+    var data = JSON.stringify({
+        query: `mutation cartLinesUpdate($cartId: ID!, $lines: [CartLineUpdateInput!]!) {
+        cartLinesUpdate(cartId: $cartId, lines: $lines) {
+          cart {
+            id
+          }
+          userErrors {
+            field
+            message
+          }
+        }
+      }`,
+        variables: {
+            "cartId": cartId,
+            "lines": {
+                "id": lines.id,
+                "merchandiseId": lines.merchandiseId,
+                "quantity": lines.quantity,
+                "sellingPlanId": lines.sellingPlanId
+            }
+        }
+    });
+    const result = await sendStorefrontQuery<{
+        "data": {
+            "cartLinesUpdate": {
+                "cart": {
+                    "id": string;
+                },
+                "userErrors": Array<string>;
+            }
+        }
+    }>(data);
+    if (result) {
+        refreshCard(result.data.cartLinesUpdate.cart.id)
+    } else {
         console.log("getCard fetch not successfull")
     }
 }
