@@ -24,6 +24,12 @@ const CartItem: React.FC<ContainerProps> = ({ cartLine, style }) => {
     const [subscribtionToggle, setSubscribtionToggle] = useState(false);
 
     const incrementCount = async () => {
+
+        if(productVariant?.quantityAvailable && ((cartLine.quantity + 1) > productVariant?.quantityAvailable)){
+            presentToast("Die Ausgewählte Anzahl überschreitet die Anzahl im Lager", 2000)
+            return
+        }
+
         presentLoading("Aktualisiere Anzahl", 4000);
         const cart = cart$.getValue();
         if(typeof cart !== "undefined"){

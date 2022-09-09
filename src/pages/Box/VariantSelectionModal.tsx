@@ -31,11 +31,6 @@ const VariantSelectionModal: React.FC<ContainerProps> = ({ isOpen, setIsOpen, pr
     const [selectedVariant, setSelectedVariant] = useState<IShopifyProductVariant | undefined>(product.node.variants.edges[0].node);
     const [selectedAmount, setSelectedAmount] = useState(1)
 
-    useEffect(() => {
-        console.log(selectedVariant)
-    }, [])
-
-
     return (
         <IonModal isOpen={isOpen}>
             <IonHeader>
