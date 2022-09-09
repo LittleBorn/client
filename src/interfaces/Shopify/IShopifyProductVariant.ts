@@ -17,4 +17,5 @@ export interface IShopifyProductVariant{
     }
     requiresShipping: boolean;
     weight: number;
+    quantityAvailable: number;
 }

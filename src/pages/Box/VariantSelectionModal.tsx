@@ -1,5 +1,5 @@
 import { IonButton, IonButtons, IonContent, IonHeader, IonImg, IonModal, IonText, IonTitle, IonToolbar, useIonLoading, useIonToast } from "@ionic/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../../components/Button";
 import { IShopifyProduct } from "../../interfaces/Shopify/IShopifyProduct";
 import { IShopifyProductVariant } from "../../interfaces/Shopify/IShopifyProductVariant";
@@ -41,16 +41,25 @@ const VariantSelectionModal: React.FC<ContainerProps> = ({ isOpen, setIsOpen, pr
                     <IonTitle>{product.node.title}</IonTitle>
                     <IonButtons slot="end">
                         <IonButton strong={true} onClick={async () => {
+                            if (selectedVariant && selectedAmount > selectedVariant?.quantityAvailable) {
+                                presentToast("Die Ausgewählte Anzahl überschreitet die verfügbare Menge", 1500)
+                                setSelectedAmount(selectedVariant?.quantityAvailable)
+                                return
+                            }
+                            if (!selectedVariant?.availableForSale) {
+                                presentToast("Der Artikel ist momentan leider nicht verfügbar!", 1500)
+                                return
+                            }
                             presentLoading("Hinzufügen zum Einkaufswagen", 1000)
-                            if(selectedVariant){
+                            if (selectedVariant) {
 
                                 // if this is the first item in cart -> create cart first
                                 let cart_id = cart$.getValue()?.cart.id;
-                                if(typeof cart_id === "undefined"){
+                                if (typeof cart_id === "undefined") {
                                     dismissLoading()
                                     presentLoading("Einkaufswagen erstellen", 1000)
                                     cart_id = await cartCreate();
-                                    if(typeof cart_id === "undefined"){
+                                    if (typeof cart_id === "undefined") {
                                         presentToast("Problem trat auf beim anlegen des Warenkorbs");
                                         return
                                     }
@@ -66,6 +75,7 @@ const VariantSelectionModal: React.FC<ContainerProps> = ({ isOpen, setIsOpen, pr
                                 setSelectedAmount(1)
                             }
                             setIsOpen(false)
+
                         }}>
                             Bestätigen
                         </IonButton>
@@ -84,7 +94,8 @@ const VariantSelectionModal: React.FC<ContainerProps> = ({ isOpen, setIsOpen, pr
                     {/* Preis */}
                     <div style={{ display: "flex", gap: "1rem", width: "100%", justifyContent: "center", flexDirection: "column", alignItems: "center" }}>
                         <IonText style={{ fontSize: "1.4em", fontWeight: "bold" }}>{selectedVariant?.priceV2.amount && Number(Number.parseFloat(selectedVariant?.priceV2.amount) * selectedAmount).toFixed(2)} €</IonText>
-                        <IonText style={{ color: "#838383" }}>Enthält: {selectedVariant?.weight}</IonText>
+                        {/* <IonText style={{ color: "#838383" }}>Enthält: {selectedVariant?.weight}</IonText> */}
+                        <IonText style={{ color: "#838383" }}>Aktuell Auf Lager: {selectedVariant?.quantityAvailable}</IonText>
                         {/* <IonText>{ selectedVariant?.currentlyNotInStock ? `🟡 Zurzeit nicht verfügbar` : `🟢 Produkt auf Lager` }</IonText> */}
                         <IonText style={{ color: "#838383" }}>{!selectedVariant?.availableForSale ? `🟡 Zurzeit nicht verfügbar` : `🟢 Produkt auf Lager`}</IonText>
                     </div>
@@ -95,7 +106,7 @@ const VariantSelectionModal: React.FC<ContainerProps> = ({ isOpen, setIsOpen, pr
                             <IonText>Wählen Sie eine <b>Größe</b> aus</IonText>
                             <div style={{ display: "flex", gap: "1rem", width: "100%", flexWrap: "wrap", justifyContent: "center" }}>
                                 {
-                                    product.node.variants.edges.map((variant: {node : IShopifyProductVariant}) => {
+                                    product.node.variants.edges.map((variant: { node: IShopifyProductVariant }) => {
                                         return <div
                                             key={variant.node.id}
                                             style={variant.node.id === selectedVariant?.id ? { ...SelectedVariantStyle } : { ...VariantStyle }}

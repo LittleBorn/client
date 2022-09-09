@@ -9,9 +9,9 @@ import { accessToken$ } from "./userStore";
 // export const cart_id$ = new BehaviorSubject<string | undefined>(undefined);
 export const cart$ = new BehaviorSubject<IShopifyCard | undefined>(undefined);
 
-cart$.asObservable().subscribe(v => {
-    console.log("New Value: ", v)
-})
+// cart$.asObservable().subscribe(v => {
+//     console.log("New Value: ", v)
+// })
 
 //////////////////////// SIMPLE FIRST TRY ///////////////////////
 
@@ -114,6 +114,7 @@ const refreshCard = async (id: string) => {
                   }
                   requiresShipping
                   weight
+                  quantityAvailable
                   }
                 }
                 cost {
@@ -237,6 +238,7 @@ export const cartLinesAdd = async (cartId: string, lines: IShopifyCardLineInput)
     }
 }
 
+/* Update Cart Line */
 export const cartLinesUpdate = async (cartId: string, lines: IShopifyCardLineUpdateInput) => {
     var data = JSON.stringify({
         query: `mutation cartLinesUpdate($cartId: ID!, $lines: [CartLineUpdateInput!]!) {
