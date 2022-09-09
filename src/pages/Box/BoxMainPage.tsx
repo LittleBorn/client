@@ -136,6 +136,7 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
                               }
                               requiresShipping
                               weight
+                              quantityAvailable
                           }
                       }
                       }
