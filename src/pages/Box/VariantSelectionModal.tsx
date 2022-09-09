@@ -41,31 +41,35 @@ const VariantSelectionModal: React.FC<ContainerProps> = ({ isOpen, setIsOpen, pr
                     <IonTitle>{product.node.title}</IonTitle>
                     <IonButtons slot="end">
                         <IonButton strong={true} onClick={async () => {
-                            presentLoading("Hinzufügen zum Einkaufswagen", 1000)
-                            if(selectedVariant){
-
-                                // if this is the first item in cart -> create cart first
-                                let cart_id = cart$.getValue()?.cart.id;
-                                if(typeof cart_id === "undefined"){
-                                    dismissLoading()
-                                    presentLoading("Einkaufswagen erstellen", 1000)
-                                    cart_id = await cartCreate();
+                            if(selectedVariant?.availableForSale){
+                                presentLoading("Hinzufügen zum Einkaufswagen", 1000)
+                                if(selectedVariant){
+    
+                                    // if this is the first item in cart -> create cart first
+                                    let cart_id = cart$.getValue()?.cart.id;
                                     if(typeof cart_id === "undefined"){
-                                        presentToast("Problem trat auf beim anlegen des Warenkorbs");
-                                        return
+                                        dismissLoading()
+                                        presentLoading("Einkaufswagen erstellen", 1000)
+                                        cart_id = await cartCreate();
+                                        if(typeof cart_id === "undefined"){
+                                            presentToast("Problem trat auf beim anlegen des Warenkorbs");
+                                            return
+                                        }
                                     }
+    
+                                    dismissLoading()
+                                    presentLoading("Füge Artikel hinzu...", 1000)
+                                    await cartLinesAdd(cart_id, {
+                                        merchandiseId: selectedVariant.id,
+                                        quantity: selectedAmount
+                                    });
+                                    dismissLoading()
+                                    setSelectedAmount(1)
                                 }
-
-                                dismissLoading()
-                                presentLoading("Füge Artikel hinzu...", 1000)
-                                await cartLinesAdd(cart_id, {
-                                    merchandiseId: selectedVariant.id,
-                                    quantity: selectedAmount
-                                });
-                                dismissLoading()
-                                setSelectedAmount(1)
+                                setIsOpen(false)
+                            }else{
+                                presentToast("Der Artikel ist momentan leider nicht verfügbar!", 1500)
                             }
-                            setIsOpen(false)
                         }}>
                             Bestätigen
                         </IonButton>

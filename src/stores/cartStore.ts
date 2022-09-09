@@ -237,6 +237,7 @@ export const cartLinesAdd = async (cartId: string, lines: IShopifyCardLineInput)
     }
 }
 
+/* Update Cart Line */
 export const cartLinesUpdate = async (cartId: string, lines: IShopifyCardLineUpdateInput) => {
     var data = JSON.stringify({
         query: `mutation cartLinesUpdate($cartId: ID!, $lines: [CartLineUpdateInput!]!) {
