@@ -26,7 +26,6 @@ import './theme/variables.css';
 
 import './App.css'
 
-
 /* Pages */
 import Home from './pages/Home/Home';
 import Login from './pages/Login/Login';
@@ -102,7 +101,7 @@ const SecureRoutes = () => {
         <Route path="/BoxOverview" render={(props) => <BoxOverview props={{ ...props }} />} exact={true} />
         <Route render={() => <Redirect to="/Home" />} />
       </IonRouterOutlet>
-      
+
     </IonTabs>
   );
 }
