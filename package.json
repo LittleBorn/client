@@ -3,6 +3,8 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
+    "@awesome-cordova-plugins/deeplinks": "^5.45.0",
+    "@awesome-cordova-plugins/in-app-browser": "^5.45.0",
     "@capacitor/android": "3.6.0",
     "@capacitor/app": "1.1.1",
     "@capacitor/core": "3.6.0",
@@ -22,6 +24,8 @@
     "@types/react-router-dom": "^5.1.7",
     "@types/styled-components": "^5.1.25",
     "axios": "^0.27.2",
+    "cordova-plugin-inappbrowser": "^5.0.0",
+    "ionic-plugin-deeplinks": "^1.0.24",
     "ionicons": "^5.5.4",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",

@@ -74,6 +74,12 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
 
   const [currentSegment, setCurrentSegment] = useState<string>("Babywindeln")
   const [products, setProducts] = useState<Array<IShopifyProduct>>()
+  const [pageInfo, setPageInfo] = useState<{
+    "hasPreviousPage": string;
+    "hasNextPage": string;
+    "startCursor": string;
+    "endCursor": string;
+  } | undefined>(undefined)
 
   const [cart, setCart] = useState<IShopifyCard | undefined>(undefined)
 
@@ -104,6 +110,12 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
               id
               title
               products(${filter}){
+                pageInfo{
+                  hasPreviousPage
+                  hasNextPage
+                  startCursor
+                  endCursor
+                }
                 edges{
                   cursor
                   node{
@@ -191,6 +203,11 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
     } else {
       if (collectionResult.data.collections.edges.length > 0) {
         const COLLECTION = collectionResult.data.collections.edges[0];
+
+        // load pageInfo
+        setPageInfo(COLLECTION.node.products.pageInfo)
+
+        // load products
         const PRODUCTS = COLLECTION.node.products.edges;
         // todo hier kann durch before/after pointer die Richtung festgestellt werden
         if (PRODUCTS.length === 0) {
@@ -253,23 +270,27 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
               );
             })
           }
-          <div style={{ height: "10rem", width: "100%", display: "flex", justifyContent: "center" }}>
+          <div style={{height: (pageInfo?.hasPreviousPage || pageInfo?.hasNextPage) ? "9rem" : "6rem", width: "100%", display: "flex", justifyContent: "center" }}>
             {/* BLOCKER for better Navigation */}
-            <Button title='Zurück' onClick={() => {
-              if (products && products?.length > 0) {
-                segmentChanged(currentSegment,undefined, products[0].cursor)
-              } else {
-                segmentChanged(currentSegment)
-              }
-            }}></Button>
-            <Button title='Weiter' onClick={() => {
-              if (products && products?.length > 0) {
-                segmentChanged(currentSegment, products[products.length - 1].cursor, undefined)
-                window.scrollTo(0, 0);
-              } else {
-                segmentChanged(currentSegment)
-              }
-            }}></Button>
+            {
+              pageInfo && pageInfo.hasPreviousPage && <Button title='Zurück' onClick={() => {
+                if (products && products?.length > 0) {
+                  segmentChanged(currentSegment, undefined, pageInfo?.startCursor || products[0].cursor)
+                } else {
+                  segmentChanged(currentSegment)
+                }
+              }}></Button>
+            }
+            {
+              pageInfo && pageInfo.hasNextPage && <Button title='Weiter' onClick={() => {
+                if (products && products?.length > 0) {
+                  segmentChanged(currentSegment, pageInfo?.endCursor || products[products.length - 1].cursor, undefined)
+                  window.scrollTo(0, 0);
+                } else {
+                  segmentChanged(currentSegment)
+                }
+              }}></Button>
+            }
           </div>
         </div>
       </div>

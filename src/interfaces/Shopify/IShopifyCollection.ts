@@ -5,6 +5,12 @@ export interface IShopifyCollection{
       "id": string;
       "title": string;
       "products": {
+        "pageInfo": {
+          "hasPreviousPage": string;
+          "hasNextPage": string;
+          "startCursor": string;
+          "endCursor": string;
+        }
         "edges": Array<IShopifyProduct>
       }
     }
