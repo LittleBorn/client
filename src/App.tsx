@@ -48,6 +48,8 @@ import Settings from './pages/Settings/Settings';
 import BoxSuccess from './pages/Box/BoxSuccess';
 import BoxOverview from './pages/Box/BoxOverview';
 import HealthStartPage from './pages/Health/HealthStartPage';
+import BoxCheckout from './pages/Box/BoxCheckout';
+import BoxBrowser from './pages/Box/BoxBrowser';
 
 setupIonicReact();
 
@@ -96,6 +98,8 @@ const SecureRoutes = () => {
         {/* Health */}
         <Route path="/Health" render={(props) => <Health props={{ ...props }} />} exact={true} />
         {/* Box */}
+        <Route path="/BoxBrowser" render={(props) => <BoxBrowser props={{ ...props }} />} exact={true} />
+        <Route path="/BoxCheckout" render={(props) => <BoxCheckout props={{ ...props }} />} exact={true} />
         <Route path="/BoxMainPage" render={(props) => <BoxMainPage props={{ ...props }} />} exact={true} />
         <Route path="/BoxSuccess" render={(props) => <BoxSuccess props={{ ...props }} />} exact={true} />
         <Route path="/BoxOverview" render={(props) => <BoxOverview props={{ ...props }} />} exact={true} />

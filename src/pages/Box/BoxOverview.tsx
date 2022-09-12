@@ -6,12 +6,13 @@ import MainTemplate from '../../components/MainTemplate';
 import { IPagePros } from '../../interfaces/IPageProps';
 import { IShopifyCard } from '../../interfaces/Shopify/IShopifyCard';
 import { cart$ } from '../../stores/cartStore';
-
+import BrowserWindow from '../../components/BrowserWindow';
 
 const BoxOverview: React.FC<IPagePros> = ({ props }: IPagePros) => {
 
   const [presentToast, dismissToast] = useIonToast();
   const [presentLoading, dismissLoading] = useIonLoading();
+  // const [checkOutURL, setCheckOutURL] = useState<undefined | string>(undefined)
 
   useEffect(() => {
     // set basket state with observable
@@ -55,11 +56,7 @@ const BoxOverview: React.FC<IPagePros> = ({ props }: IPagePros) => {
         <Button onClick={() => {
           const checkoutUrl = cart$.getValue()?.cart.checkoutUrl;
           if (checkoutUrl) {
-              presentLoading(undefined, 5000);
-            setTimeout(() => {
-              dismissLoading();
-              window.location.replace(`${checkoutUrl}`)
-            }, 3000)
+            props.history.push("/BoxCheckout", { url: checkoutUrl });
           } else {
             presentToast("Aktuell ist kein Warenkorb angelegt", 2000)
           }
@@ -68,6 +65,14 @@ const BoxOverview: React.FC<IPagePros> = ({ props }: IPagePros) => {
           zurück
         </IonText>
       </div>
+
+      {/* <Button title='DEBUG' onClick={() => {
+        setCheckOutURL("https://facebook.com")
+      }}></Button>
+      {
+        checkOutURL && <BrowserWindow url={checkOutURL} close={() => setCheckOutURL(undefined)} />
+      } */}
+
     </MainTemplate>
   );
 };
