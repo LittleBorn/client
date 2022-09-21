@@ -5,6 +5,7 @@ import BoxButton from '../../components/BoxButton';
 import BoxProgressBar from '../../components/BoxProgressBar';
 import Button from '../../components/Button';
 import MainTemplate from '../../components/MainTemplate';
+import PaginationButton from '../../components/PaginationButton';
 import { IPagePros } from '../../interfaces/IPageProps';
 import { IShopifyCard } from '../../interfaces/Shopify/IShopifyCard';
 import { IShopifyCardLine } from '../../interfaces/Shopify/IShopifyCardLine';
@@ -270,26 +271,26 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
               );
             })
           }
-          <div style={{height: (pageInfo?.hasPreviousPage || pageInfo?.hasNextPage) ? "9rem" : "6rem", width: "100%", display: "flex", justifyContent: "center" }}>
+          <div style={{height: (pageInfo?.hasPreviousPage || pageInfo?.hasNextPage) ? "9rem" : "6rem", width: "100%", display: "flex", justifyContent: "center", gap: "0.5rem" }}>
             {/* BLOCKER for better Navigation */}
             {
-              pageInfo && pageInfo.hasPreviousPage && <Button title='Zurück' onClick={() => {
+              pageInfo && pageInfo.hasPreviousPage && <PaginationButton  title='<' onClick={() => {
                 if (products && products?.length > 0) {
                   segmentChanged(currentSegment, undefined, pageInfo?.startCursor || products[0].cursor)
                 } else {
                   segmentChanged(currentSegment)
                 }
-              }}></Button>
+              }}></PaginationButton>
             }
             {
-              pageInfo && pageInfo.hasNextPage && <Button title='Weiter' onClick={() => {
+              pageInfo && pageInfo.hasNextPage && <PaginationButton title='>' onClick={() => {
                 if (products && products?.length > 0) {
                   segmentChanged(currentSegment, pageInfo?.endCursor || products[products.length - 1].cursor, undefined)
                   window.scrollTo(0, 0);
                 } else {
                   segmentChanged(currentSegment)
                 }
-              }}></Button>
+              }}></PaginationButton>
             }
           </div>
         </div>
@@ -324,7 +325,7 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
             // presentToast("Keine weitere Seite gefunden!", 1000)
           }
         }}
-          title={SEGMENTS.findIndex(s => s.id === currentSegment) === SEGMENTS.length - 1 ? `Abschließen` : `Weiter`}
+          title={SEGMENTS.findIndex(s => s.id === currentSegment) === SEGMENTS.length - 1 ? `Abschließen` : `Nächste Kategorie`}
           text={(cart?.cart?.lines?.edges?.length !== undefined && cart?.cart?.lines?.edges?.length > 1) ? `${cart?.cart.lines.edges.length} Produkte ausgewählt)` : cart?.cart.lines.edges?.length === 1 ? `${cart?.cart.lines.edges.length} Produkt ausgewählt)` : ``}
           style={{ width: "80%" }} />
         {/* <BoxButton title='zurück' style={{backgroundColor: "#cccccc"}}/> */}

@@ -7,23 +7,9 @@ import { IUser } from '../../interfaces/IUser';
 import { accessToken$, user$ } from '../../stores/userStore';
 import BoxPreview from './BoxPreview';
 
-/* Deeplink Setup */
-import { Deeplinks } from "@awesome-cordova-plugins/deeplinks"
 import Settings from '../Settings/Settings';
 
 const Home: React.FC<IPagePros> = ({ props }: IPagePros) => {
-
-  /* Deeplink Execution */
-  Deeplinks.route({
-    '/BuySuccess': Settings
-  })
-    .subscribe(match => {
-      // match.$route - the route we matched, which is the matched entry from the arguments to route()
-      // match.$args - the args passed in the link
-      // match.$link - the full link data
-      console.log('Successfully matched route', match);
-      props.history.push("/BuySuccess");
-    });
 
   const [user, setUser] = useState<IUser | undefined>(user$.getValue())
   const [date, setDate] = useState<string | undefined>();

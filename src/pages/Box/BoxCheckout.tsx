@@ -17,7 +17,7 @@ const BoxCheckout: React.FC<IPagePros> = ({ props }: IPagePros) => {
         const url: string = state.url;
         console.log("URL", url)
         setUrl(url)
-        presentLoading("Leite zur externen Seite weiter", 5000)
+        presentLoading("Deine Bestellung wird vorbereitet", 5000)
         setTimeout(() => {
             localStorage.removeItem("should-redirect")
             props.history.push("/BoxBrowser", { url: state.url})
