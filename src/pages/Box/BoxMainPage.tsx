@@ -271,7 +271,7 @@ const BoxMainPage: React.FC<IPagePros> = ({ props }: IPagePros) => {
               );
             })
           }
-          <div style={{height: (pageInfo?.hasPreviousPage || pageInfo?.hasNextPage) ? "9rem" : "6rem", width: "100%", display: "flex", justifyContent: "center", gap: "0.5rem" }}>
+          <div style={{height: (pageInfo?.hasPreviousPage || pageInfo?.hasNextPage) ? "10rem" : "6rem", width: "100%", display: "flex", justifyContent: "center", gap: "0.5rem" }}>
             {/* BLOCKER for better Navigation */}
             {
               pageInfo && pageInfo.hasPreviousPage && <PaginationButton  title='<' onClick={() => {

@@ -128,6 +128,46 @@ const VariantSelectionModal: React.FC<ContainerProps> = ({ isOpen, setIsOpen, pr
                         <Button title="+" onClick={() => setSelectedAmount(selectedAmount + 1)} />
                     </div>
 
+                    <div style={{height: "5rem", width: "100%", display: "flex", justifyContent: "center"}}>
+                        <Button title="In den Warenkorb" style={{width: "80%", height: "100%"}} onClick={async () => {
+                                if (selectedVariant && selectedAmount > selectedVariant?.quantityAvailable) {
+                                    presentToast("Die Ausgewählte Anzahl überschreitet die verfügbare Menge", 1500)
+                                    setSelectedAmount(selectedVariant?.quantityAvailable)
+                                    return
+                                }
+                                if (!selectedVariant?.availableForSale) {
+                                    presentToast("Der Artikel ist momentan leider nicht verfügbar!", 1500)
+                                    return
+                                }
+                                presentLoading("Hinzufügen zum Einkaufswagen", 1000)
+                                if (selectedVariant) {
+
+                                    // if this is the first item in cart -> create cart first
+                                    let cart_id = cart$.getValue()?.cart.id;
+                                    if (typeof cart_id === "undefined") {
+                                        dismissLoading()
+                                        presentLoading("Einkaufswagen erstellen", 1000)
+                                        cart_id = await cartCreate();
+                                        if (typeof cart_id === "undefined") {
+                                            presentToast("Problem trat auf beim anlegen des Warenkorbs");
+                                            return
+                                        }
+                                    }
+
+                                    dismissLoading()
+                                    presentLoading("Füge Artikel hinzu...", 1000)
+                                    await cartLinesAdd(cart_id, {
+                                        merchandiseId: selectedVariant.id,
+                                        quantity: selectedAmount
+                                    });
+                                    dismissLoading()
+                                    setSelectedAmount(1)
+                                }
+                                setIsOpen(false)
+
+                            }}/>
+                    </div>
+
                     {/* Beschreibung */}
                     <div dangerouslySetInnerHTML={{ __html: product?.node.descriptionHtml }} style={{ display: "flex", gap: "1rem", width: "100%", flexDirection: "column", marginTop: "1rem", color: "#838383" }}></div>
 
